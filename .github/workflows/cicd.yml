@@ -8,10 +8,10 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      name: "Run tests"
-      run: gradle test
+      - name: "Run tests"
+        run: gradle test
   build:
     runs-on: ubuntu-latest
     steps:
-      name: "Attempt compilation"
-      run: gradle build
+      - name: "Attempt compilation"
+        run: gradle build
