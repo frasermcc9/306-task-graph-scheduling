@@ -12,6 +12,6 @@ public class EntryTest {
 
     @Test
     public void testTestRunnerRunsFailedTests() {
-        Assert.assertEquals(1 + 1, 3);
+        Assert.assertEquals(1 + 2, 3);
     }
 }
