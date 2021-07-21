@@ -42,4 +42,9 @@ public class EntryTest {
     Entry.main(new String[0]);
     Assert.assertEquals("Hello im working!", outContent.toString().trim());
   }
+
+  @Test
+  public void testConstructor() {
+    new Entry();
+  }
 }
