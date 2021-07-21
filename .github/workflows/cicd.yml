@@ -40,6 +40,4 @@ jobs:
           path: target/site/jacoco/
 
       - name: Attempt compilation
-          run: gradle build
-
-
+        run: gradle build
