@@ -15,6 +15,7 @@
   - feat/ for feature
   - fix/ for bugfixes
   - dev/ for tooling or documentation
+  - test/ for testing
 
 ## Code Style
 
