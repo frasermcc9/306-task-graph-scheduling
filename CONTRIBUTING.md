@@ -1,10 +1,27 @@
 # Contributing
 
-# Branch Rules
-Avoid committing code changes directly to master branch.
+## Initial Setup
+### Requirements
+1. Ensure that Java 8, NodeJs and npm are accessible.
+2. Run `npm i` in the root directory.
+3. Run `./gradlew build` in the root directory
+ 
+## Branch Rules
 
+- Avoid committing code changes directly to master branch, create a feature branch and pull request.
+- The PR author should merge once approved.
+- Merging to master under most circumstances should only be done once reviewed by another member.
+- Branch names should be prefixed with one of the following:
+  - feat/ for feature
+  - fix/ for bugfixes
+  - dev/ for tooling or documentation
 
-# Commit Message Guidelines
+## Code Style
+
+- Most conventions are handled automatically by the editor configuration files.
+- Code is automatically linted before committing.
+
+## Commit Message Guidelines
 
 Use emojis to quickly convey the commit where possible:
 | Commit type              | Emoji                               |
