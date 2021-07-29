@@ -11,11 +11,21 @@
 
 package com.jacketing;
 
-import com.jacketing.parsing.impl.structures.Graph;
+import com.beust.jcommander.JCommander;
+import com.beust.jcommander.ParameterException;
 
 public class Entry {
 
-  public static void main(String[] args) {
-    System.out.println("Hello im working!");
+  public static void main(String... argv) {
+    Args args = new Args();
+
+    try {
+      JCommander.newBuilder().addObject(args).build().parse(argv);
+      args.validate();
+      System.out.println("Starting search...");
+    } catch (ParameterException e) {
+      System.out.println(e.getMessage());
+      System.out.println(args.helpText());
+    }
   }
 }

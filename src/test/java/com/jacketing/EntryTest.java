@@ -1,5 +1,6 @@
 package com.jacketing;
 
+import com.beust.jcommander.JCommander;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import org.junit.After;
@@ -38,8 +39,19 @@ public class EntryTest {
 
   @Test
   public void testEntry() {
-    Entry.main(new String[0]);
-    Assert.assertEquals("Hello im working!", outContent.toString().trim());
+    String[] args = { "INPUT.dot", "2" };
+    Entry.main(args);
+    Assert.assertEquals("Starting search...", outContent.toString().trim());
+  }
+
+  @Test
+  public void testInvalidEntry() {
+    String[] args = {};
+    Entry.main(args);
+    Assert.assertEquals(
+      "2 arguments expected, received 0",
+      outContent.toString().trim().split("\n")[0].trim()
+    );
   }
 
   @Test
