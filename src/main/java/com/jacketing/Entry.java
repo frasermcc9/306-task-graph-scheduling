@@ -11,6 +11,8 @@
 
 package com.jacketing;
 
+import com.jacketing.parsing.impl.structures.Graph;
+
 public class Entry {
 
   public static void main(String[] args) {
