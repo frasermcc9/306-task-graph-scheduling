@@ -10,16 +10,6 @@ public class GraphNode {
   private final String id;
   private final List<GraphNode> children;
 
-  @Override
-  public int hashCode() {
-    return id.hashCode();
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    return (obj instanceof GraphNode && ((GraphNode) obj).id.equals(this.id));
-  }
-
   public GraphNode(String id, int processTime) {
     this(processTime, id, new ArrayList<>());
   }
@@ -32,6 +22,16 @@ public class GraphNode {
     this.processTime = processTime;
     this.id = id;
     this.children = children;
+  }
+
+  @Override
+  public int hashCode() {
+    return id.hashCode();
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    return (obj instanceof GraphNode && ((GraphNode) obj).id.equals(this.id));
   }
 
   public void addChild(GraphNode node) {

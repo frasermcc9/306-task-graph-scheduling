@@ -1,23 +1,32 @@
 package com.jacketing.parsing.impl.structures;
 
-import static com.jacketing.util.Memoize.useMemo;
-
-import java.util.List;
-import java.util.function.Function;
+import com.jacketing.parsing.interfaces.structures.services.GraphWeightService;
 
 public class Graph {
 
-  public final Function<AdjacencyList, List<GraphNode>> computeTopological = useMemo(
-    this::internalTopological
-  );
+  private final EnumeratedAdjacencyList adjacencyList;
+  private final GraphWeightService weightService;
 
-  private AdjacencyList adjacencyList;
-
-  public Graph(AdjacencyList adjacencyList) {
+  public Graph(
+    EnumeratedAdjacencyList adjacencyList,
+    GraphWeightService weightService
+  ) {
     this.adjacencyList = adjacencyList;
+    this.weightService = weightService;
+
+    adjacencyList.createRepresentation();
+    weightService.formWeights();
   }
 
-  private List<GraphNode> internalTopological(AdjacencyList adjacencyList) {
-    return null;
+  public EnumeratedAdjacencyList getAdjacencyList() {
+    return adjacencyList;
+  }
+
+  public int getNodeWeight(int enumeratedNode) {
+    return weightService.nodeWeight(enumeratedNode);
+  }
+
+  public GraphWeightService.EdgeWeightFrom getEdgeWeight() {
+    return weightService.edgeWeight();
   }
 }
