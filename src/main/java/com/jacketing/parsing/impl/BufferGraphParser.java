@@ -13,11 +13,7 @@ public class BufferGraphParser extends AbstractGraphParser {
   }
 
   @Override
-  protected void parseGraphs() {
-    try {
-      this.getParser().parse(this.stringBuffer);
-    } catch (ParseException e) {
-      e.printStackTrace();
-    }
+  protected void parseGraphs() throws ParseException {
+    this.getParser().parse(this.stringBuffer);
   }
 }

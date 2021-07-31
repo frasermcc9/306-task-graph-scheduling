@@ -15,11 +15,7 @@ public class FileGraphParser extends AbstractGraphParser {
   }
 
   @Override
-  protected void parseGraphs() {
-    try {
-      this.getParser().parse(this.fileReader);
-    } catch (ParseException e) {
-      e.printStackTrace();
-    }
+  protected void parseGraphs() throws ParseException {
+    this.getParser().parse(this.fileReader);
   }
 }

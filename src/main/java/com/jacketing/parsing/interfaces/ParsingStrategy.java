@@ -1,5 +1,6 @@
 package com.jacketing.parsing.interfaces;
 
+import com.alexmerz.graphviz.ParseException;
 import com.alexmerz.graphviz.Parser;
 import com.jacketing.parsing.impl.AbstractGraphParser;
 import com.jacketing.parsing.impl.BufferGraphParser;
@@ -22,5 +23,5 @@ public interface ParsingStrategy {
     return new FileGraphParser(parser, fileReader);
   }
 
-  AbstractGraphParser parse();
+  AbstractGraphParser parse() throws ParseException;
 }
