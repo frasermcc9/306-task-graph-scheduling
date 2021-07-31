@@ -1,8 +1,7 @@
-package com.jacketing;
+package com.jacketing.io.cli;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.ParameterException;
-import com.jacketing.io.cli.ProgramContext;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
