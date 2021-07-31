@@ -86,4 +86,8 @@ public class EnumeratedAdjacencyList {
       outAdjacencyList.get(source).add(target);
     }
   }
+
+  public EnumeratedNodeMap getEnumeratedNodeMap() {
+    return enumeratedNodeMap;
+  }
 }

@@ -45,8 +45,30 @@ public class Graph {
     weightService.formWeights();
   }
 
-  public EnumeratedAdjacencyList getAdjacencyList() {
-    return adjacencyList;
+  /**
+   * Translate the integer enumerated node into its String value
+   * representation.
+   *
+   * @param enumeratedNode the enumerated integer of the node
+   * @return the original string representation of the node
+   * @see #translate(String) for the opposite
+   */
+  public String translate(int enumeratedNode) {
+    return adjacencyList
+      .getEnumeratedNodeMap()
+      .getIdFromNumeral(enumeratedNode);
+  }
+
+  /**
+   * Translate the string value of the node into its enumerated integer value
+   * representation.
+   *
+   * @param nodeId the string representation of the node
+   * @return the enumerated integer of the node
+   * @see #translate(int) for the opposite
+   */
+  public int translate(String nodeId) {
+    return adjacencyList.getEnumeratedNodeMap().getEnumerated(nodeId);
   }
 
   /**
@@ -71,5 +93,9 @@ public class Graph {
    */
   public GraphWeightService.EdgeWeightFrom getEdgeWeight() {
     return weightService.edgeWeight();
+  }
+
+  public EnumeratedAdjacencyList getAdjacencyList() {
+    return adjacencyList;
   }
 }
