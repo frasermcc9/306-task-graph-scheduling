@@ -1,12 +1,39 @@
 package com.jacketing.parsing.impl.structures;
 
+import com.jacketing.parsing.impl.services.WeightService;
 import com.jacketing.parsing.interfaces.structures.services.GraphWeightService;
 
 public class Graph {
 
+  /**
+   * Contains the two-way adjacency list that represents the DAG. The adjacency
+   * list strictly contains the relations between the nodes. It does not contain
+   * any concept of the node weights, or the weights of the edges between them.
+   *
+   * @see #getAdjacencyList()
+   */
   private final EnumeratedAdjacencyList adjacencyList;
+
+  /**
+   * Provides the ability to get the weights for the nodes of the graph, as well
+   * as the weights of the edges between graphs.
+   *
+   * @see #getNodeWeight(int)
+   * @see #getEdgeWeight()
+   */
   private final GraphWeightService weightService;
 
+  /**
+   * Creates a new graph object, which is a structure that contains both an
+   * adjacency list (for the graph structure) and a weight service (for node and
+   * edge weights).
+   *
+   * @param adjacencyList a new adjacency list. Should not have called {@link
+   *                      EnumeratedAdjacencyList#createRepresentation()} on the
+   *                      adjacency list.
+   * @param weightService a new weight service. Should not have called {@link
+   *                      WeightService#formWeights()} on the weight service.
+   */
   public Graph(
     EnumeratedAdjacencyList adjacencyList,
     GraphWeightService weightService
@@ -22,10 +49,26 @@ public class Graph {
     return adjacencyList;
   }
 
+  /**
+   * Get the weight of the node (i.e. computation time).
+   *
+   * @param enumeratedNode the int value of the node to get the weight of
+   * @return the weight of that node
+   */
   public int getNodeWeight(int enumeratedNode) {
+    getEdgeWeight();
     return weightService.nodeWeight(enumeratedNode);
   }
 
+  /**
+   * Allows the caller to get the weight between two edges (i.e. communication
+   * delay).
+   *
+   * <pre>getEdgeWeight().from(0).to(3);</pre>
+   * The above will get the edge weight of travelling from node 0 to node 3.
+   *
+   * @return the weight between the two nodes.
+   */
   public GraphWeightService.EdgeWeightFrom getEdgeWeight() {
     return weightService.edgeWeight();
   }
