@@ -10,7 +10,7 @@ import java.util.List;
 
 public class SingleCoreScheduler extends AbstractSchedulingAlgorithm {
 
-  TopologicalOrderFinder topologicalOrderFinder;
+  private final TopologicalOrderFinder topologicalOrderFinder;
 
   public SingleCoreScheduler(
     Graph graph,

@@ -3,7 +3,7 @@ package com.jacketing.parsing.impl.structures;
 public class Dependent {
 
   private final int transferTime;
-  private GraphNode graphNode;
+  private final GraphNode graphNode;
 
   public Dependent(GraphNode graphNode, int transferTime) {
     this.transferTime = transferTime;
