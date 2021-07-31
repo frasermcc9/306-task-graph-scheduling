@@ -2,27 +2,27 @@ package com.jacketing;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.ParameterException;
-import com.jacketing.io.cli.Args;
+import com.jacketing.io.cli.ProgramContext;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-public class ArgsTest {
+public class ProgramContextTest {
 
-  private Args args;
+  private ProgramContext programContext;
   private JCommander builder;
 
   @Before
   public void setupArgs() {
-    args = new Args();
-    builder = JCommander.newBuilder().addObject(args).build();
+    programContext = new ProgramContext();
+    builder = JCommander.newBuilder().addObject(programContext).build();
   }
 
   @Test
   public void testInputFile() {
     String[] input = { "INPUT.dot", "2" };
     builder.parse(input);
-    Assert.assertEquals("INPUT.dot", args.getInputFile());
+    Assert.assertEquals("INPUT.dot", programContext.getInputFile());
   }
 
   @Test
@@ -31,7 +31,7 @@ public class ArgsTest {
     builder.parse(input);
 
     try {
-      args.validate();
+      programContext.validate();
       Assert.fail("Exception expected");
     } catch (ParameterException e) {
       Assert.assertEquals(
@@ -45,7 +45,7 @@ public class ArgsTest {
   public void testCoresScheduleOn() {
     String[] input = { "INPUT.dot", "2" };
     builder.parse(input);
-    Assert.assertEquals(2, args.getCoresToScheduleOn());
+    Assert.assertEquals(2, programContext.getCoresToScheduleOn());
   }
 
   @Test
@@ -54,7 +54,7 @@ public class ArgsTest {
     builder.parse(input);
 
     try {
-      args.validate();
+      programContext.validate();
       Assert.fail("Exception expected");
     } catch (ParameterException e) {
       Assert.assertEquals(
@@ -68,7 +68,7 @@ public class ArgsTest {
   public void testCoresCalculateWith() {
     String[] input = { "INPUT.dot", "1", "-p", "2" };
     builder.parse(input);
-    Assert.assertEquals(2, args.getCoresToCalculateWith());
+    Assert.assertEquals(2, programContext.getCoresToCalculateWith());
   }
 
   @Test
@@ -90,20 +90,20 @@ public class ArgsTest {
   public void testVisualize() {
     String[] input = { "INPUT.dot", "2", "-v" };
     builder.parse(input);
-    Assert.assertEquals(true, args.isVisualized());
+    Assert.assertEquals(true, programContext.isVisualized());
   }
 
   @Test
   public void testOutput() {
     String[] input = { "INPUT.dot", "2", "-o", "Test.dot" };
     builder.parse(input);
-    Assert.assertEquals("Test.dot", args.getOutputName());
+    Assert.assertEquals("Test.dot", programContext.getOutputName());
   }
 
   @Test
   public void testNoOutput() {
     String[] input = { "INPUT.dot", "2" };
     builder.parse(input);
-    Assert.assertEquals("INPUT-output.dot", args.getOutputName());
+    Assert.assertEquals("INPUT-output.dot", programContext.getOutputName());
   }
 }

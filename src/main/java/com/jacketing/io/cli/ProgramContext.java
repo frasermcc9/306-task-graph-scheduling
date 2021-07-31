@@ -6,7 +6,7 @@ import com.beust.jcommander.validators.PositiveInteger;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Args {
+public class ProgramContext {
 
   @Parameter(description = "Input")
   private List<String> input = new ArrayList<>();
