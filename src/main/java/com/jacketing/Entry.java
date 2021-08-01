@@ -14,10 +14,14 @@ package com.jacketing;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.ParameterException;
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+
+import java.io.IOException;
 
 public class Entry extends Application {
 
@@ -41,9 +45,16 @@ public class Entry extends Application {
 
   @Override
   public void start(Stage primaryStage) {
-    StackPane root = new StackPane(new Label("Hello World"));
-    Scene scene = new Scene(root, 800, 800);
-    primaryStage.setScene(scene);
-    primaryStage.show();
+    FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("mockup.fxml"));
+    Parent root;
+
+    try {
+      root = loader.load();
+      Scene scene = new Scene(root);
+      primaryStage.setScene(scene);
+      primaryStage.show();
+    } catch (IOException e) {
+      System.out.println(e.getMessage());
+    }
   }
 }
