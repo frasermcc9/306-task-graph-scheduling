@@ -25,8 +25,10 @@ import java.io.IOException;
 
 public class Entry extends Application {
 
+  private static Args args;
+
   public static void main(String... argv) {
-    Args args = new Args();
+    args = new Args();
 
     try {
       JCommander.newBuilder().addObject(args).build().parse(argv);
@@ -34,13 +36,17 @@ public class Entry extends Application {
 
       if (args.isVisualized()) {
         launch();
+      } else {
+        beginSearch();
       }
-
-      System.out.println("Starting search...");
     } catch (ParameterException e) {
       System.out.println(e.getMessage());
       System.out.println(args.helpText());
     }
+  }
+
+  public static void beginSearch() {
+    System.out.println("Starting search...");
   }
 
   @Override
@@ -53,6 +59,7 @@ public class Entry extends Application {
       Scene scene = new Scene(root);
       primaryStage.setScene(scene);
       primaryStage.show();
+      new Thread(Entry::beginSearch).start();
     } catch (IOException e) {
       System.out.println(e.getMessage());
     }
