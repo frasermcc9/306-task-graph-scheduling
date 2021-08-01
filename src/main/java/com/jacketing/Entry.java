@@ -13,6 +13,8 @@ package com.jacketing;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.ParameterException;
+import com.jacketing.io.cli.ProgramContext;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -25,23 +27,23 @@ import java.io.IOException;
 
 public class Entry extends Application {
 
-  private static Args args;
+  private static ProgramContext programContext;
 
   public static void main(String... argv) {
-    args = new Args();
+    programContext = new ProgramContext();
 
     try {
-      JCommander.newBuilder().addObject(args).build().parse(argv);
-      args.validate();
+      JCommander.newBuilder().addObject(programContext).build().parse(argv);
+      programContext.validate();
 
-      if (args.isVisualized()) {
+      if (programContext.isVisualized()) {
         launch();
       } else {
         beginSearch();
       }
     } catch (ParameterException e) {
       System.out.println(e.getMessage());
-      System.out.println(args.helpText());
+      System.out.println(programContext.helpText());
     }
   }
 

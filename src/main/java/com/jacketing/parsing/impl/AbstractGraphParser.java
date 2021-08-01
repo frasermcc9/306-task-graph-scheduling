@@ -1,11 +1,13 @@
 package com.jacketing.parsing.impl;
 
+import com.alexmerz.graphviz.ParseException;
 import com.alexmerz.graphviz.Parser;
 import com.alexmerz.graphviz.objects.Graph;
 import com.jacketing.parsing.interfaces.ParsingStrategy;
 import java.util.List;
 import java.util.Optional;
 
+@Deprecated
 public abstract class AbstractGraphParser implements ParsingStrategy {
 
   private final Parser parser;
@@ -16,7 +18,7 @@ public abstract class AbstractGraphParser implements ParsingStrategy {
     this.graphs = null;
   }
 
-  public AbstractGraphParser parse() {
+  public AbstractGraphParser parse() throws ParseException {
     parseGraphs();
     this.graphs = parser.getGraphs();
     return this;
@@ -30,5 +32,5 @@ public abstract class AbstractGraphParser implements ParsingStrategy {
     return parser;
   }
 
-  protected abstract void parseGraphs();
+  protected abstract void parseGraphs() throws ParseException;
 }

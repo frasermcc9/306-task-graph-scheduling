@@ -3,6 +3,7 @@ package com.jacketing.parsing.impl;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
+import com.alexmerz.graphviz.ParseException;
 import com.alexmerz.graphviz.Parser;
 import com.alexmerz.graphviz.objects.Edge;
 import com.alexmerz.graphviz.objects.Graph;
@@ -15,7 +16,6 @@ import java.io.FileReader;
 import java.io.Reader;
 import java.util.List;
 import java.util.Optional;
-import javax.print.DocFlavor;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -62,7 +62,7 @@ public class AbstractGraphParserTest {
   }
 
   @Test
-  public void testParseCreatesGraph() {
+  public void testParseCreatesGraph() throws ParseException {
     Optional<List<Graph>> graphs = ParsingStrategy
       .fromBuffer(parser, graphString)
       .parse()
@@ -75,7 +75,7 @@ public class AbstractGraphParserTest {
   }
 
   @Test
-  public void testParseFile() throws FileNotFoundException {
+  public void testParseFile() throws FileNotFoundException, ParseException {
     Reader fileReader = new FileReader(new File("examples/g1/g1.dot"));
     Optional<List<Graph>> graphs = ParsingStrategy
       .fromFile(parser, fileReader)
@@ -86,5 +86,23 @@ public class AbstractGraphParserTest {
       return;
     }
     fail();
+  }
+
+  @Test(expected = ParseException.class)
+  public void testParseInvalidFile()
+    throws FileNotFoundException, ParseException {
+    Reader fileReader = new FileReader(
+      new File("examples/invalid/invalid" + ".dot")
+    );
+
+    ParsingStrategy.fromFile(parser, fileReader).parse().getGraphs();
+  }
+
+  @Test(expected = ParseException.class)
+  public void testParseInvalidBuffer() throws ParseException {
+    ParsingStrategy
+      .fromBuffer(parser, new StringBuffer("Something invalid..."))
+      .parse()
+      .getGraphs();
   }
 }
