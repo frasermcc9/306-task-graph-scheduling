@@ -19,8 +19,6 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -52,18 +50,14 @@ public class Entry extends Application {
   }
 
   @Override
-  public void start(Stage primaryStage) {
+  public void start(Stage primaryStage) throws IOException {
     FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("mockup.fxml"));
     Parent root;
 
-    try {
-      root = loader.load();
-      Scene scene = new Scene(root);
-      primaryStage.setScene(scene);
-      primaryStage.show();
-      new Thread(Entry::beginSearch).start();
-    } catch (IOException e) {
-      System.out.println(e.getMessage());
-    }
+    root = loader.load();
+    Scene scene = new Scene(root);
+    primaryStage.setScene(scene);
+    primaryStage.show();
+    new Thread(Entry::beginSearch).start();
   }
 }

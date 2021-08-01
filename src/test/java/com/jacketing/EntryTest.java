@@ -3,6 +3,8 @@ package com.jacketing;
 import com.beust.jcommander.JCommander;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+
+import javafx.application.Platform;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -52,6 +54,18 @@ public class EntryTest {
       "2 arguments expected, received 0",
       outContent.toString().trim().split("\n")[0].trim()
     );
+  }
+
+  @Test
+  public void testVisualize() throws InterruptedException {
+    String[] args = { "INPUT.dot", "2", "-v" };
+
+    new Thread(() -> {
+      Entry.main(args);
+    }).start();
+
+    Thread.sleep(1000);
+    return;
   }
 
   @Test
