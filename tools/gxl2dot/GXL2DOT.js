@@ -23,6 +23,7 @@ async function* getFiles(dir) {
 
 (async () => {
   for await (const f of getFiles(__dirname + "/input")) {
+    if (f.endsWith(".gitignore")) continue;
     const output = replaceLast(f.replace(".gxl", ".dot"), "input", "output");
     const cmd = `gxl2dot -o ${output} ${f}`;
     execSync(cmd);

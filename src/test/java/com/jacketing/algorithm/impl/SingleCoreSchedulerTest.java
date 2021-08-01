@@ -23,7 +23,7 @@ public class SingleCoreSchedulerTest {
   public void tearDown() {}
 
   @Test
-  public void schedule() {
+  public void testSchedule() {
     Graph graph = TestUtil.graphVariantOne();
     ProgramContext programContext = mock(ProgramContext.class);
     when(programContext.getCoresToScheduleOn()).thenReturn(1);
@@ -36,5 +36,21 @@ public class SingleCoreSchedulerTest {
     schedule.getDuration();
 
     assertEquals(10, schedule.getDuration());
+  }
+
+  @Test
+  public void testScheduleWithComplexGraph() {
+    Graph graph = TestUtil.graphVariantFour();
+    ProgramContext programContext = mock(ProgramContext.class);
+    when(programContext.getCoresToScheduleOn()).thenReturn(1);
+
+    SchedulingAlgorithmStrategy schedulingAlgorithmStrategy = SchedulingAlgorithmStrategy.create(
+      new SingleCoreScheduler(graph, programContext, ScheduleFactory.create())
+    );
+
+    Schedule schedule = schedulingAlgorithmStrategy.schedule();
+    int duration = schedule.getDuration();
+
+    assertEquals(10, duration);
   }
 }
