@@ -13,8 +13,13 @@ package com.jacketing;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.ParameterException;
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
 
-public class Entry {
+public class Entry extends Application {
 
   public static void main(String... argv) {
     Args args = new Args();
@@ -22,10 +27,23 @@ public class Entry {
     try {
       JCommander.newBuilder().addObject(args).build().parse(argv);
       args.validate();
+
+      if (args.isVisualized()) {
+        launch();
+      }
+
       System.out.println("Starting search...");
     } catch (ParameterException e) {
       System.out.println(e.getMessage());
       System.out.println(args.helpText());
     }
+  }
+
+  @Override
+  public void start(Stage primaryStage) {
+    StackPane root = new StackPane(new Label("Hello World"));
+    Scene scene = new Scene(root, 800, 800);
+    primaryStage.setScene(scene);
+    primaryStage.show();
   }
 }
