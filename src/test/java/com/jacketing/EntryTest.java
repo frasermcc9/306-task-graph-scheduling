@@ -1,10 +1,7 @@
 package com.jacketing;
 
-import com.beust.jcommander.JCommander;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-
-import javafx.application.Platform;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -30,16 +27,6 @@ public class EntryTest {
   }
 
   @Test
-  public void testTestRunnerRunsTests() {
-    Assert.assertEquals(1 + 1, 2);
-  }
-
-  @Test
-  public void testTestRunnerRunsFailedTests() {
-    Assert.assertEquals(1 + 2, 3);
-  }
-
-  @Test
   public void testEntry() {
     String[] args = { "INPUT.dot", "2" };
     Entry.main(args);
@@ -60,12 +47,8 @@ public class EntryTest {
   public void testVisualize() throws InterruptedException {
     String[] args = { "INPUT.dot", "2", "-v" };
 
-    new Thread(() -> {
-      Entry.main(args);
-    }).start();
-
+    new Thread(() -> Entry.main(args)).start();
     Thread.sleep(1000);
-    return;
   }
 
   @Test
