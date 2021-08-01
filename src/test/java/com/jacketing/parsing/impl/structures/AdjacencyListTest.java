@@ -1,15 +1,13 @@
 package com.jacketing.parsing.impl.structures;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
+import com.alexmerz.graphviz.ParseException;
 import com.alexmerz.graphviz.Parser;
-import com.alexmerz.graphviz.objects.Edge;
 import com.alexmerz.graphviz.objects.Graph;
-import com.alexmerz.graphviz.objects.Id;
-import com.alexmerz.graphviz.objects.Node;
 import com.jacketing.parsing.interfaces.ParsingStrategy;
 import com.jacketing.parsing.interfaces.structures.GraphRepresentation;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -43,7 +41,7 @@ public class AdjacencyListTest {
   @After
   public void tearDown() throws Exception {}
 
-  public Graph createGraph() {
+  public Graph createGraph() throws ParseException {
     Optional<List<Graph>> graphs = ParsingStrategy
       .fromBuffer(parser, graphString)
       .parse()
@@ -56,7 +54,7 @@ public class AdjacencyListTest {
   }
 
   @Test
-  public void testGraphNodeMapping() {
+  public void testGraphNodeMapping() throws ParseException {
     Graph graph = createGraph();
     AdjacencyList adjacencyList = GraphRepresentation.withAdjacencyList(graph);
     adjacencyList.createRepresentation();
@@ -69,7 +67,7 @@ public class AdjacencyListTest {
   }
 
   @Test
-  public void testAdjacencyListCreation() {
+  public void testAdjacencyListCreation() throws ParseException {
     Graph graph = createGraph();
     AdjacencyList adjacencyList = GraphRepresentation.withAdjacencyList(graph);
     adjacencyList.createRepresentation();

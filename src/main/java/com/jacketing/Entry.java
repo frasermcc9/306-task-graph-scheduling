@@ -13,19 +13,20 @@ package com.jacketing;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.ParameterException;
+import com.jacketing.io.cli.ProgramContext;
 
 public class Entry {
 
   public static void main(String... argv) {
-    Args args = new Args();
+    ProgramContext programContext = new ProgramContext();
 
     try {
-      JCommander.newBuilder().addObject(args).build().parse(argv);
-      args.validate();
+      JCommander.newBuilder().addObject(programContext).build().parse(argv);
+      programContext.validate();
       System.out.println("Starting search...");
     } catch (ParameterException e) {
       System.out.println(e.getMessage());
-      System.out.println(args.helpText());
+      System.out.println(programContext.helpText());
     }
   }
 }
