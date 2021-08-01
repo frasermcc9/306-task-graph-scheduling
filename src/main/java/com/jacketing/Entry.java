@@ -14,16 +14,10 @@ package com.jacketing;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.ParameterException;
 import com.jacketing.io.cli.ProgramContext;
-
+import com.jacketing.view.ApplicationEntry;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
 
-import java.io.IOException;
-
-public class Entry extends Application {
+public class Entry {
 
   private static ProgramContext programContext;
 
@@ -35,10 +29,9 @@ public class Entry extends Application {
       programContext.validate();
 
       if (programContext.isVisualized()) {
-        launch();
-      } else {
-        beginSearch();
+        Application.launch(ApplicationEntry.class);
       }
+      beginSearch();
     } catch (ParameterException e) {
       System.out.println(e.getMessage());
       System.out.println(programContext.helpText());
@@ -47,17 +40,5 @@ public class Entry extends Application {
 
   public static void beginSearch() {
     System.out.println("Starting search...");
-  }
-
-  @Override
-  public void start(Stage primaryStage) throws IOException {
-    FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("mockup.fxml"));
-    Parent root;
-
-    root = loader.load();
-    Scene scene = new Scene(root);
-    primaryStage.setScene(scene);
-    primaryStage.show();
-    new Thread(Entry::beginSearch).start();
   }
 }
