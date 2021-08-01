@@ -11,6 +11,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Install jfx
+        run: sudo apt-get install -y openjfx
+
       - name: "Run tests"
         run: gradle test
 
