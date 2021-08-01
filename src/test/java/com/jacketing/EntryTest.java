@@ -1,6 +1,5 @@
 package com.jacketing;
 
-import com.beust.jcommander.JCommander;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import org.junit.After;
