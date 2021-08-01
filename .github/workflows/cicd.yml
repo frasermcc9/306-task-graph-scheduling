@@ -11,8 +11,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Install jfx
-        run: sudo apt-get install -y openjfx
+      - name: Fetch jdk
+        run: curl https://cdn.azul.com/zulu/bin/zulu8.54.0.21-ca-fx-jdk8.0.292-linux_amd64.deb --output jdk.deb
+
+      - name: Install jdk
+        run: sudo apt install -y ./jdk.deb
+
+      - name: Set JAVE_HOME
+        run: export JAVA_HOME=/usr/lib/jvm/zulu-fx-8-amd64
+
+      - name: Print JDK
+        run: java -version
 
       - name: "Run tests"
         run: gradle test
