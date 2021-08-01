@@ -1,7 +1,7 @@
 package com.jacketing.parsing.interfaces.structures.services;
 
-import com.alexmerz.graphviz.objects.Graph;
+import com.paypal.digraph.parser.GraphParser;
 
 public interface GraphEnumerationService {
-  EnumeratedNodeMap enumerateFromGraph(Graph graph);
+  EnumeratedNodeMap enumerateFromGraph(GraphParser graph);
 }

@@ -1,6 +1,7 @@
 package com.jacketing.parsing.interfaces.structures.services;
 
 import com.alexmerz.graphviz.objects.Node;
+import com.paypal.digraph.parser.GraphNode;
 
 /**
  * The {@link EnumeratedNodeMap} interface provides the ability to convert
@@ -30,8 +31,20 @@ public interface EnumeratedNodeMap {
    *
    * @param n the node
    * @return its enumerated value
+   * @deprecated the library that uses this node is no longer used
    */
+  @Deprecated
   default int getEnumeratedNode(Node n) {
     return this.getEnumerated(n.getId().getId());
+  }
+
+  /**
+   * Helper method for quickly getting an enumerated value from a raw node
+   *
+   * @param n the node
+   * @return its enumerated value
+   */
+  default int getEnumeratedNode(GraphNode n) {
+    return this.getEnumerated(n.getId());
   }
 }

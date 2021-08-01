@@ -3,6 +3,7 @@ package com.jacketing.parsing.impl;
 import com.alexmerz.graphviz.ParseException;
 import com.alexmerz.graphviz.Parser;
 
+@Deprecated
 public class BufferGraphParser extends AbstractGraphParser {
 
   private final StringBuffer stringBuffer;

@@ -1,17 +1,14 @@
 package com.jacketing.parsing.impl.structures;
 
-import com.alexmerz.graphviz.objects.Edge;
-import com.alexmerz.graphviz.objects.Graph;
-import com.alexmerz.graphviz.objects.Node;
 import com.jacketing.parsing.interfaces.structures.services.EnumeratedNodeMap;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.paypal.digraph.parser.GraphEdge;
+import com.paypal.digraph.parser.GraphNode;
+import com.paypal.digraph.parser.GraphParser;
+import java.util.*;
 
 public class EnumeratedAdjacencyList {
 
-  private final Graph sourceGraph;
+  private final GraphParser sourceGraph;
   private final Map<Integer, List<Integer>> inAdjacencyList;
   private final Map<Integer, List<Integer>> outAdjacencyList;
   private final EnumeratedNodeMap enumeratedNodeMap;
@@ -19,7 +16,7 @@ public class EnumeratedAdjacencyList {
   private int nodeCount;
 
   public EnumeratedAdjacencyList(
-    Graph sourceGraph,
+    GraphParser sourceGraph,
     EnumeratedNodeMap enumeratedNodeMap,
     Map<Integer, List<Integer>> inAdjacencyList,
     Map<Integer, List<Integer>> outAdjacencyList
@@ -60,8 +57,8 @@ public class EnumeratedAdjacencyList {
   }
 
   private void introduceNodes() {
-    ArrayList<Node> nodes = this.sourceGraph.getNodes(true);
-    for (Node node : nodes) {
+    Collection<GraphNode> nodes = this.sourceGraph.getNodes().values();
+    for (GraphNode node : nodes) {
       int enumeratedNode = enumeratedNodeMap.getEnumeratedNode(node);
       inAdjacencyList.put(enumeratedNode, new ArrayList<>());
       outAdjacencyList.put(enumeratedNode, new ArrayList<>());
@@ -74,14 +71,10 @@ public class EnumeratedAdjacencyList {
   }
 
   private void introduceEdges() {
-    ArrayList<Edge> edges = this.sourceGraph.getEdges();
-    for (Edge edge : edges) {
-      int source = enumeratedNodeMap.getEnumeratedNode(
-        edge.getSource().getNode()
-      );
-      int target = enumeratedNodeMap.getEnumeratedNode(
-        edge.getTarget().getNode()
-      );
+    Collection<GraphEdge> edges = this.sourceGraph.getEdges().values();
+    for (GraphEdge edge : edges) {
+      int source = enumeratedNodeMap.getEnumeratedNode(edge.getNode1());
+      int target = enumeratedNodeMap.getEnumeratedNode(edge.getNode2());
       inAdjacencyList.get(target).add(source);
       outAdjacencyList.get(source).add(target);
     }

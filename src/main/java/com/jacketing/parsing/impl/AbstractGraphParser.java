@@ -7,6 +7,7 @@ import com.jacketing.parsing.interfaces.ParsingStrategy;
 import java.util.List;
 import java.util.Optional;
 
+@Deprecated
 public abstract class AbstractGraphParser implements ParsingStrategy {
 
   private final Parser parser;

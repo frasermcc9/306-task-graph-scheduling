@@ -5,6 +5,7 @@ import com.alexmerz.graphviz.Parser;
 import java.io.Reader;
 import org.jetbrains.annotations.NotNull;
 
+@Deprecated
 public class FileGraphParser extends AbstractGraphParser {
 
   private final Reader fileReader;

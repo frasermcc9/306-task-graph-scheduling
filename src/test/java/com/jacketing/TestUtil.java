@@ -1,18 +1,14 @@
 package com.jacketing;
 
-import com.alexmerz.graphviz.Parser;
 import com.google.common.collect.HashBiMap;
+import com.jacketing.parsing.impl.Parser;
 import com.jacketing.parsing.impl.services.EnumerationService;
 import com.jacketing.parsing.impl.services.WeightService;
 import com.jacketing.parsing.impl.structures.EnumeratedAdjacencyList;
 import com.jacketing.parsing.impl.structures.Graph;
-import com.jacketing.parsing.interfaces.ParsingStrategy;
 import com.jacketing.parsing.interfaces.structures.services.EnumeratedNodeMap;
-import java.io.File;
-import java.io.FileReader;
+import com.paypal.digraph.parser.GraphParser;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
 
 public class TestUtil {
 
@@ -61,40 +57,25 @@ public class TestUtil {
 
   private static Graph createGraphFromBuffer(StringBuffer graphString) {
     try {
-      Parser parser = new Parser();
-
-      Optional<List<com.alexmerz.graphviz.objects.Graph>> graphs = ParsingStrategy
-        .fromBuffer(parser, graphString)
-        .parse()
-        .getGraphs();
-
-      return graphs.map(TestUtil::createGraph).orElse(null);
+      Parser parser = Parser.fromStringBuffer(graphString);
+      GraphParser graph = parser.parse();
+      return createGraph(graph);
     } catch (Exception e) {
       return null;
     }
   }
 
   private static Graph createGraphFromFile(String path) {
-    Parser parser = new Parser();
-    File file = new File(path);
     try {
-      FileReader fileReader = new FileReader(file);
-
-      Optional<List<com.alexmerz.graphviz.objects.Graph>> graphs = ParsingStrategy
-        .fromFile(parser, fileReader)
-        .parse()
-        .getGraphs();
-
-      return graphs.map(TestUtil::createGraph).orElse(null);
+      Parser parser = Parser.fromFile(path);
+      GraphParser graph = parser.parse();
+      return createGraph(graph);
     } catch (Exception e) {
       return null;
     }
   }
 
-  private static Graph createGraph(
-    List<com.alexmerz.graphviz.objects.Graph> graphs
-  ) {
-    com.alexmerz.graphviz.objects.Graph graph = graphs.get(0);
+  private static Graph createGraph(GraphParser graph) {
     EnumerationService enumerationService = new EnumerationService(
       HashBiMap.create()
     );

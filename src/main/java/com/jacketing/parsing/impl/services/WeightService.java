@@ -1,17 +1,17 @@
 package com.jacketing.parsing.impl.services;
 
-import com.alexmerz.graphviz.objects.Edge;
-import com.alexmerz.graphviz.objects.Graph;
-import com.alexmerz.graphviz.objects.Node;
 import com.jacketing.parsing.interfaces.structures.services.EnumeratedNodeMap;
 import com.jacketing.parsing.interfaces.structures.services.GraphWeightService;
-import java.util.ArrayList;
+import com.paypal.digraph.parser.GraphEdge;
+import com.paypal.digraph.parser.GraphNode;
+import com.paypal.digraph.parser.GraphParser;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 public class WeightService implements GraphWeightService {
 
-  private final Graph graph;
+  private final GraphParser graph;
   private final EnumeratedNodeMap enumeratedNodeMap;
   private final Map<Integer, Integer> nodeWeightMap;
   /**
@@ -20,7 +20,7 @@ public class WeightService implements GraphWeightService {
   private final Map<Integer, Map<Integer, Integer>> edgeWeightMap;
 
   public WeightService(
-    Graph graph,
+    GraphParser graph,
     EnumeratedNodeMap enumeratedNodeMap,
     Map<Integer, Integer> nodeWeightMap,
     Map<Integer, Map<Integer, Integer>> edgeWeightMap
@@ -46,10 +46,10 @@ public class WeightService implements GraphWeightService {
   }
 
   private void introduceNodeWeights() {
-    ArrayList<Node> nodes = graph.getNodes(true);
-    for (Node node : nodes) {
-      int enumerated = enumeratedNodeMap.getEnumerated(node.getId().getId());
-      int weight = Integer.parseInt(node.getAttribute("Weight"));
+    Collection<GraphNode> nodes = graph.getNodes().values();
+    for (GraphNode node : nodes) {
+      int enumerated = enumeratedNodeMap.getEnumerated(node.getId());
+      int weight = Integer.parseInt(node.getAttribute("Weight").toString());
       nodeWeightMap.put(enumerated, weight);
 
       edgeWeightMap.put(enumerated, new HashMap<>());
@@ -57,16 +57,12 @@ public class WeightService implements GraphWeightService {
   }
 
   private void introduceEdgeWeights() {
-    ArrayList<Edge> edges = graph.getEdges();
-    for (Edge edge : edges) {
-      int source = enumeratedNodeMap.getEnumeratedNode(
-        edge.getSource().getNode()
-      );
-      int target = enumeratedNodeMap.getEnumeratedNode(
-        edge.getTarget().getNode()
-      );
+    Collection<GraphEdge> edges = graph.getEdges().values();
+    for (GraphEdge edge : edges) {
+      int source = enumeratedNodeMap.getEnumerated(edge.getNode1().getId());
+      int target = enumeratedNodeMap.getEnumerated(edge.getNode2().getId());
 
-      int weight = Integer.parseInt(edge.getAttribute("Weight"));
+      int weight = Integer.parseInt(edge.getAttribute("Weight").toString());
       edgeWeightMap.get(source).put(target, weight);
     }
   }
