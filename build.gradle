@@ -22,6 +22,7 @@ jar {
     )
   }
   from {
+    exclude '**/module-info.class'
     configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
   }
 }
