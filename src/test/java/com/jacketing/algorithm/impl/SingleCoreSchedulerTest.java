@@ -51,6 +51,6 @@ public class SingleCoreSchedulerTest {
     Schedule schedule = schedulingAlgorithmStrategy.schedule();
     int duration = schedule.getDuration();
 
-    assertEquals(10, duration);
+    assertEquals(903, duration);
   }
 }
