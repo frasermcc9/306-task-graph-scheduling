@@ -16,7 +16,7 @@ public class ScheduleImpl implements Schedule {
     this.context = context;
     this.processorMap = processorMap;
 
-    int procCount = context.getCoresToScheduleOn();
+    int procCount = context.getProcessorsToScheduleOn();
     for (int i = 0; i < procCount; i++) {
       processorMap.put(i, new TaskList());
     }

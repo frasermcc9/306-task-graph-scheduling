@@ -26,7 +26,7 @@ public class SingleCoreSchedulerTest {
   public void testSchedule() {
     Graph graph = TestUtil.graphVariantOne();
     ProgramContext programContext = mock(ProgramContext.class);
-    when(programContext.getCoresToScheduleOn()).thenReturn(1);
+    when(programContext.getProcessorsToScheduleOn()).thenReturn(1);
 
     SchedulingAlgorithmStrategy schedulingAlgorithmStrategy = SchedulingAlgorithmStrategy.create(
       new SingleCoreScheduler(graph, programContext, ScheduleFactory.create())
@@ -42,7 +42,7 @@ public class SingleCoreSchedulerTest {
   public void testScheduleWithComplexGraph() {
     Graph graph = TestUtil.graphVariantFour();
     ProgramContext programContext = mock(ProgramContext.class);
-    when(programContext.getCoresToScheduleOn()).thenReturn(1);
+    when(programContext.getProcessorsToScheduleOn()).thenReturn(1);
 
     SchedulingAlgorithmStrategy schedulingAlgorithmStrategy = SchedulingAlgorithmStrategy.create(
       new SingleCoreScheduler(graph, programContext, ScheduleFactory.create())
