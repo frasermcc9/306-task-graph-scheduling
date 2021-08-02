@@ -31,7 +31,7 @@ public class ProgramContext {
     return input.get(0);
   }
 
-  public int getCoresToScheduleOn() {
+  public int getProcessorsToScheduleOn() {
     return Integer.parseInt(input.get(1));
   }
 
