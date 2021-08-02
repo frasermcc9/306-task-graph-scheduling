@@ -8,23 +8,19 @@ import java.util.List;
 
 public class ProgramContext {
 
-  @Parameter(description = "Input")
+  @Parameter()
   private List<String> input = new ArrayList<>();
 
   @Parameter(
     names = { "-p" },
-    description = "use N cores for execution in parallel",
     validateWith = PositiveInteger.class
   )
   private int coresToCalculateWith;
 
-  @Parameter(names = { "-v" }, description = "visualize the search")
+  @Parameter(names = { "-v" })
   private boolean visualize;
 
-  @Parameter(
-    names = { "-o" },
-    description = "output file is named OUTPUT (default is INPUT-output.dot"
-  )
+  @Parameter(names = { "-o" })
   private String outputName;
 
   public String getInputFile() {
