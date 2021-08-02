@@ -89,7 +89,7 @@ public class ProgramContextTest {
   public void testVisualize() {
     String[] input = { "INPUT.dot", "2", "-v" };
     builder.parse(input);
-    Assert.assertEquals(true, programContext.isVisualized());
+    Assert.assertTrue(programContext.isVisualized());
   }
 
   @Test
