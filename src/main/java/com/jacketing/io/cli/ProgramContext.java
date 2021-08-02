@@ -76,24 +76,16 @@ public class ProgramContext {
   }
 
   public String helpText() {
-    StringBuilder output = new StringBuilder();
-    output.append("java -jar scheduler.jar INPUT.dot P [OPTIONS]\n");
-    output.append(
-      "INPUT.dot: a task graph with integer weights in dot format\n"
-    );
-    output.append(
-      "P:         number of processors to schedule the INPUT graph on\n"
-    );
-    output.append("\n");
-    output.append("Optional:\n");
-    output.append(
-      "-p N:      use N cores for execution (default sequential)\n"
-    );
-    output.append("-v:        visualize the search\n");
-    output.append(
-      "-o OUTPUT: output file is named OUTPUT (default INPUT-output.dot\n"
-    );
+    String output = "";
+    output += "java -jar scheduler.jar INPUT.dot P [OPTIONS]\n";
+    output += "INPUT.dot  a task graph with integer weights in dot format\n";
+    output += "P          number of processors to schedule the INPUT graph on\n";
+    output += "\n";
+    output += "Optional:\n";
+    output += "-p N       use N cores for execution (default sequential)\n";
+    output += "-v         visualize the search\n";
+    output += "-o OUTPUT  output file is named OUTPUT (default INPUT-output.dot)\n";
 
-    return output.toString();
+    return output;
   }
 }
