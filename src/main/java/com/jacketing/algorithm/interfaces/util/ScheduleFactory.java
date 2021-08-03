@@ -8,6 +8,6 @@ public interface ScheduleFactory {
   static ScheduleFactory create() {
     return new ScheduleFactoryImpl();
   }
-
   Schedule newSchedule(ProgramContext ctx);
+  Schedule copy(Schedule schedule);
 }
