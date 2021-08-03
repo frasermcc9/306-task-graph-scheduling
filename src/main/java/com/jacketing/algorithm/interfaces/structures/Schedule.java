@@ -8,4 +8,8 @@ public interface Schedule {
   int getDuration();
 
   int getProcessorEnd(int processor);
+
+  Task getLastScheduledTask(int processor);
+
+  int getEndTime(int taskId);
 }
