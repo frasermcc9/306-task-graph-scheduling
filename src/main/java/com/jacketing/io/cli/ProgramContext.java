@@ -1,3 +1,16 @@
+/*
+ * Copyright 2021 Team Jacketing
+ * All Rights Reserved.
+ *
+ * NOTICE: All information contained herein is, and remains the property of Team
+ * Jacketing (the author) and its affiliates, if any. The intellectual and
+ * technical concepts contained herein are proprietary to Team Jacketing, and
+ * are protected by copyright law. Dissemination of this information or
+ * reproduction of this material is strictly forbidden unless prior written
+ * permission is obtained from the author.
+ *
+ */
+
 package com.jacketing.io.cli;
 
 import com.beust.jcommander.Parameter;
@@ -8,13 +21,10 @@ import java.util.List;
 
 public class ProgramContext {
 
-  @Parameter()
+  @Parameter
   private List<String> input = new ArrayList<>();
 
-  @Parameter(
-    names = { "-p" },
-    validateWith = PositiveInteger.class
-  )
+  @Parameter(names = { "-p" }, validateWith = PositiveInteger.class)
   private int coresToCalculateWith;
 
   @Parameter(names = { "-v" })
@@ -75,12 +85,14 @@ public class ProgramContext {
     String output = "";
     output += "java -jar scheduler.jar INPUT.dot P [OPTIONS]\n";
     output += "INPUT.dot  a task graph with integer weights in dot format\n";
-    output += "P          number of processors to schedule the INPUT graph on\n";
+    output +=
+      "P          number of processors to schedule the INPUT graph on\n";
     output += "\n";
     output += "Optional:\n";
     output += "-p N       use N cores for execution (default sequential)\n";
     output += "-v         visualize the search\n";
-    output += "-o OUTPUT  output file is named OUTPUT (default INPUT-output.dot)\n";
+    output +=
+      "-o OUTPUT  output file is named OUTPUT (default INPUT-output.dot)\n";
 
     return output;
   }
