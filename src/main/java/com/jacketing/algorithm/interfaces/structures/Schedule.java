@@ -9,7 +9,9 @@ public interface Schedule {
 
   int getProcessorEnd(int processor);
 
+  int getProcessor(int taskId);
+
   Task getLastScheduledTask(int processor);
 
-  int getEndTime(int taskId);
+  Task getTask(int taskId);
 }

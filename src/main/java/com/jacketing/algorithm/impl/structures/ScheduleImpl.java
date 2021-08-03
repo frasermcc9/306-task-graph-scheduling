@@ -12,16 +12,18 @@ public class ScheduleImpl implements Schedule {
 
   private final ProgramContext context;
   private final Map<Integer, TaskList> processorMap;
-  private final Map<Integer, Integer> taskIdToEndTimeMap;
+  private final Map<Integer, Task> taskIdToTaskMap;
+  private final Map<Task, Integer> inverseProcessorMap;
 
   public ScheduleImpl(
     ProgramContext context,
     Map<Integer, TaskList> processorMap,
-    Map<Integer, Integer> taskIdToEndTimeMap
+    Map<Integer, Task> taskIdToTaskMap
   ) {
     this.context = context;
     this.processorMap = processorMap;
-    this.taskIdToEndTimeMap = taskIdToEndTimeMap;
+    this.taskIdToTaskMap = taskIdToTaskMap;
+    inverseProcessorMap = new HashMap<>();
 
     int procCount = context.getCoresToScheduleOn();
     for (int i = 0; i < procCount; i++) {
@@ -33,18 +35,24 @@ public class ScheduleImpl implements Schedule {
     this.context = scheduleImpl.context;
 
     this.processorMap = new HashMap<>();
+    this.inverseProcessorMap = new HashMap<>();
     for (Map.Entry<Integer, TaskList> entry : scheduleImpl.processorMap.entrySet()){
       this.processorMap.put(entry.getKey(), new TaskList(entry.getValue()));
+      for (Task task : entry.getValue()) {
+        this.inverseProcessorMap.put(task, entry.getKey());
+      }
     }
-    this.taskIdToEndTimeMap = new HashMap<>();
-    for (Map.Entry<Integer, Integer> entry : scheduleImpl.taskIdToEndTimeMap.entrySet()){
-      this.taskIdToEndTimeMap.put(entry.getKey(), new Integer(entry.getValue()));
+
+    this.taskIdToTaskMap = new HashMap<>();
+    for (Map.Entry<Integer, Task> entry : scheduleImpl.taskIdToTaskMap.entrySet()){
+      this.taskIdToTaskMap.put(entry.getKey(), entry.getValue());
     }
   }
 
   public void addTask(Task task, int processor) {
     processorMap.get(processor).add(task);
-    taskIdToEndTimeMap.put(task.getId(), task.getEndTime());
+    taskIdToTaskMap.put(task.getId(), task);
+    inverseProcessorMap.put(task, processor);
   }
 
   public int getDuration() {
@@ -62,6 +70,11 @@ public class ScheduleImpl implements Schedule {
   }
 
   @Override
+  public int getProcessor(int taskId) {
+    return inverseProcessorMap.get(getTask(taskId));
+  }
+
+  @Override
   public Task getLastScheduledTask(int processor){
     if (processorMap.get(processor).isEmpty()) {
       return null;
@@ -70,7 +83,7 @@ public class ScheduleImpl implements Schedule {
   }
 
   @Override
-  public int getEndTime(int taskId) {
-    return taskIdToEndTimeMap.get(taskId);
+  public Task getTask(int taskId) {
+    return taskIdToTaskMap.get(taskId);
   }
 }
