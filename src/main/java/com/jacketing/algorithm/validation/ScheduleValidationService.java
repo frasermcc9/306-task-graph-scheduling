@@ -14,11 +14,12 @@
 package com.jacketing.algorithm.validation;
 
 import com.jacketing.algorithm.interfaces.structures.Schedule;
+import com.jacketing.parsing.impl.structures.Graph;
 
 public class ScheduleValidationService implements ScheduleValidator {
 
   @Override
-  public boolean validateSchedule(Schedule schedule) {
+  public boolean validateSchedule(Schedule schedule, Graph graph) {
     return false;
   }
 }
