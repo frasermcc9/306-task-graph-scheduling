@@ -11,23 +11,27 @@
  *
  */
 
-package com.jacketing.util;
+package com.jacketing.algorithm.impl.structures;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
+import java.util.ArrayList;
+import java.util.List;
 
-public class Memoize<T, U> {
+public class ProcessorTaskList extends ArrayList<Task> {
 
-  private final Map<T, U> cache = new ConcurrentHashMap<>();
-
-  private Memoize() {}
-
-  private Function<T, U> createMemo(final Function<T, U> function) {
-    return input -> cache.computeIfAbsent(input, function);
+  public ProcessorTaskList() {
+    super();
   }
 
-  public static <T, U> Function<T, U> useMemo(final Function<T, U> function) {
-    return new Memoize<T, U>().createMemo(function);
+  public ProcessorTaskList(List<Task> tasks) {
+    super(tasks);
+  }
+
+  public int getLastScheduledEndTime() {
+    if (this.isEmpty()) return 0;
+    return this.get(this.size() - 1).getEndTime();
+  }
+
+  public Task getLastScheduledTask() {
+    return this.get(this.size() - 1);
   }
 }

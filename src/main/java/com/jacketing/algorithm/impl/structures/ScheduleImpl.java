@@ -1,7 +1,21 @@
+/*
+ * Copyright 2021 Team Jacketing
+ * All Rights Reserved.
+ *
+ * NOTICE: All information contained herein is, and remains the property of Team
+ * Jacketing (the author) and its affiliates, if any. The intellectual and
+ * technical concepts contained herein are proprietary to Team Jacketing, and
+ * are protected by copyright law. Dissemination of this information or
+ * reproduction of this material is strictly forbidden unless prior written
+ * permission is obtained from the author.
+ *
+ */
+
 package com.jacketing.algorithm.impl.structures;
 
 import com.jacketing.algorithm.interfaces.structures.Schedule;
 import com.jacketing.io.cli.ProgramContext;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -9,23 +23,23 @@ import java.util.Map;
 public class ScheduleImpl implements Schedule {
 
   private final ProgramContext context;
-  private final Map<Integer, TaskList> processorMap;
+  private final Map<Integer, ProcessorTaskList> processorMap;
   private final Map<Integer, Task> taskIdToTaskMap;
   private final Map<Task, Integer> inverseProcessorMap;
 
   public ScheduleImpl(
     ProgramContext context,
-    Map<Integer, TaskList> processorMap,
+    Map<Integer, ProcessorTaskList> processorMap,
     Map<Integer, Task> taskIdToTaskMap
   ) {
     this.context = context;
     this.processorMap = processorMap;
     this.taskIdToTaskMap = taskIdToTaskMap;
     inverseProcessorMap = new HashMap<>();
+    int numberProcessors = context.getProcessorsToScheduleOn();
 
-    int procCount = context.getProcessorsToScheduleOn();
-    for (int i = 0; i < procCount; i++) {
-      processorMap.put(i, new TaskList());
+    for (int i = 0; i < numberProcessors; i++) {
+      processorMap.put(i, new ProcessorTaskList());
     }
   }
 
@@ -34,8 +48,11 @@ public class ScheduleImpl implements Schedule {
 
     this.processorMap = new HashMap<>();
     this.inverseProcessorMap = new HashMap<>();
-    for (Map.Entry<Integer, TaskList> entry : scheduleImpl.processorMap.entrySet()) {
-      this.processorMap.put(entry.getKey(), new TaskList(entry.getValue()));
+    for (Map.Entry<Integer, ProcessorTaskList> entry : scheduleImpl.processorMap.entrySet()) {
+      this.processorMap.put(
+          entry.getKey(),
+          new ProcessorTaskList(entry.getValue())
+        );
       for (Task task : entry.getValue()) {
         this.inverseProcessorMap.put(task, entry.getKey());
       }
@@ -54,17 +71,42 @@ public class ScheduleImpl implements Schedule {
   }
 
   public int getDuration() {
-    Collection<TaskList> values = processorMap.values();
+    Collection<ProcessorTaskList> values = processorMap.values();
     int max = 0;
-    for (TaskList value : values) {
+    for (ProcessorTaskList value : values) {
       max = Math.max(max, value.getLastScheduledEndTime());
     }
     return max;
   }
 
   @Override
+  public ArrayList<Task> getAllTasks() {
+    // Convert map of lists, to one list
+    Collection<ProcessorTaskList> processorProcessorTaskLists = processorMap.values();
+    ArrayList<Task> allTasks = new ArrayList<>();
+    for (ProcessorTaskList processorTaskList : processorProcessorTaskLists) {
+      allTasks.addAll(processorTaskList);
+    }
+    return allTasks;
+  }
+
+  @Override
+  public Task getTaskForNode(int nodeId) {
+    for (Task task : getAllTasks()) {
+      if (task.getId() == nodeId) {
+        return task;
+      }
+    }
+    return null;
+  }
+
+  @Override
   public int getProcessorEnd(int processor) {
     return processorMap.get(processor).getLastScheduledEndTime();
+  }
+
+  public int getNumberOfProcessors() {
+    return processorMap.size();
   }
 
   @Override
@@ -87,7 +129,11 @@ public class ScheduleImpl implements Schedule {
 
   @Override
   public int getTotalScheduledTasks() {
-    return processorMap.values().stream().mapToInt(TaskList::size).sum();
+    return processorMap
+      .values()
+      .stream()
+      .mapToInt(ProcessorTaskList::size)
+      .sum();
   }
 
   @Override

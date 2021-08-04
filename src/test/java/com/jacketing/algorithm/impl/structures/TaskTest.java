@@ -21,7 +21,7 @@ public class TaskTest {
 
   @Test
   public void testGetStart() {
-    Assert.assertEquals(4, task.getStart());
+    Assert.assertEquals(4, task.getStartTime());
   }
 
   @Test

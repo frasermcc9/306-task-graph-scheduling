@@ -25,7 +25,6 @@ import com.jacketing.algorithm.interfaces.util.ScheduleFactory;
 import com.jacketing.io.cli.ProgramContext;
 import java.io.IOException;
 import java.util.List;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class DepthFirstSchedulerTest {
@@ -55,9 +54,12 @@ public class DepthFirstSchedulerTest {
   }
 
   @Test
-  @Ignore
   public void testGraphSuiteFourCores() throws IOException {
-    List<GraphResult> graphs = TestUtil.getGraphTestSuite(4);
+    List<GraphResult> graphs = TestUtil.getGraphTestSuite(0);
+    graphs.addAll(TestUtil.getGraphTestSuite(1));
+    graphs.addAll(TestUtil.getGraphTestSuite(2));
+    graphs.addAll(TestUtil.getGraphTestSuite(3));
+    // graphs.addAll(TestUtil.getGraphTestSuite(4));
 
     ProgramContext programContext = mock(ProgramContext.class);
     when(programContext.getProcessorsToScheduleOn()).thenReturn(4);

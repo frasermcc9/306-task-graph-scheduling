@@ -80,9 +80,9 @@ public class TestUtil {
 
     String[] graphLocations = { "1.dot", "2.dot", "3.dot", "4.dot", "5.dot" };
     String[] twoCoreResult = loadResource("e2e/sln-2-core.txt", Charsets.UTF_8)
-      .split(System.lineSeparator());
+      .split("\n");
     String[] fourCoreResult = loadResource("e2e/sln-4-core.txt", Charsets.UTF_8)
-      .split(System.lineSeparator());
+      .split("\n");
 
     for (int i = 0; i < graphLocations.length; i++) {
       String fileName = graphLocations[i];
