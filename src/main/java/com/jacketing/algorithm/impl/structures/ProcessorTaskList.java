@@ -15,7 +15,7 @@ package com.jacketing.algorithm.impl.structures;
 
 import java.util.ArrayList;
 
-public class TaskList extends ArrayList<Task> {
+public class ProcessorTaskList extends ArrayList<Task> {
 
   public int getLastScheduledEndTime() {
     if (this.isEmpty()) return 0;
