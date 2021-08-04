@@ -28,7 +28,7 @@ public class BruteForceScheduler extends AbstractSchedulingAlgorithm {
   /**
    * Outputs an optimal scheduling by exploring all possible schedules.
    *
-   * Implementation note: The algorithm runs recursively like DFS. This algorithm
+   * @implNote The algorithm runs recursively like DFS. This algorithm
    * runs exponentially on the number of processors.
    * It can be improved by adding cost function to prune the recursion tree.
    *
