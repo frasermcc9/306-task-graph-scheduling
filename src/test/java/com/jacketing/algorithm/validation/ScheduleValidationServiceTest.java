@@ -2,11 +2,14 @@ package com.jacketing.algorithm.validation;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import com.google.common.collect.HashBiMap;
-import com.jacketing.algorithm.impl.structures.ScheduleImpl;
 import com.jacketing.algorithm.impl.structures.Task;
 import com.jacketing.algorithm.interfaces.structures.Schedule;
+import com.jacketing.algorithm.interfaces.util.ScheduleFactory;
+import com.jacketing.io.cli.ProgramContext;
 import com.jacketing.parsing.impl.Parser;
 import com.jacketing.parsing.impl.services.EnumerationService;
 import com.jacketing.parsing.impl.services.WeightService;
@@ -22,11 +25,6 @@ import org.junit.Test;
 public class ScheduleValidationServiceTest {
 
   ScheduleValidationService validationService;
-
-  @Before
-  public void setUp() throws Exception {
-    validationService = new ScheduleValidationService();
-  }
 
   private static Graph createGraph(GraphParser graph) {
     EnumerationService enumerationService = new EnumerationService(
@@ -63,6 +61,11 @@ public class ScheduleValidationServiceTest {
     }
   }
 
+  @Before
+  public void setUp() throws Exception {
+    validationService = new ScheduleValidationService();
+  }
+
   @After
   public void tearDown() throws Exception {}
 
@@ -82,29 +85,38 @@ public class ScheduleValidationServiceTest {
   }
 
   public Schedule getValidScheduleG1() {
-    Schedule schedule = new ScheduleImpl(2);
-    schedule.addTask(new Task(0, 2, 0, 0));
-    schedule.addTask(new Task(2, 3, 1, 0));
-    schedule.addTask(new Task(4, 3, 2, 1));
-    schedule.addTask(new Task(7, 2, 3, 1));
+    ProgramContext programContext = mock(ProgramContext.class);
+    when(programContext.getProcessorsToScheduleOn()).thenReturn(2);
+    Schedule schedule = ScheduleFactory.create().newSchedule(programContext);
+
+    schedule.addTask(new Task(0, 2, 0), 0);
+    schedule.addTask(new Task(2, 3, 1), 0);
+    schedule.addTask(new Task(4, 3, 2), 1);
+    schedule.addTask(new Task(7, 2, 3), 1);
     return schedule;
   }
 
   public Schedule getInvalidStartTimeScheduleG1() {
-    Schedule schedule = new ScheduleImpl(2);
-    schedule.addTask(new Task(0, 2, 0, 0));
-    schedule.addTask(new Task(2, 3, 1, 0));
-    schedule.addTask(new Task(2, 3, 2, 1));
-    schedule.addTask(new Task(7, 2, 3, 1));
+    ProgramContext programContext = mock(ProgramContext.class);
+    when(programContext.getProcessorsToScheduleOn()).thenReturn(2);
+    Schedule schedule = ScheduleFactory.create().newSchedule(programContext);
+
+    schedule.addTask(new Task(0, 2, 0), 0);
+    schedule.addTask(new Task(2, 3, 1), 0);
+    schedule.addTask(new Task(2, 3, 2), 1);
+    schedule.addTask(new Task(7, 2, 3), 1);
     return schedule;
   }
 
   public Schedule getInvalidTaskOrderScheduleG1() {
-    Schedule schedule = new ScheduleImpl(2);
-    schedule.addTask(new Task(3, 2, 0, 0));
-    schedule.addTask(new Task(0, 3, 1, 0));
-    schedule.addTask(new Task(10, 3, 2, 1));
-    schedule.addTask(new Task(20, 2, 3, 1));
+    ProgramContext programContext = mock(ProgramContext.class);
+    when(programContext.getProcessorsToScheduleOn()).thenReturn(2);
+    Schedule schedule = ScheduleFactory.create().newSchedule(programContext);
+
+    schedule.addTask(new Task(3, 2, 0), 0);
+    schedule.addTask(new Task(0, 3, 1), 0);
+    schedule.addTask(new Task(10, 3, 2), 1);
+    schedule.addTask(new Task(20, 2, 3), 1);
     return schedule;
   }
 

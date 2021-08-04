@@ -18,13 +18,11 @@ public class Task {
   private final int id;
   private final int start;
   private final int duration;
-  private final int processorNumber;
 
-  public Task(int start, int duration, int id, int processorNumber) {
+  public Task(int start, int duration, int id) {
     this.start = start;
     this.duration = duration;
     this.id = id;
-    this.processorNumber = processorNumber;
   }
 
   public int getEndTime() {
@@ -41,9 +39,5 @@ public class Task {
 
   public int getId() {
     return id;
-  }
-
-  public int getProcessorNumber() {
-    return processorNumber;
   }
 }

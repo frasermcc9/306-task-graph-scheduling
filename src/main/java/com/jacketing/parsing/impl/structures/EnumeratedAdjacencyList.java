@@ -49,6 +49,10 @@ public class EnumeratedAdjacencyList {
     return outAdjacencyList.get(forNode);
   }
 
+  public List<Integer> getParentNodes(int forNode) {
+    return inAdjacencyList.get(forNode);
+  }
+
   public int parentCount(int forNode) {
     return inAdjacencyList.get(forNode).size();
   }

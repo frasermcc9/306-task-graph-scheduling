@@ -17,7 +17,7 @@ import com.jacketing.algorithm.impl.structures.Task;
 import java.util.ArrayList;
 
 public interface Schedule {
-  void addTask(Task task);
+  void addTask(Task task, int processor);
 
   int getDuration();
 
@@ -28,4 +28,14 @@ public interface Schedule {
   ArrayList<Task> getAllTasks();
 
   Task getTaskForNode(int nodeId);
+
+  int getProcessor(int taskId);
+
+  Task getLastScheduledTask(int processor);
+
+  Task getTask(int taskId);
+
+  int getTotalScheduledTasks();
+
+  boolean isFullyPopulated(int graphSize);
 }

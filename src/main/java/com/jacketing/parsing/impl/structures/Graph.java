@@ -15,6 +15,7 @@ package com.jacketing.parsing.impl.structures;
 
 import com.jacketing.parsing.impl.services.WeightService;
 import com.jacketing.parsing.interfaces.structures.services.GraphWeightService;
+import java.util.List;
 
 public class Graph {
 
@@ -110,5 +111,9 @@ public class Graph {
 
   public EnumeratedAdjacencyList getAdjacencyList() {
     return adjacencyList;
+  }
+
+  public List<Integer> parentNodesFor(int forNode) {
+    return adjacencyList.getParentNodes(forNode);
   }
 }

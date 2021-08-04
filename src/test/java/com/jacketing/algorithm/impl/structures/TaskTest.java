@@ -10,7 +10,7 @@ public class TaskTest {
 
   @Before
   public void setup() {
-    task = new Task(4, 8, 0, 1);
+    task = new Task(4, 8, 0);
   }
 
   @Test

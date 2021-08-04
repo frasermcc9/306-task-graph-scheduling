@@ -32,9 +32,8 @@ public class ScheduleValidationService implements ScheduleValidator {
     Map<Integer, List<Integer>> childToParentsMap = enumeratedAdjacencyList.getInAdjacencyList();
 
     for (Task childTask : schedule.getAllTasks()) {
-      List<Integer> parentNodeIds = childToParentsMap.get(childTask.getId());
-
       int childId = childTask.getId();
+      List<Integer> parentNodeIds = childToParentsMap.get(childId);
 
       for (Integer parentNodeId : parentNodeIds) {
         Task parentTask = schedule.getTaskForNode(parentNodeId);
@@ -47,7 +46,10 @@ public class ScheduleValidationService implements ScheduleValidator {
           return false;
         }
 
-        if (parentTask.getProcessorNumber() != childTask.getProcessorNumber()) {
+        int parentProcessor = schedule.getProcessor(parentTask.getId());
+        int childProcessor = schedule.getProcessor(childTask.getId());
+
+        if (parentProcessor != childProcessor) {
           int weightOfEdge = graph
             .getEdgeWeight()
             .from(parentTask.getId())
@@ -99,10 +101,6 @@ public class ScheduleValidationService implements ScheduleValidator {
       return false;
     }
 
-    if (!validateTasksInOrder(schedule, graph)) {
-      return false;
-    }
-
-    return true;
+    return validateTasksInOrder(schedule, graph);
   }
 }
