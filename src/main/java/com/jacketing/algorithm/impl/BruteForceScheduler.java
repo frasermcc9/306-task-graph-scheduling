@@ -2,8 +2,10 @@ package com.jacketing.algorithm.impl;
 
 import com.jacketing.algorithm.impl.structures.Task;
 import com.jacketing.algorithm.impl.util.topological.TopologicalOrderFinder;
+import com.jacketing.algorithm.impl.util.topological.TopologicalSortContext;
 import com.jacketing.algorithm.interfaces.structures.Schedule;
 import com.jacketing.algorithm.interfaces.util.ScheduleFactory;
+import com.jacketing.algorithm.interfaces.util.topological.TopologicalSort;
 import com.jacketing.io.cli.ProgramContext;
 import com.jacketing.parsing.impl.structures.Graph;
 import java.util.ArrayList;
@@ -12,7 +14,7 @@ import java.util.List;
 public class BruteForceScheduler extends AbstractSchedulingAlgorithm {
 
   private final int numberOfProcessors;
-  private final TopologicalOrderFinder topologicalOrderFinder;
+  private final TopologicalSortContext<List<Integer>> topologicalOrderFinder;
   private Schedule schedule;
 
   public BruteForceScheduler(
@@ -21,7 +23,8 @@ public class BruteForceScheduler extends AbstractSchedulingAlgorithm {
     ScheduleFactory scheduleFactory
   ) {
     super(graph, context, scheduleFactory);
-    topologicalOrderFinder = new TopologicalOrderFinder(graph);
+    topologicalOrderFinder =
+      new TopologicalSortContext<>(TopologicalSort.withLayers(graph));
     numberOfProcessors = context.getProcessorsToScheduleOn();
   }
 
@@ -36,10 +39,9 @@ public class BruteForceScheduler extends AbstractSchedulingAlgorithm {
    */
   @Override
   public Schedule schedule() {
-    List<Integer> topological = topologicalOrderFinder.sortedTopological();
+    List<List<Integer>> topological = topologicalOrderFinder.sortedTopological();
 
-    List<Integer> freeNodes = new ArrayList<>();
-    freeNodes.add(topological.get(0));
+    List<Integer> freeNodes = new ArrayList<>(topological.get(0));
     List<Integer> visited = new ArrayList<>();
     dfs(scheduleFactory.newSchedule(context), freeNodes, visited);
 
@@ -61,27 +63,19 @@ public class BruteForceScheduler extends AbstractSchedulingAlgorithm {
     for (int node : freeNodes) {
       int nodeWeight = graph.getNodeWeight(node);
       List<Integer> parentNodes = graph.getAdjacencyList().getParentNodes(node);
-
-      // the latest time at which the prerequisite node finishes.
-      int latestEndTime = 0;
-      int lastNode = -1;
-      for (Integer parentNode : parentNodes) {
-        int currEndTime = curState.getTask(parentNode).getEndTime();
-        if (currEndTime > latestEndTime) {
-          latestEndTime = currEndTime;
-          lastNode = parentNode;
-        }
-      }
-
       for (int processor = 0; processor < numberOfProcessors; processor++) {
-        int startTimeOfChildNode = latestEndTime;
+
         // if the prerequisite node that ends latest is in the different proc
-        if (lastNode != -1 && curState.getProcessor(lastNode) != processor) {
-          startTimeOfChildNode += graph.getEdgeWeight().from(lastNode).to(node);
+        int startTime = 0;
+        for (Integer parentNode : parentNodes) {
+          int parentEndTime = curState.getTask(parentNode).getEndTime();
+          if (curState.getProcessor(parentNode) != processor) {
+            startTime = Math.max(startTime, parentEndTime + graph.getEdgeWeight().from(parentNode).to(node));
+          }
         }
 
         Task task = new Task(
-          Math.max(startTimeOfChildNode, curState.getProcessorEnd(processor)),
+          Math.max(startTime, curState.getProcessorEnd(processor)),
           nodeWeight,
           node
         );
