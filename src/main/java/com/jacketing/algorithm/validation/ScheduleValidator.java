@@ -17,5 +17,9 @@ import com.jacketing.algorithm.interfaces.structures.Schedule;
 import com.jacketing.parsing.impl.structures.Graph;
 
 public interface ScheduleValidator {
-  boolean validateSchedule(Schedule schedule, Graph graph);
+  boolean validateSchedule(
+    Schedule schedule,
+    Graph graph,
+    int numberOfProcessors
+  );
 }
