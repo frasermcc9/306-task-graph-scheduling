@@ -15,21 +15,23 @@ package com.jacketing.algorithm.impl.structures;
 
 public class Task {
 
+  private final int id;
   private final int start;
   private final int duration;
-  private final int id;
+  private final int processorNumber;
 
-  public Task(int start, int duration, int id) {
+  public Task(int start, int duration, int id, int processorNumber) {
     this.start = start;
     this.duration = duration;
     this.id = id;
+    this.processorNumber = processorNumber;
   }
 
   public int getEndTime() {
     return start + duration;
   }
 
-  public int getStart() {
+  public int getStartTime() {
     return start;
   }
 
@@ -39,5 +41,9 @@ public class Task {
 
   public int getId() {
     return id;
+  }
+
+  public int getProcessorNumber() {
+    return processorNumber;
   }
 }
