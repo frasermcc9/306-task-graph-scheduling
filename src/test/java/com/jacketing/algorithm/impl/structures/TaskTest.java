@@ -10,7 +10,7 @@ public class TaskTest {
 
   @Before
   public void setup() {
-    task = new Task(4, 8, 0);
+    task = new Task(4, 8, 0, 1);
   }
 
   @Test
@@ -21,7 +21,7 @@ public class TaskTest {
 
   @Test
   public void testGetStart() {
-    Assert.assertEquals(4, task.getStart());
+    Assert.assertEquals(4, task.getStartTime());
   }
 
   @Test

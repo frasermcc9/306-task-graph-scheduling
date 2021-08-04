@@ -41,8 +41,8 @@ public class SingleCoreScheduler extends AbstractSchedulingAlgorithm {
 
     for (int node : topological) {
       int nodeWeight = graph.getNodeWeight(node);
-      Task task = new Task(schedule.getProcessorEnd(0), nodeWeight, node);
-      schedule.addTask(task, 0);
+      Task task = new Task(schedule.getProcessorEnd(0), nodeWeight, node, 0);
+      schedule.addTask(task);
     }
 
     return schedule;
