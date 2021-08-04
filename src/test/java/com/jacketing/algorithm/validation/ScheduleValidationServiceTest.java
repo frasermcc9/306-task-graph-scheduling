@@ -90,7 +90,7 @@ public class ScheduleValidationServiceTest {
     return schedule;
   }
 
-  public Schedule getInvalidTimeTimeScheduleG1() {
+  public Schedule getInvalidStartTimeScheduleG1() {
     Schedule schedule = new ScheduleImpl(2);
     schedule.addTask(new Task(0, 2, 0, 0));
     schedule.addTask(new Task(2, 3, 1, 0));
@@ -121,7 +121,7 @@ public class ScheduleValidationServiceTest {
   @Test
   public void validateScheduleInvalidStartTime() {
     boolean isValid = validationService.validateSchedule(
-      getInvalidTimeTimeScheduleG1(),
+      getInvalidStartTimeScheduleG1(),
       getGraphG1(),
       2
     );
