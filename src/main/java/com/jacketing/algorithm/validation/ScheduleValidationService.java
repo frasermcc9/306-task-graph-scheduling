@@ -15,13 +15,11 @@ package com.jacketing.algorithm.validation;
 
 import com.jacketing.algorithm.impl.structures.Task;
 import com.jacketing.algorithm.interfaces.structures.Schedule;
-import com.jacketing.io.cli.ProgramContext;
 import com.jacketing.parsing.impl.structures.EnumeratedAdjacencyList;
 import com.jacketing.parsing.impl.structures.Graph;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import org.checkerframework.checker.units.qual.A;
 
 public class ScheduleValidationService implements ScheduleValidator {
 
