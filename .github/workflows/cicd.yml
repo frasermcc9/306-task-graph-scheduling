@@ -11,6 +11,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Print JDK
+        run: java -version
+
       - name: "Run tests"
         run: gradle test
 

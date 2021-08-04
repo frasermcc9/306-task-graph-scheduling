@@ -14,19 +14,31 @@ package com.jacketing;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.ParameterException;
 import com.jacketing.io.cli.ProgramContext;
+import com.jacketing.view.ApplicationEntry;
+import javafx.application.Application;
 
 public class Entry {
 
+  private static ProgramContext programContext;
+
   public static void main(String... argv) {
-    ProgramContext programContext = new ProgramContext();
+    programContext = new ProgramContext();
 
     try {
       JCommander.newBuilder().addObject(programContext).build().parse(argv);
       programContext.validate();
-      System.out.println("Starting search...");
+
+      if (programContext.isVisualized()) {
+        Application.launch(ApplicationEntry.class);
+      }
+      beginSearch();
     } catch (ParameterException e) {
       System.out.println(e.getMessage());
       System.out.println(programContext.helpText());
     }
+  }
+
+  public static void beginSearch() {
+    System.out.println("Starting search...");
   }
 }

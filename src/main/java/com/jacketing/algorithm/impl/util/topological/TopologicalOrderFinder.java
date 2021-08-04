@@ -1,9 +1,10 @@
-package com.jacketing.algorithm.impl.util;
+package com.jacketing.algorithm.impl.util.topological;
 
+import com.jacketing.algorithm.interfaces.util.topological.TopologicalSort;
 import com.jacketing.parsing.impl.structures.Graph;
 import java.util.*;
 
-public class TopologicalOrderFinder {
+public class TopologicalOrderFinder implements TopologicalSort<Integer> {
 
   //Here we store the size of the in-degree of all nodes. I use a map as this
   // allows constant access time of

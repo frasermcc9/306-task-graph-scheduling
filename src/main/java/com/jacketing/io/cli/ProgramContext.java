@@ -8,30 +8,26 @@ import java.util.List;
 
 public class ProgramContext {
 
-  @Parameter(description = "Input")
+  @Parameter()
   private List<String> input = new ArrayList<>();
 
   @Parameter(
     names = { "-p" },
-    description = "use N cores for execution in parallel",
     validateWith = PositiveInteger.class
   )
   private int coresToCalculateWith;
 
-  @Parameter(names = { "-v" }, description = "visualize the search")
+  @Parameter(names = { "-v" })
   private boolean visualize;
 
-  @Parameter(
-    names = { "-o" },
-    description = "output file is named OUTPUT (default is INPUT-output.dot"
-  )
+  @Parameter(names = { "-o" })
   private String outputName;
 
   public String getInputFile() {
     return input.get(0);
   }
 
-  public int getCoresToScheduleOn() {
+  public int getProcessorsToScheduleOn() {
     return Integer.parseInt(input.get(1));
   }
 
@@ -76,24 +72,16 @@ public class ProgramContext {
   }
 
   public String helpText() {
-    StringBuilder output = new StringBuilder();
-    output.append("java -jar scheduler.jar INPUT.dot P [OPTIONS]\n");
-    output.append(
-      "INPUT.dot: a task graph with integer weights in dot format\n"
-    );
-    output.append(
-      "P:         number of processors to schedule the INPUT graph on\n"
-    );
-    output.append("\n");
-    output.append("Optional:\n");
-    output.append(
-      "-p N:      use N cores for execution (default sequential)\n"
-    );
-    output.append("-v:        visualize the search\n");
-    output.append(
-      "-o OUTPUT: output file is named OUTPUT (default INPUT-output.dot\n"
-    );
+    String output = "";
+    output += "java -jar scheduler.jar INPUT.dot P [OPTIONS]\n";
+    output += "INPUT.dot  a task graph with integer weights in dot format\n";
+    output += "P          number of processors to schedule the INPUT graph on\n";
+    output += "\n";
+    output += "Optional:\n";
+    output += "-p N       use N cores for execution (default sequential)\n";
+    output += "-v         visualize the search\n";
+    output += "-o OUTPUT  output file is named OUTPUT (default INPUT-output.dot)\n";
 
-    return output.toString();
+    return output;
   }
 }

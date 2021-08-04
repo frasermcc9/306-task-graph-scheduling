@@ -44,7 +44,7 @@ public class ProgramContextTest {
   public void testCoresScheduleOn() {
     String[] input = { "INPUT.dot", "2" };
     builder.parse(input);
-    Assert.assertEquals(2, programContext.getCoresToScheduleOn());
+    Assert.assertEquals(2, programContext.getProcessorsToScheduleOn());
   }
 
   @Test
@@ -89,7 +89,7 @@ public class ProgramContextTest {
   public void testVisualize() {
     String[] input = { "INPUT.dot", "2", "-v" };
     builder.parse(input);
-    Assert.assertEquals(true, programContext.isVisualized());
+    Assert.assertTrue(programContext.isVisualized());
   }
 
   @Test

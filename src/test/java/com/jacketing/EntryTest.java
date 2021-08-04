@@ -1,6 +1,5 @@
 package com.jacketing;
 
-import com.beust.jcommander.JCommander;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import org.junit.After;
@@ -28,16 +27,6 @@ public class EntryTest {
   }
 
   @Test
-  public void testTestRunnerRunsTests() {
-    Assert.assertEquals(1 + 1, 2);
-  }
-
-  @Test
-  public void testTestRunnerRunsFailedTests() {
-    Assert.assertEquals(1 + 2, 3);
-  }
-
-  @Test
   public void testEntry() {
     String[] args = { "INPUT.dot", "2" };
     Entry.main(args);
@@ -52,6 +41,14 @@ public class EntryTest {
       "2 arguments expected, received 0",
       outContent.toString().trim().split("\n")[0].trim()
     );
+  }
+
+  @Test
+  public void testVisualize() throws InterruptedException {
+    String[] args = { "INPUT.dot", "2", "-v" };
+
+    new Thread(() -> Entry.main(args)).start();
+    Thread.sleep(1000);
   }
 
   @Test

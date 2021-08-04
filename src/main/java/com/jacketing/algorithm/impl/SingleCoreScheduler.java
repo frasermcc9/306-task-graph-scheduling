@@ -1,7 +1,7 @@
 package com.jacketing.algorithm.impl;
 
 import com.jacketing.algorithm.impl.structures.Task;
-import com.jacketing.algorithm.impl.util.TopologicalOrderFinder;
+import com.jacketing.algorithm.impl.util.topological.TopologicalOrderFinder;
 import com.jacketing.algorithm.interfaces.structures.Schedule;
 import com.jacketing.algorithm.interfaces.util.ScheduleFactory;
 import com.jacketing.io.cli.ProgramContext;

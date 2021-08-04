@@ -55,6 +55,10 @@ public class TestUtil {
     return createGraphFromFile("examples/g3/g3.dot");
   }
 
+  public static Graph graphVariantFour() {
+    return createGraphFromFile("examples/g4/g4.dot");
+  }
+
   private static Graph createGraphFromBuffer(StringBuffer graphString) {
     try {
       Parser parser = Parser.fromStringBuffer(graphString);

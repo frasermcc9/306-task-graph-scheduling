@@ -2,6 +2,7 @@ plugins {
   id 'java'
   id 'jacoco'
   id 'com.github.johnrengelman.shadow' version '7.0.0'
+  id 'org.openjfx.javafxplugin' version '0.0.10'
 }
 
 group 'com.jacketing'
@@ -10,6 +11,10 @@ version '1.0-SNAPSHOT'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
+javafx {
+  modules = [ 'javafx.controls', 'javafx.fxml' ]
+}
+
 jar {
   manifest {
     attributes(
@@ -17,6 +22,7 @@ jar {
     )
   }
   from {
+    exclude '**/module-info.class'
     configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
   }
 }
