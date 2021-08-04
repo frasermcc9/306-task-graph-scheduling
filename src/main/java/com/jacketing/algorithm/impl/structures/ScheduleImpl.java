@@ -14,42 +14,63 @@
 package com.jacketing.algorithm.impl.structures;
 
 import com.jacketing.algorithm.interfaces.structures.Schedule;
-import com.jacketing.io.cli.ProgramContext;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 
 public class ScheduleImpl implements Schedule {
 
-  private final ProgramContext context;
-  private final Map<Integer, TaskList> processorMap;
+  private final Map<Integer, ProcessorTaskList> processorMap;
 
-  public ScheduleImpl(
-    ProgramContext context,
-    Map<Integer, TaskList> processorMap
-  ) {
-    this.context = context;
-    this.processorMap = processorMap;
+  public ScheduleImpl(int numberProcessors) {
+    this.processorMap = new HashMap<>();
 
-    int procCount = context.getProcessorsToScheduleOn();
-    for (int i = 0; i < procCount; i++) {
-      processorMap.put(i, new TaskList());
+    for (int i = 0; i < numberProcessors; i++) {
+      processorMap.put(i, new ProcessorTaskList());
     }
   }
 
-  public void addTask(Task task, int processor) {
-    processorMap.get(processor).add(task);
+  public void addTask(Task task) {
+    processorMap.get(task.getProcessorNumber()).add(task);
   }
 
   public int getDuration() {
     return processorMap
       .values()
       .stream()
-      .mapToInt(TaskList::getLastScheduledEndTime)
+      .mapToInt(ProcessorTaskList::getLastScheduledEndTime)
       .max()
       .orElse(0);
   }
 
   @Override
+  public ArrayList<Task> getAllTasks() {
+    // Convert map of lists, to one list
+    Collection<ProcessorTaskList> processorProcessorTaskLists = processorMap.values();
+    ArrayList<Task> allTasks = new ArrayList<>();
+    for (ProcessorTaskList processorTaskList : processorProcessorTaskLists) {
+      allTasks.addAll(processorTaskList);
+    }
+    return allTasks;
+  }
+
+  @Override
+  public Task getTaskForNode(int nodeId) {
+    for (Task task : getAllTasks()) {
+      if (task.getId() == nodeId) {
+        return task;
+      }
+    }
+    return null;
+  }
+
+  @Override
   public int getProcessorEnd(int processor) {
     return processorMap.get(processor).getLastScheduledEndTime();
+  }
+
+  public int getNumberOfProcessors() {
+    return processorMap.size();
   }
 }

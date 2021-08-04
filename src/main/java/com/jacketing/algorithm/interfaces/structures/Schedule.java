@@ -14,11 +14,18 @@
 package com.jacketing.algorithm.interfaces.structures;
 
 import com.jacketing.algorithm.impl.structures.Task;
+import java.util.ArrayList;
 
 public interface Schedule {
-  void addTask(Task task, int processor);
+  void addTask(Task task);
 
   int getDuration();
 
   int getProcessorEnd(int processor);
+
+  int getNumberOfProcessors();
+
+  ArrayList<Task> getAllTasks();
+
+  Task getTaskForNode(int nodeId);
 }
