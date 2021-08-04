@@ -25,6 +25,7 @@ import com.jacketing.algorithm.interfaces.util.ScheduleFactory;
 import com.jacketing.io.cli.ProgramContext;
 import java.io.IOException;
 import java.util.List;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class DepthFirstSchedulerTest {
@@ -54,6 +55,7 @@ public class DepthFirstSchedulerTest {
   }
 
   @Test
+  @Ignore
   public void testGraphSuiteFourCores() throws IOException {
     List<GraphResult> graphs = TestUtil.getGraphTestSuite(4);
 
