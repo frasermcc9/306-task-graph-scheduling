@@ -1,16 +1,16 @@
 package com.jacketing.algorithm.impl;
+
 import com.jacketing.algorithm.impl.structures.Task;
-import com.jacketing.algorithm.impl.util.TopologicalOrderFinder;
+import com.jacketing.algorithm.impl.util.topological.TopologicalOrderFinder;
 import com.jacketing.algorithm.interfaces.structures.Schedule;
 import com.jacketing.algorithm.interfaces.util.ScheduleFactory;
 import com.jacketing.io.cli.ProgramContext;
 import com.jacketing.parsing.impl.structures.Graph;
-
-
 import java.util.ArrayList;
 import java.util.List;
 
-public class BruteForceScheduler extends AbstractSchedulingAlgorithm{
+public class BruteForceScheduler extends AbstractSchedulingAlgorithm {
+
   private final int numberOfProcessors;
   private final TopologicalOrderFinder topologicalOrderFinder;
   private Schedule schedule;
@@ -18,10 +18,11 @@ public class BruteForceScheduler extends AbstractSchedulingAlgorithm{
   public BruteForceScheduler(
     Graph graph,
     ProgramContext context,
-    ScheduleFactory scheduleFactory){
+    ScheduleFactory scheduleFactory
+  ) {
     super(graph, context, scheduleFactory);
     topologicalOrderFinder = new TopologicalOrderFinder(graph);
-    numberOfProcessors = context.getCoresToScheduleOn();
+    numberOfProcessors = context.getProcessorsToScheduleOn();
   }
 
   /**
@@ -45,9 +46,13 @@ public class BruteForceScheduler extends AbstractSchedulingAlgorithm{
     return schedule;
   }
 
-  private void dfs(Schedule curState, List<Integer> freeNodes, List<Integer> visited){
+  private void dfs(
+    Schedule curState,
+    List<Integer> freeNodes,
+    List<Integer> visited
+  ) {
     if (freeNodes.isEmpty()) {
-      if (schedule == null || curState.getDuration() < schedule.getDuration()){
+      if (schedule == null || curState.getDuration() < schedule.getDuration()) {
         schedule = curState;
       }
       return;
@@ -60,7 +65,7 @@ public class BruteForceScheduler extends AbstractSchedulingAlgorithm{
       // the latest time at which the prerequisite node finishes.
       int latestEndTime = 0;
       int lastNode = -1;
-      for (Integer parentNode : parentNodes){
+      for (Integer parentNode : parentNodes) {
         int currEndTime = curState.getTask(parentNode).getEndTime();
         if (currEndTime > latestEndTime) {
           latestEndTime = currEndTime;
@@ -75,7 +80,11 @@ public class BruteForceScheduler extends AbstractSchedulingAlgorithm{
           startTimeOfChildNode += graph.getEdgeWeight().from(lastNode).to(node);
         }
 
-        Task task = new Task(Math.max(startTimeOfChildNode, curState.getProcessorEnd(processor)), nodeWeight, node);
+        Task task = new Task(
+          Math.max(startTimeOfChildNode, curState.getProcessorEnd(processor)),
+          nodeWeight,
+          node
+        );
         Schedule nextState = scheduleFactory.copy(curState);
         // Add the task to next state
         nextState.addTask(task, processor);
@@ -83,20 +92,21 @@ public class BruteForceScheduler extends AbstractSchedulingAlgorithm{
         List<Integer> nextFreeNodes = new ArrayList<>();
         for (Integer freeNode : freeNodes) {
           // exclude the node that has already been scheduled.
-          if (node != freeNode.intValue()) {
+          if (node != freeNode) {
             nextFreeNodes.add(freeNode);
           }
         }
 
-        List<Integer> nextVisited = new ArrayList<>();
-        for (Integer visitedNode : visited) {
-          nextVisited.add(visitedNode);
-        }
+        List<Integer> nextVisited = new ArrayList<>(visited);
         nextVisited.add(node);
 
-        for (int nextNode : graph.getAdjacencyList().getChildNodes(node)){
+        for (int nextNode : graph.getAdjacencyList().getChildNodes(node)) {
           // If all prerequisite nodes are scheduled, then the child node is free to be scheduled.
-          if (nextVisited.containsAll(graph.getAdjacencyList().getParentNodes(nextNode))){
+          if (
+            nextVisited.containsAll(
+              graph.getAdjacencyList().getParentNodes(nextNode)
+            )
+          ) {
             nextFreeNodes.add(nextNode);
           }
         }
