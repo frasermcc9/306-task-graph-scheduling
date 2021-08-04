@@ -108,12 +108,11 @@ public class DepthFirstScheduler extends AbstractSchedulingAlgorithm {
         }
 
         if (
-          schedule != null &&
-          nextState.getDuration() > schedule.getDuration() + 2 &&
-          schedule.getTotalScheduledTasks() ==
-          graph.getAdjacencyList().getNodeCount()
+          schedule != null && nextState.getDuration() >= schedule.getDuration()
         ) {
-          return;
+          if (nextState.getDuration() > schedule.getDuration()) {
+            continue;
+          }
         }
 
         dfs(nextState, nextFreeNodes, nextVisited);

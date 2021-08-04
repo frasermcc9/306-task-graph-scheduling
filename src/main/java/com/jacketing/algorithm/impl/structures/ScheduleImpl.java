@@ -2,6 +2,7 @@ package com.jacketing.algorithm.impl.structures;
 
 import com.jacketing.algorithm.interfaces.structures.Schedule;
 import com.jacketing.io.cli.ProgramContext;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -53,12 +54,12 @@ public class ScheduleImpl implements Schedule {
   }
 
   public int getDuration() {
-    return processorMap
-      .values()
-      .stream()
-      .mapToInt(TaskList::getLastScheduledEndTime)
-      .max()
-      .orElse(0);
+    Collection<TaskList> values = processorMap.values();
+    int max = 0;
+    for (TaskList value : values) {
+      max = Math.max(max, value.getLastScheduledEndTime());
+    }
+    return max;
   }
 
   @Override
@@ -87,5 +88,10 @@ public class ScheduleImpl implements Schedule {
   @Override
   public int getTotalScheduledTasks() {
     return processorMap.values().stream().mapToInt(TaskList::size).sum();
+  }
+
+  @Override
+  public boolean isFullyPopulated(int graphSize) {
+    return getTotalScheduledTasks() == graphSize;
   }
 }
