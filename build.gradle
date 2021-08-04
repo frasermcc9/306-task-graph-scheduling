@@ -33,7 +33,7 @@ jacoco {
 }
 
 test {
-  maxHeapSize = "1024m"
+  maxHeapSize = "4096m"
   finalizedBy jacocoTestReport // report is always generated after tests run
 }
 jacocoTestReport {
