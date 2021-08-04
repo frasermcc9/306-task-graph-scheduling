@@ -10,5 +10,6 @@ public interface ScheduleFactory {
   }
 
   Schedule newSchedule(ProgramContext ctx);
+
   Schedule copy(Schedule schedule);
 }

@@ -16,4 +16,6 @@ public interface Schedule {
   Task getTask(int taskId);
 
   int getTotalScheduledTasks();
+
+  boolean isFullyPopulated(int graphSize);
 }
