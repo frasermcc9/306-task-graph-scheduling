@@ -90,12 +90,21 @@ public class ScheduleValidationServiceTest {
     return schedule;
   }
 
-  public Schedule getInvalidScheduleG1() {
+  public Schedule getInvalidTimeTimeScheduleG1() {
     Schedule schedule = new ScheduleImpl(2);
     schedule.addTask(new Task(0, 2, 0, 0));
     schedule.addTask(new Task(2, 3, 1, 0));
     schedule.addTask(new Task(2, 3, 2, 1));
     schedule.addTask(new Task(7, 2, 3, 1));
+    return schedule;
+  }
+
+  public Schedule getInvalidTaskOrderScheduleG1() {
+    Schedule schedule = new ScheduleImpl(2);
+    schedule.addTask(new Task(3, 2, 0, 0));
+    schedule.addTask(new Task(0, 3, 1, 0));
+    schedule.addTask(new Task(10, 3, 2, 1));
+    schedule.addTask(new Task(20, 2, 3, 1));
     return schedule;
   }
 
@@ -110,9 +119,19 @@ public class ScheduleValidationServiceTest {
   }
 
   @Test
-  public void validateScheduleInvalidGraph() {
+  public void validateScheduleInvalidStartTime() {
     boolean isValid = validationService.validateSchedule(
-      getInvalidScheduleG1(),
+      getInvalidTimeTimeScheduleG1(),
+      getGraphG1(),
+      2
+    );
+    assertFalse(isValid);
+  }
+
+  @Test
+  public void validateScheduleInvalidTaskOrder() {
+    boolean isValid = validationService.validateSchedule(
+      getInvalidTaskOrderScheduleG1(),
       getGraphG1(),
       2
     );
@@ -123,24 +142,16 @@ public class ScheduleValidationServiceTest {
   public void validateInvalidScheduleInvalidProcessorCount() {
     assertFalse(
       validationService.validateSchedule(
-        getInvalidScheduleG1(),
+        getValidScheduleG1(),
         getGraphG1(),
         200
       )
     );
     assertFalse(
-      validationService.validateSchedule(
-        getInvalidScheduleG1(),
-        getGraphG1(),
-        0
-      )
+      validationService.validateSchedule(getValidScheduleG1(), getGraphG1(), 0)
     );
     assertFalse(
-      validationService.validateSchedule(
-        getInvalidScheduleG1(),
-        getGraphG1(),
-        -1
-      )
+      validationService.validateSchedule(getValidScheduleG1(), getGraphG1(), -1)
     );
   }
 }
