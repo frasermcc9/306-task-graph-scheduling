@@ -10,13 +10,13 @@ import com.jacketing.parsing.impl.structures.Graph;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BruteForceScheduler extends AbstractSchedulingAlgorithm {
+public class DepthFirstScheduler extends AbstractSchedulingAlgorithm {
 
   private final int numberOfProcessors;
   private final TopologicalSortContext<List<Integer>> topologicalOrderFinder;
   private Schedule schedule;
 
-  public BruteForceScheduler(
+  public DepthFirstScheduler(
     Graph graph,
     ProgramContext context,
     ScheduleFactory scheduleFactory
@@ -30,11 +30,10 @@ public class BruteForceScheduler extends AbstractSchedulingAlgorithm {
   /**
    * Outputs an optimal scheduling by exploring all possible schedules.
    *
-   * @implNote The algorithm runs recursively like DFS. This algorithm
-   * runs exponentially on the number of processors.
-   * It can be improved by adding cost function to prune the recursion tree.
-   *
    * @return Schedule object containing optimal schedule.
+   * @implNote The algorithm runs recursively like DFS. This algorithm runs
+   * exponentially on the number of processors. It can be improved by adding
+   * cost function to prune the recursion tree.
    */
   @Override
   public Schedule schedule() {
@@ -97,7 +96,8 @@ public class BruteForceScheduler extends AbstractSchedulingAlgorithm {
         nextVisited.add(node);
 
         for (int nextNode : graph.getAdjacencyList().getChildNodes(node)) {
-          // If all prerequisite nodes are scheduled, then the child node is free to be scheduled.
+          // If all prerequisite nodes are scheduled, then the child node is
+          // free to be scheduled.
           if (
             nextVisited.containsAll(
               graph.getAdjacencyList().getParentNodes(nextNode)
@@ -105,6 +105,15 @@ public class BruteForceScheduler extends AbstractSchedulingAlgorithm {
           ) {
             nextFreeNodes.add(nextNode);
           }
+        }
+
+        if (
+          schedule != null &&
+          nextState.getDuration() > schedule.getDuration() + 2 &&
+          schedule.getTotalScheduledTasks() ==
+          graph.getAdjacencyList().getNodeCount()
+        ) {
+          return;
         }
 
         dfs(nextState, nextFreeNodes, nextVisited);

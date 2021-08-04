@@ -71,6 +71,11 @@ public class TestUtil {
   }
 
   public static List<GraphResult> getGraphTestSuite() throws IOException {
+    return getGraphTestSuite(-1);
+  }
+
+  public static List<GraphResult> getGraphTestSuite(int only)
+    throws IOException {
     List<GraphResult> graphs = new ArrayList<>();
 
     String[] graphLocations = { "1.dot", "2.dot", "3.dot", "4.dot", "5.dot" };
@@ -95,6 +100,12 @@ public class TestUtil {
       );
 
       graphs.add(graphResult);
+    }
+
+    if (only != -1) {
+      ArrayList<GraphResult> exclusiveList = new ArrayList<>();
+      exclusiveList.add(graphs.get(only));
+      return exclusiveList;
     }
 
     return graphs;

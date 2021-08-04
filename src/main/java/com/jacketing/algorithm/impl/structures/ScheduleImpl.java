@@ -2,9 +2,6 @@ package com.jacketing.algorithm.impl.structures;
 
 import com.jacketing.algorithm.interfaces.structures.Schedule;
 import com.jacketing.io.cli.ProgramContext;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,12 +28,12 @@ public class ScheduleImpl implements Schedule {
     }
   }
 
-  public ScheduleImpl(ScheduleImpl scheduleImpl){
+  public ScheduleImpl(ScheduleImpl scheduleImpl) {
     this.context = scheduleImpl.context;
 
     this.processorMap = new HashMap<>();
     this.inverseProcessorMap = new HashMap<>();
-    for (Map.Entry<Integer, TaskList> entry : scheduleImpl.processorMap.entrySet()){
+    for (Map.Entry<Integer, TaskList> entry : scheduleImpl.processorMap.entrySet()) {
       this.processorMap.put(entry.getKey(), new TaskList(entry.getValue()));
       for (Task task : entry.getValue()) {
         this.inverseProcessorMap.put(task, entry.getKey());
@@ -44,7 +41,7 @@ public class ScheduleImpl implements Schedule {
     }
 
     this.taskIdToTaskMap = new HashMap<>();
-    for (Map.Entry<Integer, Task> entry : scheduleImpl.taskIdToTaskMap.entrySet()){
+    for (Map.Entry<Integer, Task> entry : scheduleImpl.taskIdToTaskMap.entrySet()) {
       this.taskIdToTaskMap.put(entry.getKey(), entry.getValue());
     }
   }
@@ -75,7 +72,7 @@ public class ScheduleImpl implements Schedule {
   }
 
   @Override
-  public Task getLastScheduledTask(int processor){
+  public Task getLastScheduledTask(int processor) {
     if (processorMap.get(processor).isEmpty()) {
       return null;
     }
@@ -85,5 +82,10 @@ public class ScheduleImpl implements Schedule {
   @Override
   public Task getTask(int taskId) {
     return taskIdToTaskMap.get(taskId);
+  }
+
+  @Override
+  public int getTotalScheduledTasks() {
+    return processorMap.values().stream().mapToInt(TaskList::size).sum();
   }
 }

@@ -14,4 +14,6 @@ public interface Schedule {
   Task getLastScheduledTask(int processor);
 
   Task getTask(int taskId);
+
+  int getTotalScheduledTasks();
 }

@@ -85,8 +85,10 @@ public class BruteForceSchedulerTest {
 
       Schedule schedule = schedulingAlgorithmStrategy.schedule();
       int optimalLength = schedule.getDuration();
+      int expectedLength = graph.getTwoCoresResult();
 
-      assertEquals(graph.getTwoCoresResult(), optimalLength);
+      assertEquals(expectedLength, optimalLength);
+      //      assertEquals(expectedLength, expectedLength);
     }
   }
 
