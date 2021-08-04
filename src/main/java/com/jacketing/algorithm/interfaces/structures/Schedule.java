@@ -38,4 +38,6 @@ public interface Schedule {
   int getTotalScheduledTasks();
 
   boolean isFullyPopulated(int graphSize);
+
+  String stringIdentifier();
 }
