@@ -21,7 +21,7 @@ import java.util.HashMap;
 
 public class ScheduleFactoryImpl implements ScheduleFactory {
 
-  public Schedule newSchedule(ProgramContext ctx) {
-    return new ScheduleImpl(ctx, new HashMap<>());
+  public Schedule newSchedule(ProgramContext context) {
+    return new ScheduleImpl(context.getProcessorsToScheduleOn());
   }
 }
