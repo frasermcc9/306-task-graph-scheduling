@@ -8,4 +8,14 @@ public interface Schedule {
   int getDuration();
 
   int getProcessorEnd(int processor);
+
+  int getProcessor(int taskId);
+
+  Task getLastScheduledTask(int processor);
+
+  Task getTask(int taskId);
+
+  int getTotalScheduledTasks();
+
+  boolean isFullyPopulated(int graphSize);
 }

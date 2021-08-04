@@ -8,13 +8,10 @@ import java.util.List;
 
 public class ProgramContext {
 
-  @Parameter()
+  @Parameter
   private List<String> input = new ArrayList<>();
 
-  @Parameter(
-    names = { "-p" },
-    validateWith = PositiveInteger.class
-  )
+  @Parameter(names = { "-p" }, validateWith = PositiveInteger.class)
   private int coresToCalculateWith;
 
   @Parameter(names = { "-v" })
@@ -75,12 +72,14 @@ public class ProgramContext {
     String output = "";
     output += "java -jar scheduler.jar INPUT.dot P [OPTIONS]\n";
     output += "INPUT.dot  a task graph with integer weights in dot format\n";
-    output += "P          number of processors to schedule the INPUT graph on\n";
+    output +=
+      "P          number of processors to schedule the INPUT graph on\n";
     output += "\n";
     output += "Optional:\n";
     output += "-p N       use N cores for execution (default sequential)\n";
     output += "-v         visualize the search\n";
-    output += "-o OUTPUT  output file is named OUTPUT (default INPUT-output.dot)\n";
+    output +=
+      "-o OUTPUT  output file is named OUTPUT (default INPUT-output.dot)\n";
 
     return output;
   }
