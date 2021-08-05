@@ -15,6 +15,8 @@ package com.jacketing.parsing.impl.structures;
 
 import com.jacketing.parsing.impl.services.WeightService;
 import com.jacketing.parsing.interfaces.structures.services.GraphWeightService;
+
+import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
 import java.util.List;
 
 public class Graph {
@@ -37,6 +39,10 @@ public class Graph {
    */
   private final GraphWeightService weightService;
 
+  private final int[] bLevels;
+
+  private int criticalTime;
+
   /**
    * Creates a new graph object, which is a structure that contains both an
    * adjacency list (for the graph structure) and a weight service (for node and
@@ -57,6 +63,8 @@ public class Graph {
 
     adjacencyList.createRepresentation();
     weightService.formWeights();
+
+    bLevels = new int[adjacencyList.getNodeCount()];
   }
 
   /**
@@ -115,5 +123,57 @@ public class Graph {
 
   public List<Integer> parentNodesFor(int forNode) {
     return adjacencyList.getParentNodes(forNode);
+  }
+
+  /**
+   * Calculate the overall longest path length
+   * Sum of task weights + edge weights.
+   * @return critical path.
+   */
+  public int getCriticalTime() {
+    if(criticalTime != 0) {
+      return criticalTime;
+    }
+
+    criticalTime = 0;
+    for (int node : adjacencyList.getNodeIds()) {
+      getBLevel(node);
+    }
+
+    return criticalTime;
+  }
+
+  /**
+   * Returns the longest path (sum of task weights + edge)
+   * from the input node to last node of the graph.
+   * @param node
+   * @return longest path from the node to end.
+   * @implNote It runs recursively bottom-up.
+   * Worst case it will traverse all nodes and edges in the graph, thus, O(|V|+|E|)
+   */
+
+  public int getBLevel(int node){
+    // bl(node) has already been calculated
+    if (bLevels[node] != 0) {
+      return bLevels[node];
+    }
+
+    List<Integer> childNodes = adjacencyList.getChildNodes(node);
+    // if the node is at 0th level, bl(node) = w_node
+    if (childNodes.isEmpty()) {
+      bLevels[node] = weightService.nodeWeight(node);
+      return bLevels[node];
+    }
+
+    int maxBl = 0;
+    for(int childNode : childNodes) {
+      maxBl = Math.max(maxBl, getBLevel(childNode) + weightService.edgeWeight().from(node).to(childNode));
+    }
+
+    bLevels[node] = maxBl + weightService.nodeWeight(node);
+    criticalTime = Math.max(criticalTime, bLevels[node]);
+
+    return bLevels[node];
+
   }
 }
