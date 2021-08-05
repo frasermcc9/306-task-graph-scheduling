@@ -3,9 +3,7 @@ package com.jacketing.util;
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
 import java.lang.management.ThreadInfo;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import com.jacketing.parsing.impl.CpuUsageFormatter;
 import com.sun.management.ThreadMXBean;
@@ -14,18 +12,20 @@ public class CpuReader {
 
   private final ThreadMXBean threadBean;
   private final RuntimeMXBean runtimeBean;
+  private final List<double[]> model;
 
   /**
    * Reads cpu memory at 400ms intervals
    * @param testing Set to enable synthetic CPU usage
    */
-  public CpuReader(boolean testing) {
+  public CpuReader(List<double[]> model, boolean testing) {
+    this.model = model;
+
     threadBean = (ThreadMXBean) ManagementFactory.getThreadMXBean();
     runtimeBean = ManagementFactory.getRuntimeMXBean();
 
     // set this true just in case
     threadBean.setThreadCpuTimeEnabled(true);
-
 
     new Thread(() -> {
       while(true) {
@@ -50,7 +50,8 @@ public class CpuReader {
   }
 
   public static void main(String[] args) {
-    new CpuReader(false);
+    List<double[]> model = new ArrayList<double[]>();
+    new CpuReader(model, false);
   }
 
   /**
@@ -90,8 +91,12 @@ public class CpuReader {
       }
     }
 
+    if (model.size() > 100) {
+      model.remove(0);
+    }
+
     // threadCPUUsage contains cpu % per thread
-    System.out.println(Arrays.toString(CpuUsageFormatter.format(threadCPUUsage)));
+    model.add(CpuUsageFormatter.format(threadCPUUsage));
   }
 
 }
