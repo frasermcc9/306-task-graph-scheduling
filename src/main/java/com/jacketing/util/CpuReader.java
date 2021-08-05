@@ -17,13 +17,15 @@ public class CpuReader {
 
   /**
    * Reads cpu memory at 400ms intervals
+   * @param testing Set to enable synthetic CPU usage
    */
-  public CpuReader() {
+  public CpuReader(boolean testing) {
     threadBean = (ThreadMXBean) ManagementFactory.getThreadMXBean();
     runtimeBean = ManagementFactory.getRuntimeMXBean();
 
     // set this true just in case
     threadBean.setThreadCpuTimeEnabled(true);
+
 
     new Thread(() -> {
       while(true) {
@@ -36,17 +38,19 @@ public class CpuReader {
       }
     }).start();
 
-    int numCore = 16;
-    int numThreadsPerCore = 2;
-    double load = 0.8;
-    final long duration = 100000;
-    for (int thread = 0; thread < numCore * numThreadsPerCore; thread++) {
-      new BusyThread("Thread" + thread, load, duration).start();
+    if (testing) {
+      int numCore = 16;
+      int numThreadsPerCore = 2;
+      double load = 0.8;
+      final long duration = 100000;
+      for (int thread = 0; thread < numCore * numThreadsPerCore; thread++) {
+        new BusyThread("Thread" + thread, load, duration).start();
+      }
     }
   }
 
   public static void main(String[] args) {
-    new CpuReader();
+    new CpuReader(false);
   }
 
   /**
