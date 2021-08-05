@@ -15,6 +15,7 @@ public class DepthFirstScheduler extends AbstractSchedulingAlgorithm {
   private final int numberOfProcessors;
   private final TopologicalSortContext<List<Integer>> topologicalOrderFinder;
   private Schedule schedule;
+  private final int criticalTime;
 
   public DepthFirstScheduler(
     Graph graph,
@@ -25,6 +26,7 @@ public class DepthFirstScheduler extends AbstractSchedulingAlgorithm {
     topologicalOrderFinder =
       new TopologicalSortContext<>(TopologicalSort.withLayers(graph));
     numberOfProcessors = context.getProcessorsToScheduleOn();
+    criticalTime = graph.getCriticalTime();
   }
 
   /**
@@ -108,7 +110,9 @@ public class DepthFirstScheduler extends AbstractSchedulingAlgorithm {
         }
 
         if (
-          schedule != null && nextState.getDuration() >= schedule.getDuration()
+          schedule != null &&
+            (nextState.getDuration() >= schedule.getDuration() ||
+              nextState.getEarliestFinishTime() + criticalTime > schedule.getDuration())
         ) {
           if (nextState.getDuration() > schedule.getDuration()) {
             continue;
