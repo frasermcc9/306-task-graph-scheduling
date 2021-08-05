@@ -103,7 +103,7 @@ public class DotFileFormatterTest {
     return schedule;
   }
 
-  public String getVaildOutputString() {
+  public String getValidOutputString() {
     return (
       "digraph Default {\n" +
       "\ta [Weight=2, Start=0, Processor=0];\n" +
@@ -121,17 +121,17 @@ public class DotFileFormatterTest {
   @Test
   public void checkOutputCorrect() {
     String output = fileFormatter.formatSchedule(getScheduleG1(), getGraphG1());
-    assertEquals(getVaildOutputString(), output);
+    assertEquals(getValidOutputString(), output);
   }
 
   @Test
   public void checkOutputFileGeneration() throws IOException {
-    fileSaver.saveFile("output", getVaildOutputString());
+    fileSaver.saveFile("output", getValidOutputString());
     String content = new String(
       Files.readAllBytes(Paths.get("output")),
       StandardCharsets.UTF_8
     );
-    assertEquals(getVaildOutputString(), content);
+    assertEquals(getValidOutputString(), content);
     File fileToDelete = new File("output");
     if (!fileToDelete.delete()) {
       System.out.println("File output was not deleted.");
