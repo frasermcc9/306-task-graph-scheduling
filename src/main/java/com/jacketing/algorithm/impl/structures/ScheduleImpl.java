@@ -15,10 +15,7 @@ package com.jacketing.algorithm.impl.structures;
 
 import com.jacketing.algorithm.interfaces.structures.Schedule;
 import com.jacketing.io.cli.ProgramContext;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class ScheduleImpl implements Schedule {
 
@@ -139,5 +136,41 @@ public class ScheduleImpl implements Schedule {
   @Override
   public boolean isFullyPopulated(int graphSize) {
     return getTotalScheduledTasks() == graphSize;
+  }
+
+  @Override
+  public int hashCode() {
+    String[] strings = new String[this.context.getProcessorsToScheduleOn()];
+
+    for (int i = 0; i < this.processorMap.size(); i++) {
+      ProcessorTaskList list = this.processorMap.get(i);
+      StringBuilder sb = new StringBuilder();
+      for (Task task : list) {
+        sb.append(task.getId()).append(task.getStartTime());
+      }
+      strings[i] = sb.toString();
+    }
+
+    Arrays.sort(strings);
+
+    return String.join("", strings).hashCode();
+  }
+
+  @Override
+  public String stringIdentifier() {
+    String[] strings = new String[this.context.getProcessorsToScheduleOn()];
+
+    for (int i = 0; i < this.processorMap.size(); i++) {
+      ProcessorTaskList list = this.processorMap.get(i);
+      StringBuilder sb = new StringBuilder();
+      for (Task task : list) {
+        sb.append(task.getId()).append(task.getStartTime());
+      }
+      strings[i] = sb.toString();
+    }
+
+    Arrays.sort(strings);
+
+    return String.join("", strings);
   }
 }
