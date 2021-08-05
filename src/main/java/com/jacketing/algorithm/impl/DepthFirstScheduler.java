@@ -34,7 +34,7 @@ public class DepthFirstScheduler extends AbstractSchedulingAlgorithm {
     numberOfProcessors = context.getProcessorsToScheduleOn();
 
     SchedulingAlgorithmStrategy algorithm = SchedulingAlgorithmStrategy.create(
-      new ListScheduler(graph, context, ScheduleFactory.create())
+      new ListScheduler(graph, context, scheduleFactory)
     );
 
     upperBound = algorithm.schedule().getDuration();
@@ -51,6 +51,10 @@ public class DepthFirstScheduler extends AbstractSchedulingAlgorithm {
   @Override
   public Schedule schedule() {
     List<List<Integer>> topological = topologicalOrderFinder.sortedTopological();
+
+    if (topological.size() == 0) {
+      return scheduleFactory.newSchedule(context);
+    }
 
     List<Integer> freeNodes = new ArrayList<>(topological.get(0));
     List<Integer> visited = new ArrayList<>();

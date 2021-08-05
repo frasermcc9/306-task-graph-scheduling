@@ -70,6 +70,13 @@ public class TestUtil {
     return createGraphFromFile("examples/g5/g5.dot");
   }
 
+  public static Graph emptyGraph() {
+    StringBuffer graphString = new StringBuffer(
+      "digraph \"empty\" {\n" + "}\n"
+    );
+    return createGraphFromBuffer(graphString);
+  }
+
   public static List<GraphResult> getGraphTestSuite() throws IOException {
     return getGraphTestSuite(-1);
   }
