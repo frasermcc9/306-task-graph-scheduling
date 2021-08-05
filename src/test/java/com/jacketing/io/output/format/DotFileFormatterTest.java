@@ -1,6 +1,6 @@
 package com.jacketing.io.output.format;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -8,9 +8,8 @@ import com.google.common.collect.HashBiMap;
 import com.jacketing.algorithm.impl.structures.Task;
 import com.jacketing.algorithm.interfaces.structures.Schedule;
 import com.jacketing.algorithm.interfaces.util.ScheduleFactory;
-import com.jacketing.io.cli.IOContext;
 import com.jacketing.io.cli.ProgramContext;
-import com.jacketing.io.output.saver.FileSaverFactory;
+import com.jacketing.io.output.saver.StandardFileSaver;
 import com.jacketing.parsing.impl.Parser;
 import com.jacketing.parsing.impl.services.EnumerationService;
 import com.jacketing.parsing.impl.services.WeightService;
@@ -18,14 +17,24 @@ import com.jacketing.parsing.impl.structures.EnumeratedAdjacencyList;
 import com.jacketing.parsing.impl.structures.Graph;
 import com.jacketing.parsing.interfaces.structures.services.EnumeratedNodeMap;
 import com.paypal.digraph.parser.GraphParser;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.Scanner;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 public class DotFileFormatterTest {
 
   DotFileFormatter fileFormatter;
+  StandardFileSaver fileSaver;
 
   private static Graph createGraph(GraphParser graph) {
     EnumerationService enumerationService = new EnumerationService(
@@ -65,6 +74,7 @@ public class DotFileFormatterTest {
   @Before
   public void setUp() throws Exception {
     fileFormatter = new DotFileFormatter();
+    fileSaver = new StandardFileSaver();
   }
 
   @After
@@ -97,11 +107,8 @@ public class DotFileFormatterTest {
     return schedule;
   }
 
-  @Test
-  public void checkOutputCorrect() {
-    String output = fileFormatter.formatSchedule(getScheduleG1(), getGraphG1());
-    System.out.println(output);
-    assertEquals(
+  public String getVaildOutputString() {
+    return (
       "digraph Default {\n" +
       "\ta [Weight=2, Start=0, Processor=0];\n" +
       "\tb [Weight=3, Start=2, Processor=0];\n" +
@@ -111,8 +118,25 @@ public class DotFileFormatterTest {
       "\ta -> c [Weight=2];\n" +
       "\tb -> d [Weight=2];\n" +
       "\tc -> d [Weight=1];\n" +
-      "}",
-      output
+      "}"
     );
+  }
+
+  @Test
+  public void checkOutputCorrect() {
+    String output = fileFormatter.formatSchedule(getScheduleG1(), getGraphG1());
+    assertEquals(getVaildOutputString(), output);
+  }
+
+  @Test
+  public void checkOutputFileGeneration() throws IOException {
+    fileSaver.saveFile("output", getVaildOutputString());
+    String content = new String(
+      Files.readAllBytes(Paths.get("output")),
+      StandardCharsets.UTF_8
+    );
+    assertEquals(getVaildOutputString(), content);
+    File fileToDelete = new File("output");
+    fileToDelete.delete();
   }
 }
