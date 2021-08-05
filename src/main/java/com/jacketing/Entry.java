@@ -32,8 +32,9 @@ public class Entry {
 
       if (programContext.isVisualized()) {
         Application.launch(ApplicationEntry.class);
+      } else {
+        beginSearch();
       }
-      beginSearch();
     } catch (ParameterException e) {
       System.out.println(e.getMessage());
       System.out.println(programContext.helpText());
