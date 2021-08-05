@@ -13,7 +13,6 @@ public class CpuReader {
   private final ThreadMXBean threadBean;
   private final RuntimeMXBean runtimeBean;
   private final List<double[]> model;
-  private boolean syntheticLoad = false;
 
   /**
    * Reads cpu memory at 400ms intervals
@@ -38,16 +37,6 @@ public class CpuReader {
         }
       }
     }).start();
-
-    if (syntheticLoad) {
-      int numCore = 16;
-      int numThreadsPerCore = 2;
-      double load = 0.8;
-      final long duration = 100000;
-      for (int thread = 0; thread < numCore * numThreadsPerCore; thread++) {
-        new BusyThread("Thread" + thread, load, duration).start();
-      }
-    }
   }
 
   public static void main(String[] args) {
@@ -60,7 +49,13 @@ public class CpuReader {
    * Enable synthetic load to test utilization
    */
   public void setSyntheticLoad() {
-    syntheticLoad = true;
+    int numCore = 16;
+    int numThreadsPerCore = 2;
+    double load = 0.8;
+    final long duration = 100000;
+    for (int thread = 0; thread < numCore * numThreadsPerCore; thread++) {
+      new BusyThread("Thread" + thread, load, duration).start();
+    }
   }
 
   /**
