@@ -2,6 +2,7 @@ package com.jacketing.algorithm.impl;
 
 import com.jacketing.algorithm.impl.structures.Task;
 import com.jacketing.algorithm.impl.util.topological.TopologicalSortContext;
+import com.jacketing.algorithm.interfaces.SchedulingAlgorithmStrategy;
 import com.jacketing.algorithm.interfaces.structures.Schedule;
 import com.jacketing.algorithm.interfaces.util.ScheduleFactory;
 import com.jacketing.algorithm.interfaces.util.topological.TopologicalSort;
@@ -15,6 +16,7 @@ public class DepthFirstScheduler extends AbstractSchedulingAlgorithm {
   private final int numberOfProcessors;
   private final TopologicalSortContext<List<Integer>> topologicalOrderFinder;
   private Schedule schedule;
+  private final int upperBound;
 
   public DepthFirstScheduler(
     Graph graph,
@@ -25,6 +27,12 @@ public class DepthFirstScheduler extends AbstractSchedulingAlgorithm {
     topologicalOrderFinder =
       new TopologicalSortContext<>(TopologicalSort.withLayers(graph));
     numberOfProcessors = context.getProcessorsToScheduleOn();
+
+    SchedulingAlgorithmStrategy algorithm = SchedulingAlgorithmStrategy.create(
+      new ListScheduler(graph, context, ScheduleFactory.create())
+    );
+
+    upperBound = algorithm.schedule().getDuration();
   }
 
   /**
@@ -41,6 +49,7 @@ public class DepthFirstScheduler extends AbstractSchedulingAlgorithm {
 
     List<Integer> freeNodes = new ArrayList<>(topological.get(0));
     List<Integer> visited = new ArrayList<>();
+
     dfs(scheduleFactory.newSchedule(context), freeNodes, visited);
 
     return schedule;
@@ -62,24 +71,14 @@ public class DepthFirstScheduler extends AbstractSchedulingAlgorithm {
       int nodeWeight = graph.getNodeWeight(node);
       List<Integer> parentNodes = graph.getAdjacencyList().getParentNodes(node);
       for (int processor = 0; processor < numberOfProcessors; processor++) {
-        // if the prerequisite node that ends latest is in the different proc
-        int startTime = 0;
-        for (Integer parentNode : parentNodes) {
-          int parentEndTime = curState.getTask(parentNode).getEndTime();
-          if (curState.getProcessor(parentNode) != processor) {
-            startTime =
-              Math.max(
-                startTime,
-                parentEndTime + graph.getEdgeWeight().from(parentNode).to(node)
-              );
-          }
-        }
+        int startTime = findEarliestStartTime(node, parentNodes, curState, processor);
 
         Task task = new Task(
           Math.max(startTime, curState.getProcessorEnd(processor)),
           nodeWeight,
           node
         );
+
         Schedule nextState = scheduleFactory.copy(curState);
         // Add the task to next state
         nextState.addTask(task, processor);
@@ -109,12 +108,12 @@ public class DepthFirstScheduler extends AbstractSchedulingAlgorithm {
 
         if (
           schedule != null &&
-            (nextState.getDuration() >= schedule.getDuration())
-        ) {
-          if (nextState.getDuration() > schedule.getDuration()) {
+            ( nextState.getDuration() > upperBound ||
+              nextState.getDuration() > schedule.getDuration())
+        )  {
             continue;
-          }
         }
+
 
         dfs(nextState, nextFreeNodes, nextVisited);
       }
