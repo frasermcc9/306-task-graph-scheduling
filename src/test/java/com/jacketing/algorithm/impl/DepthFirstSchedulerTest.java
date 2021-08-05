@@ -73,11 +73,7 @@ public class DepthFirstSchedulerTest {
 
   @Test
   public void testGraphSuiteFourCores() throws IOException {
-    List<GraphResult> graphs = TestUtil.getGraphTestSuite(0);
-    graphs.addAll(TestUtil.getGraphTestSuite(1));
-    graphs.addAll(TestUtil.getGraphTestSuite(2));
-    graphs.addAll(TestUtil.getGraphTestSuite(3));
-    // graphs.addAll(TestUtil.getGraphTestSuite(4));
+    List<GraphResult> graphs = TestUtil.getGraphTestSuite();
 
     ProgramContext programContext = mock(ProgramContext.class);
     when(programContext.getProcessorsToScheduleOn()).thenReturn(4);
