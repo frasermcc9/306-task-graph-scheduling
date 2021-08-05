@@ -15,9 +15,8 @@ package com.jacketing.parsing.impl.structures;
 
 import com.jacketing.parsing.impl.services.WeightService;
 import com.jacketing.parsing.interfaces.structures.services.GraphWeightService;
-
-import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
 import java.util.List;
+import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
 
 public class Graph {
 
@@ -131,7 +130,7 @@ public class Graph {
    * @return critical path.
    */
   public int getCriticalTime() {
-    if(criticalTime != 0) {
+    if (criticalTime != 0) {
       return criticalTime;
     }
 
@@ -152,7 +151,7 @@ public class Graph {
    * Worst case it will traverse all nodes in the graph, thus, O(|V|)
    */
 
-  public int getBLevel(int node){
+  public int getBLevel(int node) {
     // bl(node) has already been calculated
     if (bLevels[node] != 0) {
       return bLevels[node];
@@ -166,7 +165,7 @@ public class Graph {
     }
 
     int maxBl = 0;
-    for(int childNode : childNodes) {
+    for (int childNode : childNodes) {
       maxBl = Math.max(maxBl, getBLevel(childNode));
     }
 
@@ -174,6 +173,5 @@ public class Graph {
     criticalTime = Math.max(criticalTime, bLevels[node]);
 
     return bLevels[node];
-
   }
 }

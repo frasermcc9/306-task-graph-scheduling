@@ -1,12 +1,12 @@
 package com.jacketing.parsing.impl.structures;
 
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import com.jacketing.TestUtil;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 public class GraphTest {
 
@@ -36,7 +36,6 @@ public class GraphTest {
 
     graph = TestUtil.graphVariantTwo();
     criticalTime = graph.getCriticalTime();
-    assertTrue(criticalTime==18);
+    assertTrue(criticalTime == 18);
   }
-
 }

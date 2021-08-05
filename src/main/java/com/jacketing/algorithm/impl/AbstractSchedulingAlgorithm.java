@@ -18,7 +18,6 @@ import com.jacketing.algorithm.interfaces.structures.Schedule;
 import com.jacketing.algorithm.interfaces.util.ScheduleFactory;
 import com.jacketing.io.cli.ProgramContext;
 import com.jacketing.parsing.impl.structures.Graph;
-
 import java.util.List;
 
 public abstract class AbstractSchedulingAlgorithm
@@ -47,7 +46,12 @@ public abstract class AbstractSchedulingAlgorithm
    * @param processor processor on which task is scheduled.
    * @return
    */
-  protected int findEarliestStartTime(int node, List<Integer> parentNodes, Schedule schedule, int processor) {
+  protected int findEarliestStartTime(
+    int node,
+    List<Integer> parentNodes,
+    Schedule schedule,
+    int processor
+  ) {
     int startTime = 0;
     for (Integer parentNode : parentNodes) {
       int parentEndTime = schedule.getTask(parentNode).getEndTime();

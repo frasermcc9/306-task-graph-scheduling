@@ -7,19 +7,24 @@ import com.jacketing.algorithm.interfaces.util.ScheduleFactory;
 import com.jacketing.algorithm.interfaces.util.topological.TopologicalSort;
 import com.jacketing.io.cli.ProgramContext;
 import com.jacketing.parsing.impl.structures.Graph;
-
 import java.util.List;
 
 public class ListScheduler extends AbstractSchedulingAlgorithm {
+
   private final List<Integer> topologicalOrderFinder;
   private final int numberOfProcessors;
-  public ListScheduler(Graph graph, ProgramContext context, ScheduleFactory scheduleFactory) {
+
+  public ListScheduler(
+    Graph graph,
+    ProgramContext context,
+    ScheduleFactory scheduleFactory
+  ) {
     super(graph, context, scheduleFactory);
     topologicalOrderFinder =
-      new TopologicalSortContext<>(TopologicalSort.withoutLayers(graph)).sortedTopological();
+      new TopologicalSortContext<>(TopologicalSort.withoutLayers(graph))
+        .sortedTopological();
     numberOfProcessors = context.getProcessorsToScheduleOn();
   }
-
 
   @Override
   public Schedule schedule() {
@@ -33,7 +38,12 @@ public class ListScheduler extends AbstractSchedulingAlgorithm {
       int curProc = 0;
       for (int processor = 0; processor < numberOfProcessors; processor++) {
         // for each processor, find proc that yields the earliest finish time.
-        int startTime = findEarliestStartTime(node, parentNodes, schedule, processor);
+        int startTime = findEarliestStartTime(
+          node,
+          parentNodes,
+          schedule,
+          processor
+        );
         if (earliestStartTime > startTime) {
           earliestStartTime = startTime;
           curProc = processor;
