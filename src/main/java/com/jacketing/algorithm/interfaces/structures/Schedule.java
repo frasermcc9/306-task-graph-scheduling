@@ -21,6 +21,8 @@ public interface Schedule {
 
   int getDuration();
 
+  int getEarliestFinishTime();
+
   int getProcessorEnd(int processor);
 
   int getNumberOfProcessors();

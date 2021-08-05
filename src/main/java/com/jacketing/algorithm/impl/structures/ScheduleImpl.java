@@ -19,6 +19,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
+import java.util.function.BiPredicate;
+import java.util.function.Consumer;
 
 public class ScheduleImpl implements Schedule {
 
@@ -71,12 +75,28 @@ public class ScheduleImpl implements Schedule {
   }
 
   public int getDuration() {
-    Collection<ProcessorTaskList> values = processorMap.values();
-    int max = 0;
-    for (ProcessorTaskList value : values) {
-      max = Math.max(max, value.getLastScheduledEndTime());
+    return getFinishTime(true);
+  }
+
+  public int getEarliestFinishTime() {
+    return getFinishTime(false);
+  }
+
+  private int getFinishTime(boolean max) {
+    int dur = 0;
+    BiFunction<Integer, Integer, Integer> method;
+    if (max) {
+      method = (n, m) -> {return Math.max(n, m);};
+    } else {
+      method = (n,m) -> {return Math.min(n, m);};
     }
-    return max;
+
+    Collection<ProcessorTaskList> values = processorMap.values();
+    for (ProcessorTaskList value : values) {
+      dur = method.apply(dur, value.getLastScheduledEndTime());
+    }
+
+    return dur;
   }
 
   @Override
