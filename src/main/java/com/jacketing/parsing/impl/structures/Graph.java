@@ -37,10 +37,12 @@ public class Graph {
    */
   private final GraphWeightService weightService;
 
+  private final String name;
+
   /**
    * Creates a new graph object, which is a structure that contains both an
    * adjacency list (for the graph structure) and a weight service (for node and
-   * edge weights).
+   * edge weights). Names the graph with a default name.
    *
    * @param adjacencyList a new adjacency list. Should not have called {@link
    *                      EnumeratedAdjacencyList#createRepresentation()} on the
@@ -52,11 +54,36 @@ public class Graph {
     EnumeratedAdjacencyList adjacencyList,
     GraphWeightService weightService
   ) {
+    this(adjacencyList, weightService, "Default");
+  }
+
+  /**
+   * Creates a new graph object, which is a structure that contains both an
+   * adjacency list (for the graph structure) and a weight service (for node and
+   * edge weights).
+   *
+   * @param adjacencyList a new adjacency list. Should not have called {@link
+   *                      EnumeratedAdjacencyList#createRepresentation()} on the
+   *                      adjacency list.
+   * @param weightService a new weight service. Should not have called {@link
+   *                      WeightService#formWeights()} on the weight service.
+   * @param name          the name of this graph
+   */
+  public Graph(
+    EnumeratedAdjacencyList adjacencyList,
+    GraphWeightService weightService,
+    String name
+  ) {
     this.adjacencyList = adjacencyList;
     this.weightService = weightService;
+    this.name = name;
 
     adjacencyList.createRepresentation();
     weightService.formWeights();
+  }
+
+  public String getName() {
+    return name;
   }
 
   /**
