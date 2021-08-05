@@ -21,6 +21,9 @@ public class VisualizationController {
   @FXML
   private LineChart<String, Double> thread4Graph;
 
+  @FXML
+  private LineChart<String, Double> ramGraph;
+
   public VisualizationController() {}
 
   @FXML
