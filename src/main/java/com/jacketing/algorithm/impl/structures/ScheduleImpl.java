@@ -16,6 +16,7 @@ package com.jacketing.algorithm.impl.structures;
 import com.jacketing.algorithm.interfaces.structures.Schedule;
 import com.jacketing.io.cli.ProgramContext;
 import java.util.*;
+import java.util.function.BiFunction;
 
 public class ScheduleImpl implements Schedule {
 
@@ -68,12 +69,28 @@ public class ScheduleImpl implements Schedule {
   }
 
   public int getDuration() {
-    Collection<ProcessorTaskList> values = processorMap.values();
-    int max = 0;
-    for (ProcessorTaskList value : values) {
-      max = Math.max(max, value.getLastScheduledEndTime());
+    return getFinishTime(true);
+  }
+
+  public int getEarliestFinishTime() {
+    return getFinishTime(false);
+  }
+
+  private int getFinishTime(boolean max) {
+    int dur = 0;
+    BiFunction<Integer, Integer, Integer> method;
+    if (max) {
+      method = Math::max;
+    } else {
+      method = Math::min;
     }
-    return max;
+
+    Collection<ProcessorTaskList> values = processorMap.values();
+    for (ProcessorTaskList value : values) {
+      dur = method.apply(dur, value.getLastScheduledEndTime());
+    }
+
+    return dur;
   }
 
   @Override

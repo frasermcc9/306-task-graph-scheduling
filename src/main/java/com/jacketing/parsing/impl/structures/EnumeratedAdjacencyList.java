@@ -45,6 +45,13 @@ public class EnumeratedAdjacencyList {
     introduceEdges();
   }
 
+  public List<Integer> getNodeIds() {
+    List<Integer> nodes = new ArrayList<>();
+    inAdjacencyList.forEach((key, value) -> nodes.add(key));
+
+    return nodes;
+  }
+
   public List<Integer> getChildNodes(int forNode) {
     return outAdjacencyList.get(forNode);
   }

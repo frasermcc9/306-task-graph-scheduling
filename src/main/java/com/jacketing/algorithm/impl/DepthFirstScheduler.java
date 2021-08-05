@@ -2,6 +2,7 @@ package com.jacketing.algorithm.impl;
 
 import com.jacketing.algorithm.impl.structures.Task;
 import com.jacketing.algorithm.impl.util.topological.TopologicalSortContext;
+import com.jacketing.algorithm.interfaces.SchedulingAlgorithmStrategy;
 import com.jacketing.algorithm.interfaces.structures.Schedule;
 import com.jacketing.algorithm.interfaces.util.ScheduleFactory;
 import com.jacketing.algorithm.interfaces.util.topological.TopologicalSort;
@@ -31,6 +32,12 @@ public class DepthFirstScheduler extends AbstractSchedulingAlgorithm {
     topologicalOrderFinder =
       new TopologicalSortContext<>(TopologicalSort.withLayers(graph));
     numberOfProcessors = context.getProcessorsToScheduleOn();
+
+    SchedulingAlgorithmStrategy algorithm = SchedulingAlgorithmStrategy.create(
+      new ListScheduler(graph, context, ScheduleFactory.create())
+    );
+
+    upperBound = algorithm.schedule().getDuration();
   }
 
   /**
@@ -70,18 +77,12 @@ public class DepthFirstScheduler extends AbstractSchedulingAlgorithm {
       int nodeWeight = graph.getNodeWeight(node);
       List<Integer> parentNodes = graph.getAdjacencyList().getParentNodes(node);
       for (int processor = 0; processor < numberOfProcessors; processor++) {
-        // if the prerequisite node that ends latest is in the different proc
-        int startTime = 0;
-        for (Integer parentNode : parentNodes) {
-          int parentEndTime = partialSchedule.getTask(parentNode).getEndTime();
-          if (partialSchedule.getProcessor(parentNode) != processor) {
-            startTime =
-              Math.max(
-                startTime,
-                parentEndTime + graph.getEdgeWeight().from(parentNode).to(node)
-              );
-          }
-        }
+        int startTime = findEarliestStartTime(
+          node,
+          parentNodes,
+          partialSchedule,
+          processor
+        );
 
         Task task = new Task(
           Math.max(startTime, partialSchedule.getProcessorEnd(processor)),
