@@ -12,15 +12,13 @@ public class CpuReader {
 
   private final ThreadMXBean threadBean;
   private final RuntimeMXBean runtimeBean;
-  private final List<double[]> model;
+  private final List<CpuStatModel> models = new ArrayList<>();
 
   /**
    * Reads cpu memory at 400ms intervals
-   * @param model Model to add the utilization details to. It will have a max size of 100.
+   * @param model Model to handle changes of data.
    */
-  public CpuReader(List<double[]> model) {
-    this.model = model;
-
+  public CpuReader() {
     threadBean = (ThreadMXBean) ManagementFactory.getThreadMXBean();
     runtimeBean = ManagementFactory.getRuntimeMXBean();
 
@@ -31,18 +29,12 @@ public class CpuReader {
       while(true) {
         pollCpu();
         try {
-          Thread.sleep(200);
+          Thread.sleep(25);
         } catch (InterruptedException e) {
           e.printStackTrace();
         }
       }
     }).start();
-  }
-
-  public static void main(String[] args) {
-    List<double[]> model = new ArrayList<>();
-    CpuReader reader = new CpuReader(model);
-    reader.setSyntheticLoad();
   }
 
   /**
@@ -56,6 +48,14 @@ public class CpuReader {
     for (int thread = 0; thread < numCore * numThreadsPerCore; thread++) {
       new BusyThread("Thread" + thread, load, duration).start();
     }
+  }
+
+  /**
+   * Add model listener
+   * @param model
+   */
+  public void addModel(CpuStatModel model) {
+    models.add(model);
   }
 
   /**
@@ -95,12 +95,9 @@ public class CpuReader {
       }
     }
 
-    if (model.size() > 100) {
-      model.remove(0);
+    for (CpuStatModel model : models) {
+      model.change(CpuUsageFormatter.format(threadCPUUsage));
     }
-
-    // threadCPUUsage contains cpu % per thread
-    model.add(CpuUsageFormatter.format(threadCPUUsage));
   }
 
 }
