@@ -1,7 +1,7 @@
 package com.jacketing.view;
 
-import com.jacketing.util.CpuReader;
-import javafx.application.Platform;
+import com.jacketing.util.CPU.CpuReader;
+import com.jacketing.util.CPU.CpuStatModel;
 import javafx.fxml.FXML;
 import javafx.scene.chart.Axis;
 import javafx.scene.chart.LineChart;

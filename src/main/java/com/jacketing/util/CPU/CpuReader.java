@@ -1,4 +1,4 @@
-package com.jacketing.util;
+package com.jacketing.util.CPU;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
