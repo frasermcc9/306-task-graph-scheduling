@@ -26,8 +26,6 @@ public class VisualizationController {
   @FXML
   private LineChart<String, Long> ramGraph;
 
-  public VisualizationController() {}
-
   @FXML
   public void initialize() {
 
