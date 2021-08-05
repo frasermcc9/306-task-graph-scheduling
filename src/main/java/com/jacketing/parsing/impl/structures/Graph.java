@@ -149,7 +149,7 @@ public class Graph {
    * @param node
    * @return longest path from the node to end.
    * @implNote It runs recursively bottom-up.
-   * Worst case it will traverse all nodes and edges in the graph, thus, O(|V|+|E|)
+   * Worst case it will traverse all nodes in the graph, thus, O(|V|)
    */
 
   public int getBLevel(int node){
@@ -167,7 +167,7 @@ public class Graph {
 
     int maxBl = 0;
     for(int childNode : childNodes) {
-      maxBl = Math.max(maxBl, getBLevel(childNode) + weightService.edgeWeight().from(node).to(childNode));
+      maxBl = Math.max(maxBl, getBLevel(childNode));
     }
 
     bLevels[node] = maxBl + weightService.nodeWeight(node);
