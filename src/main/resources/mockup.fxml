@@ -95,7 +95,7 @@
                            </VBox.margin>
                            <children>
                               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Ram Usage" />
-                              <LineChart minHeight="0.0" minWidth="0.0">
+                              <LineChart fx:id="ramGraph" minHeight="0.0" minWidth="0.0">
                                 <xAxis>
                                   <CategoryAxis side="BOTTOM" />
                                 </xAxis>
