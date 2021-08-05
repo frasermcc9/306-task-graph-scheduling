@@ -32,11 +32,11 @@ public class GraphTest {
   @Test
   public void testCriticalTime() {
     int criticalTime = graph.getCriticalTime();
-    assertTrue(criticalTime == 10);
+    assertTrue(criticalTime == 7);
 
     graph = TestUtil.graphVariantTwo();
     criticalTime = graph.getCriticalTime();
-    assertTrue(criticalTime==54);
+    assertTrue(criticalTime==18);
   }
 
 }
