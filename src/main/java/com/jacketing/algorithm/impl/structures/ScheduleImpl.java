@@ -77,12 +77,14 @@ public class ScheduleImpl implements Schedule {
   }
 
   private int getFinishTime(boolean max) {
-    int dur = 0;
+    int dur;
     BiFunction<Integer, Integer, Integer> method;
     if (max) {
       method = Math::max;
+      dur = 0;
     } else {
       method = Math::min;
+      dur = Integer.MAX_VALUE;
     }
 
     Collection<ProcessorTaskList> values = processorMap.values();
@@ -106,12 +108,7 @@ public class ScheduleImpl implements Schedule {
 
   @Override
   public Task getTaskForNode(int nodeId) {
-    for (Task task : getAllTasks()) {
-      if (task.getId() == nodeId) {
-        return task;
-      }
-    }
-    return null;
+    return taskIdToTaskMap.get(nodeId);
   }
 
   @Override
