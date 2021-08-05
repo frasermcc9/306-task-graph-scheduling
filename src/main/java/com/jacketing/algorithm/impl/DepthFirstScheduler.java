@@ -5,7 +5,7 @@ import com.jacketing.algorithm.impl.util.topological.TopologicalSortContext;
 import com.jacketing.algorithm.interfaces.structures.Schedule;
 import com.jacketing.algorithm.interfaces.util.ScheduleFactory;
 import com.jacketing.algorithm.interfaces.util.topological.TopologicalSort;
-import com.jacketing.io.cli.ProgramContext;
+import com.jacketing.io.cli.AlgorithmContext;
 import com.jacketing.parsing.impl.structures.Graph;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +18,7 @@ public class DepthFirstScheduler extends AbstractSchedulingAlgorithm {
 
   public DepthFirstScheduler(
     Graph graph,
-    ProgramContext context,
+    AlgorithmContext context,
     ScheduleFactory scheduleFactory
   ) {
     super(graph, context, scheduleFactory);

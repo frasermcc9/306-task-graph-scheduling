@@ -14,21 +14,18 @@
 package com.jacketing.algorithm.impl.structures;
 
 import com.jacketing.algorithm.interfaces.structures.Schedule;
-import com.jacketing.io.cli.ProgramContext;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import com.jacketing.io.cli.AlgorithmContext;
+import java.util.*;
 
 public class ScheduleImpl implements Schedule {
 
-  private final ProgramContext context;
+  private final AlgorithmContext context;
   private final Map<Integer, ProcessorTaskList> processorMap;
   private final Map<Integer, Task> taskIdToTaskMap;
   private final Map<Task, Integer> inverseProcessorMap;
 
   public ScheduleImpl(
-    ProgramContext context,
+    AlgorithmContext context,
     Map<Integer, ProcessorTaskList> processorMap,
     Map<Integer, Task> taskIdToTaskMap
   ) {
@@ -80,7 +77,7 @@ public class ScheduleImpl implements Schedule {
   }
 
   @Override
-  public ArrayList<Task> getAllTasks() {
+  public List<Task> getAllTasks() {
     // Convert map of lists, to one list
     Collection<ProcessorTaskList> processorProcessorTaskLists = processorMap.values();
     ArrayList<Task> allTasks = new ArrayList<>();
