@@ -16,10 +16,11 @@ public class DepthFirstScheduler extends AbstractSchedulingAlgorithm {
 
   private final int numberOfProcessors;
   private final TopologicalSortContext<List<Integer>> topologicalOrderFinder;
-  private Schedule bestSchedule;
-  private int upperBound;
 
   Set<String> equivalents = new HashSet<>();
+
+  private Schedule bestSchedule;
+  private int upperBound;
 
   public DepthFirstScheduler(
     Graph graph,
