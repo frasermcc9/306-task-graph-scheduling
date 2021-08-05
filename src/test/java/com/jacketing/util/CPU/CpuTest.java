@@ -9,7 +9,12 @@ public class CpuTest {
 
   @Test
   public void testCpu() throws InterruptedException {
-    XYChart.Series series = new XYChart.Series();
+    XYChart.Series<String, Double> series = new XYChart.Series();
+
+    for (int i = 0; i <= 100; i++) {
+      series.getData().add(new XYChart.Data<>("", 1D));
+    }
+
     CpuStatModel model = new CpuStatModel(series, 0);
     CpuReader reader = new CpuReader();
     reader.setSyntheticLoad();
