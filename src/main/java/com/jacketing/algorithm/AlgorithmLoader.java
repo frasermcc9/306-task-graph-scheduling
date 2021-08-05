@@ -13,7 +13,6 @@
 
 package com.jacketing.algorithm;
 
-import com.jacketing.algorithm.impl.DepthFirstScheduler;
 import com.jacketing.algorithm.interfaces.SchedulingAlgorithmStrategy;
 import com.jacketing.algorithm.interfaces.structures.Schedule;
 import com.jacketing.algorithm.interfaces.util.ScheduleFactory;
@@ -26,22 +25,31 @@ public class AlgorithmLoader implements Loader<Schedule> {
 
   private final Graph graph;
   private final AlgorithmContext context;
+  private final AlgorithmFactory algorithmFactory;
 
   private AlgorithmLoader(
-    @NotNull Graph graph,
-    @NotNull AlgorithmContext context
+    @NotNull final Graph graph,
+    @NotNull final AlgorithmContext context,
+    @NotNull final AlgorithmFactory algorithmFactory
   ) {
     this.graph = graph;
     this.context = context;
+    this.algorithmFactory = algorithmFactory;
   }
 
-  public static Loader<Schedule> create(Graph graph, AlgorithmContext context) {
-    return new AlgorithmLoader(graph, context);
+  public static Loader<Schedule> create(
+    @NotNull final Graph graph,
+    @NotNull final AlgorithmContext context,
+    @NotNull final AlgorithmFactory algorithmFactory
+  ) {
+    return new AlgorithmLoader(graph, context, algorithmFactory);
   }
 
   public Schedule load() {
-    SchedulingAlgorithmStrategy schedulingAlgorithmStrategy = SchedulingAlgorithmStrategy.create(
-      new DepthFirstScheduler(graph, context, ScheduleFactory.create())
+    SchedulingAlgorithmStrategy schedulingAlgorithmStrategy = algorithmFactory.createAlgorithm(
+      graph,
+      context,
+      ScheduleFactory.create()
     );
 
     return schedulingAlgorithmStrategy.schedule();

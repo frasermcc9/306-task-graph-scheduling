@@ -16,6 +16,7 @@ package com.jacketing;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.ParameterException;
 import com.jacketing.algorithm.AlgorithmLoader;
+import com.jacketing.algorithm.impl.DepthFirstScheduler;
 import com.jacketing.algorithm.interfaces.structures.Schedule;
 import com.jacketing.common.Loader;
 import com.jacketing.io.cli.ApplicationContext;
@@ -55,7 +56,11 @@ public class Entry {
     );
     Graph graph = graphLoader.load();
 
-    Loader<Schedule> scheduleLoader = AlgorithmLoader.create(graph, context);
+    Loader<Schedule> scheduleLoader = AlgorithmLoader.create(
+      graph,
+      context,
+      DepthFirstScheduler::new
+    );
     Schedule schedule = scheduleLoader.load();
 
     Loader<Void> outputLoader = OutputLoader.create(
