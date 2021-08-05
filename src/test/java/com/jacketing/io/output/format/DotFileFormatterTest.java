@@ -18,18 +18,14 @@ import com.jacketing.parsing.impl.structures.Graph;
 import com.jacketing.parsing.interfaces.structures.services.EnumeratedNodeMap;
 import com.paypal.digraph.parser.GraphParser;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
-import java.util.Scanner;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
 
 public class DotFileFormatterTest {
 
@@ -137,6 +133,8 @@ public class DotFileFormatterTest {
     );
     assertEquals(getVaildOutputString(), content);
     File fileToDelete = new File("output");
-    fileToDelete.delete();
+    if (!fileToDelete.delete()) {
+      System.out.println("File output was not deleted.");
+    }
   }
 }
