@@ -16,6 +16,7 @@ package com.jacketing.parsing.impl.structures;
 import com.jacketing.parsing.impl.services.WeightService;
 import com.jacketing.parsing.interfaces.structures.services.GraphWeightService;
 import java.util.List;
+import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
 
 public class Graph {
 
@@ -38,17 +39,21 @@ public class Graph {
   private final GraphWeightService weightService;
 
   private final String name;
+  private final int[] bLevels;
+
+  private int criticalTime;
 
   /**
    * Creates a new graph object, which is a structure that contains both an
    * adjacency list (for the graph structure) and a weight service (for node and
    * edge weights). Names the graph with a default name.
    *
-   * @param adjacencyList a new adjacency list. Should not have called {@link
-   *                      EnumeratedAdjacencyList#createRepresentation()} on the
-   *                      adjacency list.
-   * @param weightService a new weight service. Should not have called {@link
-   *                      WeightService#formWeights()} on the weight service.
+   * @param adjacencyList a new adjacency list. Should not have called
+   *                      {@link EnumeratedAdjacencyList#createRepresentation()}
+   *                      on the adjacency list.
+   * @param weightService a new weight service. Should not have called
+   *                      {@link WeightService#formWeights()} on the weight
+   *                      service.
    */
   public Graph(
     EnumeratedAdjacencyList adjacencyList,
@@ -62,11 +67,12 @@ public class Graph {
    * adjacency list (for the graph structure) and a weight service (for node and
    * edge weights).
    *
-   * @param adjacencyList a new adjacency list. Should not have called {@link
-   *                      EnumeratedAdjacencyList#createRepresentation()} on the
-   *                      adjacency list.
-   * @param weightService a new weight service. Should not have called {@link
-   *                      WeightService#formWeights()} on the weight service.
+   * @param adjacencyList a new adjacency list. Should not have called
+   *                      {@link EnumeratedAdjacencyList#createRepresentation()}
+   *                      on the adjacency list.
+   * @param weightService a new weight service. Should not have called
+   *                      {@link WeightService#formWeights()} on the weight
+   *                      service.
    * @param name          the name of this graph
    */
   public Graph(
@@ -80,6 +86,8 @@ public class Graph {
 
     adjacencyList.createRepresentation();
     weightService.formWeights();
+
+    bLevels = new int[adjacencyList.getNodeCount()];
   }
 
   public String getName() {
@@ -87,8 +95,7 @@ public class Graph {
   }
 
   /**
-   * Translate the integer enumerated node into its String value
-   * representation.
+   * Translate the integer enumerated node into its String value representation.
    *
    * @param enumeratedNode the enumerated integer of the node
    * @return the original string representation of the node
@@ -127,7 +134,10 @@ public class Graph {
    * Allows the caller to get the weight between two edges (i.e. communication
    * delay).
    *
-   * <pre>getEdgeWeight().from(0).to(3);</pre>
+   * <pre>
+   * getEdgeWeight().from(0).to(3);
+   * </pre>
+   *
    * The above will get the edge weight of travelling from node 0 to node 3.
    *
    * @return the weight between the two nodes.
@@ -142,5 +152,57 @@ public class Graph {
 
   public List<Integer> parentNodesFor(int forNode) {
     return adjacencyList.getParentNodes(forNode);
+  }
+
+  /**
+   * Calculate the overall longest path length Sum of task weights + edge weights.
+   *
+   * @return critical path.
+   */
+  public int getCriticalTime() {
+    if (criticalTime != 0) {
+      return criticalTime;
+    }
+
+    criticalTime = 0;
+    for (int node : adjacencyList.getNodeIds()) {
+      getBLevel(node);
+    }
+
+    return criticalTime;
+  }
+
+  /**
+   * Returns the longest path (sum of task weights + edge) from the input node to
+   * last node of the graph.
+   *
+   * @param node
+   * @return longest path from the node to end.
+   * @implNote It runs recursively bottom-up. Worst case it will traverse all
+   *           nodes in the graph, thus, O(|V|)
+   */
+
+  public int getBLevel(int node) {
+    // bl(node) has already been calculated
+    if (bLevels[node] != 0) {
+      return bLevels[node];
+    }
+
+    List<Integer> childNodes = adjacencyList.getChildNodes(node);
+    // if the node is at 0th level, bl(node) = w_node
+    if (childNodes.isEmpty()) {
+      bLevels[node] = weightService.nodeWeight(node);
+      return bLevels[node];
+    }
+
+    int maxBl = 0;
+    for (int childNode : childNodes) {
+      maxBl = Math.max(maxBl, getBLevel(childNode));
+    }
+
+    bLevels[node] = maxBl + weightService.nodeWeight(node);
+    criticalTime = Math.max(criticalTime, bLevels[node]);
+
+    return bLevels[node];
   }
 }

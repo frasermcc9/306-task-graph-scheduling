@@ -16,6 +16,7 @@ package com.jacketing.algorithm.impl.structures;
 import com.jacketing.algorithm.interfaces.structures.Schedule;
 import com.jacketing.io.cli.AlgorithmContext;
 import java.util.*;
+import java.util.function.BiFunction;
 
 public class ScheduleImpl implements Schedule {
 
@@ -68,12 +69,28 @@ public class ScheduleImpl implements Schedule {
   }
 
   public int getDuration() {
-    Collection<ProcessorTaskList> values = processorMap.values();
-    int max = 0;
-    for (ProcessorTaskList value : values) {
-      max = Math.max(max, value.getLastScheduledEndTime());
+    return getFinishTime(true);
+  }
+
+  public int getEarliestFinishTime() {
+    return getFinishTime(false);
+  }
+
+  private int getFinishTime(boolean max) {
+    int dur = 0;
+    BiFunction<Integer, Integer, Integer> method;
+    if (max) {
+      method = Math::max;
+    } else {
+      method = Math::min;
     }
-    return max;
+
+    Collection<ProcessorTaskList> values = processorMap.values();
+    for (ProcessorTaskList value : values) {
+      dur = method.apply(dur, value.getLastScheduledEndTime());
+    }
+
+    return dur;
   }
 
   @Override
@@ -136,5 +153,41 @@ public class ScheduleImpl implements Schedule {
   @Override
   public boolean isFullyPopulated(int graphSize) {
     return getTotalScheduledTasks() == graphSize;
+  }
+
+  @Override
+  public int hashCode() {
+    String[] strings = new String[this.context.getProcessorsToScheduleOn()];
+
+    for (int i = 0; i < this.processorMap.size(); i++) {
+      ProcessorTaskList list = this.processorMap.get(i);
+      StringBuilder sb = new StringBuilder();
+      for (Task task : list) {
+        sb.append(task.getId()).append(task.getStartTime());
+      }
+      strings[i] = sb.toString();
+    }
+
+    Arrays.sort(strings);
+
+    return String.join("", strings).hashCode();
+  }
+
+  @Override
+  public String stringIdentifier() {
+    String[] strings = new String[this.context.getProcessorsToScheduleOn()];
+
+    for (int i = 0; i < this.processorMap.size(); i++) {
+      ProcessorTaskList list = this.processorMap.get(i);
+      StringBuilder sb = new StringBuilder();
+      for (Task task : list) {
+        sb.append(task.getId()).append(task.getStartTime());
+      }
+      strings[i] = sb.toString();
+    }
+
+    Arrays.sort(strings);
+
+    return String.join("", strings);
   }
 }

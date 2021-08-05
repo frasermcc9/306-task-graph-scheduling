@@ -21,6 +21,8 @@ public interface Schedule {
 
   int getDuration();
 
+  int getEarliestFinishTime();
+
   int getProcessorEnd(int processor);
 
   int getNumberOfProcessors();
@@ -38,4 +40,6 @@ public interface Schedule {
   int getTotalScheduledTasks();
 
   boolean isFullyPopulated(int graphSize);
+
+  String stringIdentifier();
 }

@@ -64,17 +64,12 @@ public class BruteForceScheduler extends AbstractSchedulingAlgorithm {
       List<Integer> parentNodes = graph.getAdjacencyList().getParentNodes(node);
       for (int processor = 0; processor < numberOfProcessors; processor++) {
         // if the prerequisite node that ends latest is in the different proc
-        int startTime = 0;
-        for (Integer parentNode : parentNodes) {
-          int parentEndTime = curState.getTask(parentNode).getEndTime();
-          if (curState.getProcessor(parentNode) != processor) {
-            startTime =
-              Math.max(
-                startTime,
-                parentEndTime + graph.getEdgeWeight().from(parentNode).to(node)
-              );
-          }
-        }
+        int startTime = findEarliestStartTime(
+          node,
+          parentNodes,
+          curState,
+          processor
+        );
 
         Task task = new Task(
           Math.max(startTime, curState.getProcessorEnd(processor)),

@@ -1,1 +1,7 @@
 * text=auto eol=lf
+
+*.ai binary
+*.png binary
+*.jpeg binary
+*.jpg binary
+*.svg binary
