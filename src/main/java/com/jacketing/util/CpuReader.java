@@ -13,12 +13,13 @@ public class CpuReader {
   private final ThreadMXBean threadBean;
   private final RuntimeMXBean runtimeBean;
   private final List<double[]> model;
+  private boolean syntheticLoad = false;
 
   /**
    * Reads cpu memory at 400ms intervals
-   * @param testing Set to enable synthetic CPU usage
+   * @param model Model to add the utilization details to. It will have a max size of 100.
    */
-  public CpuReader(List<double[]> model, boolean testing) {
+  public CpuReader(List<double[]> model) {
     this.model = model;
 
     threadBean = (ThreadMXBean) ManagementFactory.getThreadMXBean();
@@ -38,7 +39,7 @@ public class CpuReader {
       }
     }).start();
 
-    if (testing) {
+    if (syntheticLoad) {
       int numCore = 16;
       int numThreadsPerCore = 2;
       double load = 0.8;
@@ -50,8 +51,16 @@ public class CpuReader {
   }
 
   public static void main(String[] args) {
-    List<double[]> model = new ArrayList<double[]>();
-    new CpuReader(model, false);
+    List<double[]> model = new ArrayList<>();
+    CpuReader reader = new CpuReader(model);
+    reader.setSyntheticLoad();
+  }
+
+  /**
+   * Enable synthetic load to test utilization
+   */
+  public void setSyntheticLoad() {
+    syntheticLoad = true;
   }
 
   /**
