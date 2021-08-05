@@ -26,13 +26,13 @@ Jacketing Studio Scheduler is a multi-platform, parallelized task scheduler with
 
 <h3>Team</h3>
 
-| Name            | GitHub                                    |
-| --------------- | ----------------------------------------- |
-| James Coppard   | [nzbasic](github.com/nzbasic)             |
-| Fraser McCallum | [frasermcc9](github.com/frasermcc9)       |
-| Fuki Babasaki   | [Fuki-UoA](github.com/Fuki-UoA)           |
-| Bruce Zeng      | [BruceZeng1](github.com/BruceZeng1)       |
-| Brendon Joe     | [BraveNewWorld](github.com/BraveNewWorld) |
+| Name            | GitHub                                            |
+| --------------- | ------------------------------------------------- |
+| James Coppard   | [nzbasic](https://github.com/nzbasic)             |
+| Fraser McCallum | [frasermcc9](https://github.com/frasermcc9)       |
+| Fuki Babasaki   | [Fuki-UoA](https://github.com/Fuki-UoA)           |
+| Bruce Zeng      | [BruceZeng1](https://github.com/BruceZeng1)       |
+| Brendon Joe     | [BraveNewWord](https://github.com/BraveNewWord)   |
 
 <h3>Screenshots</h3>
 
