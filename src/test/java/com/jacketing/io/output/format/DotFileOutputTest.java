@@ -27,7 +27,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class DotFileFormatterTest {
+public class DotFileOutputTest {
 
   DotFileFormatter fileFormatter;
   StandardFileSaver fileSaver;
@@ -74,7 +74,14 @@ public class DotFileFormatterTest {
   }
 
   @After
-  public void tearDown() throws Exception {}
+  public void tearDown() throws Exception {
+    File fileToDelete = new File("output");
+    if (!fileToDelete.delete()) {
+      System.out.println("File output was not deleted.");
+    } else {
+      System.out.println("File output deleted.");
+    }
+  }
 
   public Graph getGraphG1() {
     return createGraphFromBuffer(
@@ -132,9 +139,6 @@ public class DotFileFormatterTest {
       StandardCharsets.UTF_8
     );
     assertEquals(getValidOutputString(), content);
-    File fileToDelete = new File("output");
-    if (!fileToDelete.delete()) {
-      System.out.println("File output was not deleted.");
-    }
+    System.out.println("File output created");
   }
 }
