@@ -8,20 +8,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.jacketing.parsing.impl.CpuUsageFormatter;
-import com.sun.management.OperatingSystemMXBean;
 import com.sun.management.ThreadMXBean;
 
 public class CpuReader {
 
-  private OperatingSystemMXBean osBean;
-  private ThreadMXBean threadBean;
-  private RuntimeMXBean runtimeBean;
+  private final ThreadMXBean threadBean;
+  private final RuntimeMXBean runtimeBean;
 
   /**
    * Reads cpu memory at 400ms intervals
    */
   public CpuReader() {
-    osBean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
     threadBean = (ThreadMXBean) ManagementFactory.getThreadMXBean();
     runtimeBean = ManagementFactory.getRuntimeMXBean();
 
@@ -49,7 +46,7 @@ public class CpuReader {
   }
 
   public static void main(String[] args) {
-    CpuReader cpu = new CpuReader();
+    new CpuReader();
   }
 
   /**
@@ -57,8 +54,8 @@ public class CpuReader {
    */
   private void pollCpu() {
     int sampleTime = 200;
-    Map<Long, Long> threadInitialCPU = new HashMap<Long, Long>();
-    Map<Long, Float> threadCPUUsage = new HashMap<Long, Float>();
+    Map<Long, Long> threadInitialCPU = new HashMap<>();
+    Map<Long, Float> threadCPUUsage = new HashMap<>();
     long initialUptime = runtimeBean.getUptime();
 
     ThreadInfo[] threadInfos = threadBean.dumpAllThreads(false, false);
@@ -66,11 +63,11 @@ public class CpuReader {
       threadInitialCPU.put(info.getThreadId(), threadBean.getThreadCpuTime(info.getThreadId()));
     }
 
-    try {Thread.sleep(sampleTime);} catch (InterruptedException e) {}
+    try {Thread.sleep(sampleTime);} catch (InterruptedException ignored) {}
 
     long upTime = runtimeBean.getUptime();
 
-    Map<Long, Long> threadCurrentCPU = new HashMap<Long, Long>();
+    Map<Long, Long> threadCurrentCPU = new HashMap<>();
     threadInfos = threadBean.dumpAllThreads(false, false);
     for (ThreadInfo info : threadInfos) {
       threadCurrentCPU.put(info.getThreadId(), threadBean.getThreadCpuTime(info.getThreadId()));

@@ -23,7 +23,7 @@ public class CpuUsageFormatter {
         break;
       }
 
-      if (!DoubleStream.of(output).anyMatch(x -> x == value)) {
+      if (DoubleStream.of(output).noneMatch(x -> x == value)) {
         output[i] = value;
         i++;
       }
