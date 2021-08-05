@@ -16,7 +16,6 @@ public class CpuReader {
 
   /**
    * Reads cpu memory at 400ms intervals
-   * @param model Model to handle changes of data.
    */
   public CpuReader() {
     threadBean = (ThreadMXBean) ManagementFactory.getThreadMXBean();
