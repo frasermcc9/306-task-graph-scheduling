@@ -42,7 +42,7 @@ public class Entry {
       if (programContext.isVisualized()) {
         Application.launch(ApplicationEntry.class);
       } else {
-        beginSearch();
+        beginSearch(programContext);
       }
     } catch (ParameterException e) {
       System.out.println(e.getMessage());
