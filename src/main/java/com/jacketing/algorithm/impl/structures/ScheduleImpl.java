@@ -14,21 +14,19 @@
 package com.jacketing.algorithm.impl.structures;
 
 import com.jacketing.algorithm.interfaces.structures.Schedule;
-import com.jacketing.io.cli.ProgramContext;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import com.jacketing.io.cli.AlgorithmContext;
+import java.util.*;
+import java.util.function.BiFunction;
 
 public class ScheduleImpl implements Schedule {
 
-  private final ProgramContext context;
+  private final AlgorithmContext context;
   private final Map<Integer, ProcessorTaskList> processorMap;
   private final Map<Integer, Task> taskIdToTaskMap;
   private final Map<Task, Integer> inverseProcessorMap;
 
   public ScheduleImpl(
-    ProgramContext context,
+    AlgorithmContext context,
     Map<Integer, ProcessorTaskList> processorMap,
     Map<Integer, Task> taskIdToTaskMap
   ) {
@@ -71,16 +69,34 @@ public class ScheduleImpl implements Schedule {
   }
 
   public int getDuration() {
-    Collection<ProcessorTaskList> values = processorMap.values();
-    int max = 0;
-    for (ProcessorTaskList value : values) {
-      max = Math.max(max, value.getLastScheduledEndTime());
+    return getFinishTime(true);
+  }
+
+  public int getEarliestFinishTime() {
+    return getFinishTime(false);
+  }
+
+  private int getFinishTime(boolean max) {
+    int dur;
+    BiFunction<Integer, Integer, Integer> method;
+    if (max) {
+      method = Math::max;
+      dur = 0;
+    } else {
+      method = Math::min;
+      dur = Integer.MAX_VALUE;
     }
-    return max;
+
+    Collection<ProcessorTaskList> values = processorMap.values();
+    for (ProcessorTaskList value : values) {
+      dur = method.apply(dur, value.getLastScheduledEndTime());
+    }
+
+    return dur;
   }
 
   @Override
-  public ArrayList<Task> getAllTasks() {
+  public List<Task> getAllTasks() {
     // Convert map of lists, to one list
     Collection<ProcessorTaskList> processorProcessorTaskLists = processorMap.values();
     ArrayList<Task> allTasks = new ArrayList<>();
@@ -92,12 +108,7 @@ public class ScheduleImpl implements Schedule {
 
   @Override
   public Task getTaskForNode(int nodeId) {
-    for (Task task : getAllTasks()) {
-      if (task.getId() == nodeId) {
-        return task;
-      }
-    }
-    return null;
+    return taskIdToTaskMap.get(nodeId);
   }
 
   @Override
@@ -139,5 +150,41 @@ public class ScheduleImpl implements Schedule {
   @Override
   public boolean isFullyPopulated(int graphSize) {
     return getTotalScheduledTasks() == graphSize;
+  }
+
+  @Override
+  public int hashCode() {
+    String[] strings = new String[this.context.getProcessorsToScheduleOn()];
+
+    for (int i = 0; i < this.processorMap.size(); i++) {
+      ProcessorTaskList list = this.processorMap.get(i);
+      StringBuilder sb = new StringBuilder();
+      for (Task task : list) {
+        sb.append(task.getId()).append(task.getStartTime());
+      }
+      strings[i] = sb.toString();
+    }
+
+    Arrays.sort(strings);
+
+    return String.join("", strings).hashCode();
+  }
+
+  @Override
+  public String stringIdentifier() {
+    String[] strings = new String[this.context.getProcessorsToScheduleOn()];
+
+    for (int i = 0; i < this.processorMap.size(); i++) {
+      ProcessorTaskList list = this.processorMap.get(i);
+      StringBuilder sb = new StringBuilder();
+      for (Task task : list) {
+        sb.append(task.getId()).append(task.getStartTime());
+      }
+      strings[i] = sb.toString();
+    }
+
+    Arrays.sort(strings);
+
+    return String.join("", strings);
   }
 }

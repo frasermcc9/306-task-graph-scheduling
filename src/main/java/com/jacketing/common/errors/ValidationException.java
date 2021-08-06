@@ -11,18 +11,13 @@
  *
  */
 
-package com.jacketing.algorithm.interfaces.util;
+package com.jacketing.common.errors;
 
-import com.jacketing.algorithm.impl.util.ScheduleFactoryImpl;
-import com.jacketing.algorithm.interfaces.structures.Schedule;
-import com.jacketing.io.cli.AlgorithmContext;
+public class ValidationException extends RuntimeException {
 
-public interface ScheduleFactory {
-  static ScheduleFactory create() {
-    return new ScheduleFactoryImpl();
+  public ValidationException(String message) {
+    super(message);
   }
 
-  Schedule newSchedule(AlgorithmContext ctx);
-
-  Schedule copy(Schedule schedule);
+  public ValidationException() {}
 }

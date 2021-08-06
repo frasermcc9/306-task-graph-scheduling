@@ -27,13 +27,6 @@ public class EntryTest {
   }
 
   @Test
-  public void testEntry() {
-    String[] args = { "INPUT.dot", "2" };
-    Entry.main(args);
-    Assert.assertEquals("Starting search...", outContent.toString().trim());
-  }
-
-  @Test
   public void testInvalidEntry() {
     String[] args = {};
     Entry.main(args);
@@ -41,14 +34,6 @@ public class EntryTest {
       "2 arguments expected, received 0",
       outContent.toString().trim().split("\n")[0].trim()
     );
-  }
-
-  @Test
-  public void testVisualize() throws InterruptedException {
-    String[] args = { "INPUT.dot", "2", "-v" };
-
-    new Thread(() -> Entry.main(args)).start();
-    Thread.sleep(1000);
   }
 
   @Test
