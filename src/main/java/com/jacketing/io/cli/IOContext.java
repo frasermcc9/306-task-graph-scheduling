@@ -11,18 +11,12 @@
  *
  */
 
-package com.jacketing.algorithm.interfaces.util;
+package com.jacketing.io.cli;
 
-import com.jacketing.algorithm.impl.util.ScheduleFactoryImpl;
-import com.jacketing.algorithm.interfaces.structures.Schedule;
-import com.jacketing.io.cli.AlgorithmContext;
+public interface IOContext {
+  String getInputFile();
 
-public interface ScheduleFactory {
-  static ScheduleFactory create() {
-    return new ScheduleFactoryImpl();
-  }
+  boolean isVisualized();
 
-  Schedule newSchedule(AlgorithmContext ctx);
-
-  Schedule copy(Schedule schedule);
+  String getOutputName();
 }

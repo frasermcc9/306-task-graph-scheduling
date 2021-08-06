@@ -19,7 +19,7 @@ import com.beust.jcommander.validators.PositiveInteger;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProgramContext {
+public class ProgramContext implements ApplicationContext {
 
   @Parameter
   private List<String> input = new ArrayList<>();
@@ -33,22 +33,27 @@ public class ProgramContext {
   @Parameter(names = { "-o" })
   private String outputName;
 
+  @Override
   public String getInputFile() {
     return input.get(0);
   }
 
+  @Override
   public int getProcessorsToScheduleOn() {
     return Integer.parseInt(input.get(1));
   }
 
+  @Override
   public int getCoresToCalculateWith() {
     return coresToCalculateWith;
   }
 
+  @Override
   public boolean isVisualized() {
     return visualize;
   }
 
+  @Override
   public String getOutputName() {
     if (outputName != null) {
       return outputName;
@@ -59,6 +64,7 @@ public class ProgramContext {
     }
   }
 
+  @Override
   public void validate() throws IllegalArgumentException {
     if (input.size() != 2) {
       throw new ParameterException(
@@ -81,6 +87,7 @@ public class ProgramContext {
     }
   }
 
+  @Override
   public String helpText() {
     String output = "";
     output += "java -jar scheduler.jar INPUT.dot P [OPTIONS]\n";

@@ -6,7 +6,7 @@ import com.jacketing.algorithm.interfaces.SchedulingAlgorithmStrategy;
 import com.jacketing.algorithm.interfaces.structures.Schedule;
 import com.jacketing.algorithm.interfaces.util.ScheduleFactory;
 import com.jacketing.algorithm.interfaces.util.topological.TopologicalSort;
-import com.jacketing.io.cli.ProgramContext;
+import com.jacketing.io.cli.AlgorithmContext;
 import com.jacketing.parsing.impl.structures.Graph;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -25,7 +25,7 @@ public class DepthFirstScheduler extends AbstractSchedulingAlgorithm {
 
   public DepthFirstScheduler(
     Graph graph,
-    ProgramContext context,
+    AlgorithmContext context,
     ScheduleFactory scheduleFactory
   ) {
     super(graph, context, scheduleFactory);
@@ -34,7 +34,7 @@ public class DepthFirstScheduler extends AbstractSchedulingAlgorithm {
     numberOfProcessors = context.getProcessorsToScheduleOn();
 
     SchedulingAlgorithmStrategy algorithm = SchedulingAlgorithmStrategy.create(
-      new ListScheduler(graph, context, ScheduleFactory.create())
+      new ListScheduler(graph, context, scheduleFactory)
     );
 
     upperBound = algorithm.schedule().getDuration();
@@ -51,6 +51,10 @@ public class DepthFirstScheduler extends AbstractSchedulingAlgorithm {
   @Override
   public Schedule schedule() {
     List<List<Integer>> topological = topologicalOrderFinder.sortedTopological();
+
+    if (topological.size() == 0) {
+      return scheduleFactory.newSchedule(context);
+    }
 
     List<Integer> freeNodes = new ArrayList<>(topological.get(0));
     List<Integer> visited = new ArrayList<>();

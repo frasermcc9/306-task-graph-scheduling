@@ -11,18 +11,9 @@
  *
  */
 
-package com.jacketing.algorithm.interfaces.util;
+package com.jacketing.io.output.format;
 
-import com.jacketing.algorithm.impl.util.ScheduleFactoryImpl;
-import com.jacketing.algorithm.interfaces.structures.Schedule;
-import com.jacketing.io.cli.AlgorithmContext;
-
-public interface ScheduleFactory {
-  static ScheduleFactory create() {
-    return new ScheduleFactoryImpl();
-  }
-
-  Schedule newSchedule(AlgorithmContext ctx);
-
-  Schedule copy(Schedule schedule);
+@FunctionalInterface
+public interface FormatterFactory {
+  Formatter getFormatter();
 }

@@ -11,18 +11,10 @@
  *
  */
 
-package com.jacketing.algorithm.interfaces.util;
+package com.jacketing.util;
 
-import com.jacketing.algorithm.impl.util.ScheduleFactoryImpl;
-import com.jacketing.algorithm.interfaces.structures.Schedule;
-import com.jacketing.io.cli.AlgorithmContext;
+import java.util.Map;
 
-public interface ScheduleFactory {
-  static ScheduleFactory create() {
-    return new ScheduleFactoryImpl();
-  }
-
-  Schedule newSchedule(AlgorithmContext ctx);
-
-  Schedule copy(Schedule schedule);
+public interface MapFactory {
+  <K, V> Map<K, V> createMap();
 }

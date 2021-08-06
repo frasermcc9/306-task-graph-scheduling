@@ -11,18 +11,23 @@
  *
  */
 
-package com.jacketing.algorithm.interfaces.util;
+package com.jacketing.io.output.saver;
 
-import com.jacketing.algorithm.impl.util.ScheduleFactoryImpl;
-import com.jacketing.algorithm.interfaces.structures.Schedule;
-import com.jacketing.io.cli.AlgorithmContext;
+import java.io.FileWriter;
+import java.io.IOException;
 
-public interface ScheduleFactory {
-  static ScheduleFactory create() {
-    return new ScheduleFactoryImpl();
+public class StandardFileSaver implements FileSaver {
+
+  /**
+   * Saves the given data to a dot file.
+   *
+   * @param path the path to save the file
+   * @param data the data to save
+   */
+  @Override
+  public void saveFile(String path, String data) throws IOException {
+    try (FileWriter writer = new FileWriter(path)) {
+      writer.write(data);
+    }
   }
-
-  Schedule newSchedule(AlgorithmContext ctx);
-
-  Schedule copy(Schedule schedule);
 }

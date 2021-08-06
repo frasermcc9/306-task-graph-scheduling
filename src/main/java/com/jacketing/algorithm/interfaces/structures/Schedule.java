@@ -14,7 +14,7 @@
 package com.jacketing.algorithm.interfaces.structures;
 
 import com.jacketing.algorithm.impl.structures.Task;
-import java.util.ArrayList;
+import java.util.List;
 
 public interface Schedule {
   void addTask(Task task, int processor);
@@ -27,7 +27,7 @@ public interface Schedule {
 
   int getNumberOfProcessors();
 
-  ArrayList<Task> getAllTasks();
+  List<Task> getAllTasks();
 
   Task getTaskForNode(int nodeId);
 

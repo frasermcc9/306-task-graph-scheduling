@@ -14,19 +14,19 @@
 package com.jacketing.algorithm.impl.structures;
 
 import com.jacketing.algorithm.interfaces.structures.Schedule;
-import com.jacketing.io.cli.ProgramContext;
+import com.jacketing.io.cli.AlgorithmContext;
 import java.util.*;
 import java.util.function.BiFunction;
 
 public class ScheduleImpl implements Schedule {
 
-  private final ProgramContext context;
+  private final AlgorithmContext context;
   private final Map<Integer, ProcessorTaskList> processorMap;
   private final Map<Integer, Task> taskIdToTaskMap;
   private final Map<Task, Integer> inverseProcessorMap;
 
   public ScheduleImpl(
-    ProgramContext context,
+    AlgorithmContext context,
     Map<Integer, ProcessorTaskList> processorMap,
     Map<Integer, Task> taskIdToTaskMap
   ) {
@@ -77,12 +77,14 @@ public class ScheduleImpl implements Schedule {
   }
 
   private int getFinishTime(boolean max) {
-    int dur = 0;
+    int dur;
     BiFunction<Integer, Integer, Integer> method;
     if (max) {
       method = Math::max;
+      dur = 0;
     } else {
       method = Math::min;
+      dur = Integer.MAX_VALUE;
     }
 
     Collection<ProcessorTaskList> values = processorMap.values();
@@ -94,7 +96,7 @@ public class ScheduleImpl implements Schedule {
   }
 
   @Override
-  public ArrayList<Task> getAllTasks() {
+  public List<Task> getAllTasks() {
     // Convert map of lists, to one list
     Collection<ProcessorTaskList> processorProcessorTaskLists = processorMap.values();
     ArrayList<Task> allTasks = new ArrayList<>();
@@ -106,12 +108,7 @@ public class ScheduleImpl implements Schedule {
 
   @Override
   public Task getTaskForNode(int nodeId) {
-    for (Task task : getAllTasks()) {
-      if (task.getId() == nodeId) {
-        return task;
-      }
-    }
-    return null;
+    return taskIdToTaskMap.get(nodeId);
   }
 
   @Override

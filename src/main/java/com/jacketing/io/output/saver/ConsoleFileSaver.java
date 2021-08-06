@@ -11,18 +11,21 @@
  *
  */
 
-package com.jacketing.algorithm.interfaces.util;
+package com.jacketing.io.output.saver;
 
-import com.jacketing.algorithm.impl.util.ScheduleFactoryImpl;
-import com.jacketing.algorithm.interfaces.structures.Schedule;
-import com.jacketing.io.cli.AlgorithmContext;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public interface ScheduleFactory {
-  static ScheduleFactory create() {
-    return new ScheduleFactoryImpl();
+public class ConsoleFileSaver implements FileSaver {
+
+  /**
+   * Writes the given data to the console
+   *
+   * @param unused unused value (should be null)
+   * @param data   the data to save
+   */
+  @Override
+  public void saveFile(@Nullable String unused, @NotNull String data) {
+    System.out.println(data);
   }
-
-  Schedule newSchedule(AlgorithmContext ctx);
-
-  Schedule copy(Schedule schedule);
 }

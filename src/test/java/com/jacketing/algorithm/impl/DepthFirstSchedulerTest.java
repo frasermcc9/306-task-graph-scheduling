@@ -94,4 +94,21 @@ public class DepthFirstSchedulerTest {
       assertEquals(expectedLength, optimalLength);
     }
   }
+
+  @Test
+  public void testEmptyGraph() {
+    Graph graph = TestUtil.emptyGraph();
+
+    ProgramContext programContext = mock(ProgramContext.class);
+    when(programContext.getProcessorsToScheduleOn()).thenReturn(4);
+
+    SchedulingAlgorithmStrategy schedulingAlgorithmStrategy = SchedulingAlgorithmStrategy.create(
+      new DepthFirstScheduler(graph, programContext, ScheduleFactory.create())
+    );
+
+    Schedule schedule = schedulingAlgorithmStrategy.schedule();
+    int duration = schedule.getDuration();
+
+    assertEquals(0, duration);
+  }
 }
