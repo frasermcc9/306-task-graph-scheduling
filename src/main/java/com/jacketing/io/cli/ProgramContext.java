@@ -103,4 +103,21 @@ public class ProgramContext implements ApplicationContext {
 
     return output;
   }
+
+  @Override
+  public String toString() {
+    return (
+      "ProgramContext{" +
+      "input=" +
+      input +
+      ", coresToCalculateWith=" +
+      coresToCalculateWith +
+      ", visualize=" +
+      visualize +
+      ", outputName='" +
+      outputName +
+      '\'' +
+      '}'
+    );
+  }
 }

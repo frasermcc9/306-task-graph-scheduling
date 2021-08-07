@@ -17,5 +17,4 @@ public class RamTest {
     RamReader reader = new RamReader(model);
     Thread.sleep(500);
   }
-
 }

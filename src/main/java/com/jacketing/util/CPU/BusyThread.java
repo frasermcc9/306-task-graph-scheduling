@@ -2,6 +2,7 @@ package com.jacketing.util.CPU;
 
 // from https://gist.github.com/SriramKeerthi/0f1513a62b3b09fecaeb
 class BusyThread extends Thread {
+
   private double load;
   private long duration;
 

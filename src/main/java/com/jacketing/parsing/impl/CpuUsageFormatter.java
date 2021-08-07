@@ -30,5 +30,4 @@ public class CpuUsageFormatter {
     }
     return output;
   }
-
 }

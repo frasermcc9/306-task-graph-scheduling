@@ -1,7 +1,5 @@
 package com.jacketing.util.CPU;
 
-import com.jacketing.util.RAM.RamReader;
-import com.jacketing.util.RAM.RamStatModel;
 import javafx.scene.chart.XYChart;
 import org.junit.Test;
 
@@ -21,5 +19,4 @@ public class CpuTest {
     reader.addModel(model);
     Thread.sleep(500);
   }
-
 }
