@@ -16,7 +16,8 @@ package com.jacketing;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.ParameterException;
 import com.jacketing.algorithm.AlgorithmLoader;
-import com.jacketing.algorithm.impl.DepthFirstScheduler;
+import com.jacketing.algorithm.impl.algorithms.DepthFirstScheduler;
+import com.jacketing.algorithm.impl.algorithms.ParallelDepthFirstScheduler;
 import com.jacketing.algorithm.interfaces.structures.Schedule;
 import com.jacketing.common.Loader;
 import com.jacketing.io.cli.ApplicationContext;
@@ -34,16 +35,14 @@ public class Entry {
 
   public static void main(String... argv) {
     ApplicationContext programContext = new ProgramContext();
-
     try {
       JCommander.newBuilder().addObject(programContext).build().parse(argv);
       programContext.validate();
 
       if (programContext.isVisualized()) {
         Application.launch(ApplicationEntry.class);
-      } else {
-        beginSearch(programContext);
       }
+      beginSearch(programContext);
     } catch (ParameterException e) {
       System.out.println(e.getMessage());
       System.out.println(programContext.helpText());
@@ -60,7 +59,14 @@ public class Entry {
     Loader<Schedule> scheduleLoader = AlgorithmLoader.create(
       graph,
       context,
-      DepthFirstScheduler::new
+      (data, ctx, scheduleFactory) -> {
+        if (ctx.getCoresToCalculateWith() <= 1) return new DepthFirstScheduler(
+          data,
+          ctx,
+          scheduleFactory
+        );
+        return new ParallelDepthFirstScheduler(data, ctx, scheduleFactory);
+      }
     );
     Schedule schedule = scheduleLoader.load();
 
