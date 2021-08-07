@@ -11,7 +11,7 @@
  *
  */
 
-package com.jacketing.algorithm.impl;
+package com.jacketing.algorithm.impl.algorithms;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;

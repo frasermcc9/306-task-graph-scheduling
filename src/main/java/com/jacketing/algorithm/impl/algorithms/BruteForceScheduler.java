@@ -1,115 +1,100 @@
-package com.jacketing.algorithm.impl;
+/*
+ * Copyright 2021 Team Jacketing
+ * All Rights Reserved.
+ *
+ * NOTICE: All information contained herein is, and remains the property of Team
+ * Jacketing (the author) and its affiliates, if any. The intellectual and
+ * technical concepts contained herein are proprietary to Team Jacketing, and
+ * are protected by copyright law. Dissemination of this information or
+ * reproduction of this material is strictly forbidden unless prior written
+ * permission is obtained from the author.
+ *
+ */
+
+package com.jacketing.algorithm.impl.algorithms;
 
 import com.jacketing.algorithm.impl.structures.Task;
 import com.jacketing.algorithm.impl.util.topological.TopologicalSortContext;
-import com.jacketing.algorithm.interfaces.SchedulingAlgorithmStrategy;
 import com.jacketing.algorithm.interfaces.structures.Schedule;
 import com.jacketing.algorithm.interfaces.util.ScheduleFactory;
 import com.jacketing.algorithm.interfaces.util.topological.TopologicalSort;
-import com.jacketing.io.cli.AlgorithmContext;
+import com.jacketing.io.cli.ProgramContext;
 import com.jacketing.parsing.impl.structures.Graph;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-public class DepthFirstScheduler extends AbstractSchedulingAlgorithm {
+public class BruteForceScheduler extends AbstractSchedulingAlgorithm {
 
   private final int numberOfProcessors;
   private final TopologicalSortContext<List<Integer>> topologicalOrderFinder;
+  private Schedule schedule;
 
-  Set<String> equivalents = new HashSet<>();
-
-  private Schedule bestSchedule;
-  private int upperBound;
-
-  public DepthFirstScheduler(
+  public BruteForceScheduler(
     Graph graph,
-    AlgorithmContext context,
+    ProgramContext context,
     ScheduleFactory scheduleFactory
   ) {
     super(graph, context, scheduleFactory);
     topologicalOrderFinder =
       new TopologicalSortContext<>(TopologicalSort.withLayers(graph));
     numberOfProcessors = context.getProcessorsToScheduleOn();
-
-    SchedulingAlgorithmStrategy algorithm = SchedulingAlgorithmStrategy.create(
-      new ListScheduler(graph, context, scheduleFactory)
-    );
-
-    upperBound = algorithm.schedule().getDuration();
   }
 
   /**
    * Outputs an optimal scheduling by exploring all possible schedules.
    *
+   * @implNote The algorithm runs recursively like DFS. This algorithm
+   * runs exponentially on the number of processors.
+   * It can be improved by adding cost function to prune the recursion tree.
+   *
    * @return Schedule object containing optimal schedule.
-   * @implNote The algorithm runs recursively like DFS. This algorithm runs
-   * exponentially on the number of processors. It can be improved by adding
-   * cost function to prune the recursion tree.
    */
   @Override
   public Schedule schedule() {
     List<List<Integer>> topological = topologicalOrderFinder.sortedTopological();
 
-    if (topological.size() == 0) {
-      return scheduleFactory.newSchedule(context);
-    }
-
     List<Integer> freeNodes = new ArrayList<>(topological.get(0));
     List<Integer> visited = new ArrayList<>();
-    recurseDFS(scheduleFactory.newSchedule(context), freeNodes, visited);
+    dfs(scheduleFactory.newSchedule(context), freeNodes, visited);
 
-    return bestSchedule;
+    return schedule;
   }
 
-  private void recurseDFS(
-    Schedule partialSchedule,
-    List<Integer> orphanNodes,
+  private void dfs(
+    Schedule curState,
+    List<Integer> freeNodes,
     List<Integer> visited
   ) {
-    if (orphanNodes.isEmpty()) {
-      int completeDuration = partialSchedule.getDuration();
-      if (bestSchedule == null || completeDuration < upperBound) {
-        bestSchedule = partialSchedule;
-        upperBound = completeDuration;
+    if (freeNodes.isEmpty()) {
+      if (schedule == null || curState.getDuration() < schedule.getDuration()) {
+        schedule = curState;
       }
       return;
     }
 
-    for (int node : orphanNodes) {
+    for (int node : freeNodes) {
       int nodeWeight = graph.getNodeWeight(node);
       List<Integer> parentNodes = graph.getAdjacencyList().getParentNodes(node);
       for (int processor = 0; processor < numberOfProcessors; processor++) {
+        // if the prerequisite node that ends latest is in the different proc
         int startTime = findEarliestStartTime(
           node,
           parentNodes,
-          partialSchedule,
+          curState,
           processor
         );
 
         Task task = new Task(
-          Math.max(startTime, partialSchedule.getProcessorEnd(processor)),
+          Math.max(startTime, curState.getProcessorEnd(processor)),
           nodeWeight,
           node
         );
-        Schedule nextState = scheduleFactory.copy(partialSchedule);
+        Schedule nextState = scheduleFactory.copy(curState);
         // Add the task to next state
         nextState.addTask(task, processor);
 
-        // cull this branch if it exceeds best schedule so far
-        if (bestSchedule != null && nextState.getDuration() >= upperBound) {
-          continue;
-        }
-
-        String identifier = nextState.toString();
-        if (equivalents.contains(identifier)) {
-          continue;
-        }
-        equivalents.add(identifier);
-
         List<Integer> nextFreeNodes = new ArrayList<>();
-        for (Integer freeNode : orphanNodes) {
+        for (Integer freeNode : freeNodes) {
           // exclude the node that has already been scheduled.
           if (node != freeNode) {
             nextFreeNodes.add(freeNode);
@@ -119,8 +104,8 @@ public class DepthFirstScheduler extends AbstractSchedulingAlgorithm {
         List<Integer> nextVisited = new ArrayList<>(visited);
         nextVisited.add(node);
 
-        // add orphan nodes to the free nodes
         for (int nextNode : graph.getAdjacencyList().getChildNodes(node)) {
+          // If all prerequisite nodes are scheduled, then the child node is free to be scheduled.
           if (
             nextVisited.containsAll(
               graph.getAdjacencyList().getParentNodes(nextNode)
@@ -130,7 +115,7 @@ public class DepthFirstScheduler extends AbstractSchedulingAlgorithm {
           }
         }
 
-        recurseDFS(nextState, nextFreeNodes, nextVisited);
+        dfs(nextState, nextFreeNodes, nextVisited);
       }
     }
   }

@@ -11,7 +11,7 @@
  *
  */
 
-package com.jacketing.algorithm.impl;
+package com.jacketing.algorithm.impl.algorithms;
 
 import com.jacketing.algorithm.interfaces.SchedulingAlgorithmStrategy;
 import com.jacketing.algorithm.interfaces.structures.Schedule;
