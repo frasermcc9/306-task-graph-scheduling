@@ -16,6 +16,7 @@ package com.jacketing.algorithm.impl.algorithms;
 import com.jacketing.algorithm.interfaces.SchedulingAlgorithmStrategy;
 import com.jacketing.algorithm.interfaces.structures.Schedule;
 import com.jacketing.algorithm.interfaces.util.ScheduleFactory;
+import com.jacketing.common.analysis.UpdatesFromAlgorithm;
 import com.jacketing.io.cli.AlgorithmContext;
 import com.jacketing.parsing.impl.structures.Graph;
 import java.util.List;
@@ -26,6 +27,7 @@ public abstract class AbstractSchedulingAlgorithm
   protected final Graph graph;
   protected final AlgorithmContext context;
   protected final ScheduleFactory scheduleFactory;
+  protected UpdatesFromAlgorithm observer;
 
   public AbstractSchedulingAlgorithm(
     Graph graph,
@@ -37,13 +39,22 @@ public abstract class AbstractSchedulingAlgorithm
     this.scheduleFactory = scheduleFactory;
   }
 
+  @Override
+  public SchedulingAlgorithmStrategy withObservable(
+    UpdatesFromAlgorithm updater
+  ) {
+    this.observer = updater;
+    return this;
+  }
+
   /**
    * Returns the earliest possible start time for given node and processor.
    * based on communication delay constraint between processors.
-   * @param node node for which we want to know the earliest start time
+   *
+   * @param node        node for which we want to know the earliest start time
    * @param parentNodes parent nodes of node.
-   * @param schedule current schedule.
-   * @param processor processor on which task is scheduled.
+   * @param schedule    current schedule.
+   * @param processor   processor on which task is scheduled.
    * @return
    */
   protected int findEarliestStartTime(

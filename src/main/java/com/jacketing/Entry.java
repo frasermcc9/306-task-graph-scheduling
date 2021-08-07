@@ -20,6 +20,7 @@ import com.jacketing.algorithm.impl.algorithms.DepthFirstScheduler;
 import com.jacketing.algorithm.impl.algorithms.ParallelDepthFirstScheduler;
 import com.jacketing.algorithm.interfaces.structures.Schedule;
 import com.jacketing.common.Loader;
+import com.jacketing.common.analysis.AlgorithmObserver;
 import com.jacketing.io.cli.ApplicationContext;
 import com.jacketing.io.cli.ProgramContext;
 import com.jacketing.io.output.OutputLoader;
@@ -35,11 +36,13 @@ public class Entry {
 
   public static void main(String... argv) {
     ApplicationContext programContext = new ProgramContext();
+
     try {
       JCommander.newBuilder().addObject(programContext).build().parse(argv);
       programContext.validate();
 
       if (programContext.isVisualized()) {
+        programContext.giveObserver(new AlgorithmObserver());
         Application.launch(ApplicationEntry.class);
       }
       beginSearch(programContext);

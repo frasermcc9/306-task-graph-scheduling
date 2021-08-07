@@ -13,8 +13,12 @@
 
 package com.jacketing.io.cli;
 
+import com.jacketing.common.analysis.UpdatesFromAlgorithm;
+
 public interface AlgorithmContext {
   int getProcessorsToScheduleOn();
 
   int getCoresToCalculateWith();
+
+  UpdatesFromAlgorithm getObserver();
 }

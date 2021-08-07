@@ -11,14 +11,18 @@
  *
  */
 
-package com.jacketing.io.cli;
+package com.jacketing.common.analysis;
 
-import com.jacketing.common.analysis.Observer;
+import com.jacketing.algorithm.interfaces.structures.Schedule;
 
-public interface ApplicationContext extends IOContext, AlgorithmContext {
-  void validate() throws IllegalArgumentException;
+public interface UpdatesFromAlgorithm {
+  void updateBestSchedule(Schedule schedule);
 
-  String helpText();
+  void incrementCheckedSchedules();
 
-  void giveObserver(Observer observer);
+  void incrementFullSchedulesChecked();
+
+  void incrementCulledSchedules();
+
+  void incrementDuplicateSchedules();
 }

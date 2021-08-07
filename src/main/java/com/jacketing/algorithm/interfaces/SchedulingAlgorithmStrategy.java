@@ -15,6 +15,7 @@ package com.jacketing.algorithm.interfaces;
 
 import com.jacketing.algorithm.impl.util.SchedulingAlgorithmContextImpl;
 import com.jacketing.algorithm.interfaces.structures.Schedule;
+import com.jacketing.common.analysis.UpdatesFromAlgorithm;
 
 public interface SchedulingAlgorithmStrategy {
   static SchedulingAlgorithmStrategy create(
@@ -24,4 +25,6 @@ public interface SchedulingAlgorithmStrategy {
   }
 
   Schedule schedule();
+
+  SchedulingAlgorithmStrategy withObservable(UpdatesFromAlgorithm updater);
 }

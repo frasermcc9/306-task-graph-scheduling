@@ -16,6 +16,8 @@ package com.jacketing.io.cli;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParameterException;
 import com.beust.jcommander.validators.PositiveInteger;
+import com.jacketing.common.analysis.Observer;
+import com.jacketing.common.analysis.UpdatesFromAlgorithm;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +35,8 @@ public class ProgramContext implements ApplicationContext {
   @Parameter(names = { "-o" })
   private String outputName;
 
+  private Observer algorithmObserver;
+
   @Override
   public String getInputFile() {
     return input.get(0);
@@ -46,6 +50,11 @@ public class ProgramContext implements ApplicationContext {
   @Override
   public int getCoresToCalculateWith() {
     return coresToCalculateWith;
+  }
+
+  @Override
+  public UpdatesFromAlgorithm getObserver() {
+    return this.algorithmObserver;
   }
 
   @Override
@@ -102,6 +111,11 @@ public class ProgramContext implements ApplicationContext {
       "-o OUTPUT  output file is named OUTPUT (default INPUT-output.dot)\n";
 
     return output;
+  }
+
+  @Override
+  public void giveObserver(Observer observer) {
+    this.algorithmObserver = observer;
   }
 
   @Override
