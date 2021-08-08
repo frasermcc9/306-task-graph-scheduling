@@ -13,6 +13,7 @@
 
 package com.jacketing.algorithm.impl.util;
 
+import com.jacketing.algorithm.impl.structures.ProcessorTaskList;
 import com.jacketing.algorithm.impl.structures.ScheduleImpl;
 import com.jacketing.algorithm.interfaces.structures.Schedule;
 import com.jacketing.algorithm.interfaces.util.ScheduleFactory;
@@ -22,7 +23,13 @@ import java.util.HashMap;
 public class ScheduleFactoryImpl implements ScheduleFactory {
 
   public Schedule newSchedule(AlgorithmContext ctx) {
-    return new ScheduleImpl(ctx, new HashMap<>(), new HashMap<>());
+
+    HashMap<Integer, ProcessorTaskList> map = new HashMap<>();
+    for (int i = 0; i < ctx.getProcessorsToScheduleOn(); i++) {
+      map.put(i, new ProcessorTaskList());
+    }
+
+    return new ScheduleImpl(ctx, map, new HashMap<>());
   }
 
   @Override
