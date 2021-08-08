@@ -11,14 +11,9 @@
  *
  */
 
-package com.jacketing.io.cli;
+package com.jacketing.common.analysis;
 
-import com.jacketing.common.analysis.Observer;
-
-public interface ApplicationContext extends IOContext, AlgorithmContext {
-  void validate() throws IllegalArgumentException;
-
-  String helpText();
-
-  void giveObserver(Observer observer);
+@FunctionalInterface
+public interface AlgorithmUpdateHandler {
+  void update(ObserverData observer);
 }

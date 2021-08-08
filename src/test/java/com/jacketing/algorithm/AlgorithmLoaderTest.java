@@ -30,11 +30,13 @@ public class AlgorithmLoaderTest {
     ProgramContext context = mock(ProgramContext.class);
     SchedulingAlgorithmStrategy algo = mock(SchedulingAlgorithmStrategy.class);
     when(context.getProcessorsToScheduleOn()).thenReturn(2);
+    when(algo.withObservable(null)).thenReturn(algo);
 
     AlgorithmLoader
       .create(graph, context, (unused, unused2, unused3) -> algo)
       .load();
 
     verify(algo, times(1)).schedule();
+    verify(algo, times(1)).withObservable(null);
   }
 }

@@ -11,7 +11,7 @@
  *
  */
 
-package com.jacketing.algorithm.impl;
+package com.jacketing.algorithm.impl.algorithms;
 
 import com.jacketing.algorithm.impl.structures.Task;
 import com.jacketing.algorithm.impl.util.topological.TopologicalOrderFinder;

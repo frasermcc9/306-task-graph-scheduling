@@ -9,16 +9,19 @@ public class RamReader {
     this.model = model;
     runtime = Runtime.getRuntime();
 
-    new Thread(() -> {
-      while(true) {
-        pollRam();
-        try {
-          Thread.sleep(50);
-        } catch (InterruptedException e) {
-          e.printStackTrace();
+    new Thread(
+      () -> {
+        while (true) {
+          pollRam();
+          try {
+            Thread.sleep(50);
+          } catch (InterruptedException e) {
+            e.printStackTrace();
+          }
         }
       }
-    }).start();
+    )
+      .start();
   }
 
   private void pollRam() {

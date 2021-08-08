@@ -6,7 +6,7 @@ import static org.mockito.Mockito.when;
 import com.google.common.base.Charsets;
 import com.google.common.collect.HashBiMap;
 import com.google.common.io.Resources;
-import com.jacketing.algorithm.impl.DepthFirstScheduler;
+import com.jacketing.algorithm.impl.algorithms.DepthFirstScheduler;
 import com.jacketing.algorithm.interfaces.SchedulingAlgorithmStrategy;
 import com.jacketing.algorithm.interfaces.structures.Schedule;
 import com.jacketing.algorithm.interfaces.util.ScheduleFactory;

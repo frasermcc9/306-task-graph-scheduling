@@ -28,11 +28,21 @@ public class VisualizationController {
 
   @FXML
   public void initialize() {
-
-    LineChart[] allUpdatingCharts = {thread1Graph, thread2Graph, thread3Graph, thread4Graph, ramGraph };
+    LineChart[] allUpdatingCharts = {
+      thread1Graph,
+      thread2Graph,
+      thread3Graph,
+      thread4Graph,
+      ramGraph,
+    };
     removeAnimationsAndTicks(allUpdatingCharts);
 
-    LineChart[] cpuCharts = {thread1Graph, thread2Graph, thread3Graph, thread4Graph};
+    LineChart[] cpuCharts = {
+      thread1Graph,
+      thread2Graph,
+      thread3Graph,
+      thread4Graph,
+    };
     CpuReader reader = new CpuReader();
 
     int i = 0;
@@ -40,7 +50,7 @@ public class VisualizationController {
       XYChart.Series<String, Double> series = new XYChart.Series<>();
       CpuStatModel model = new CpuStatModel(series, i);
       reader.addModel(model);
-      reader.setSyntheticLoad();
+      //reader.setSyntheticLoad();
       chart.getData().add(series);
       i++;
     }
@@ -66,5 +76,4 @@ public class VisualizationController {
       chart.setAnimated(false);
     }
   }
-
 }

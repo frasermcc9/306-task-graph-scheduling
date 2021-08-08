@@ -15,6 +15,7 @@ package com.jacketing.algorithm.impl.util;
 
 import com.jacketing.algorithm.interfaces.SchedulingAlgorithmStrategy;
 import com.jacketing.algorithm.interfaces.structures.Schedule;
+import com.jacketing.common.analysis.UpdatesFromAlgorithm;
 
 public class SchedulingAlgorithmContextImpl
   implements SchedulingAlgorithmStrategy {
@@ -28,5 +29,12 @@ public class SchedulingAlgorithmContextImpl
   @Override
   public Schedule schedule() {
     return algorithm.schedule();
+  }
+
+  @Override
+  public SchedulingAlgorithmStrategy withObservable(
+    UpdatesFromAlgorithm updater
+  ) {
+    return algorithm.withObservable(updater);
   }
 }

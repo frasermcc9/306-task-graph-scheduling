@@ -46,11 +46,9 @@ public class AlgorithmLoader implements Loader<Schedule> {
   }
 
   public Schedule load() {
-    SchedulingAlgorithmStrategy schedulingAlgorithmStrategy = algorithmFactory.createAlgorithm(
-      graph,
-      context,
-      ScheduleFactory.create()
-    );
+    SchedulingAlgorithmStrategy schedulingAlgorithmStrategy = algorithmFactory
+      .createAlgorithm(graph, context, ScheduleFactory.create())
+      .withObservable(context.getObserver());
 
     return schedulingAlgorithmStrategy.schedule();
   }

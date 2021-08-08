@@ -32,5 +32,4 @@ public class ViewTest {
   public void testVisualizationController() throws InterruptedException {
     Thread.sleep(1000);
   }
-
 }

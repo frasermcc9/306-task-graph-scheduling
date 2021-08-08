@@ -11,7 +11,7 @@
  *
  */
 
-package com.jacketing.algorithm.impl;
+package com.jacketing.algorithm.impl.algorithms;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -28,24 +28,7 @@ import java.io.IOException;
 import java.util.List;
 import org.junit.Test;
 
-public class DepthFirstSchedulerTest {
-
-  @Test
-  public void simpleDfsTwoCores() {
-    Graph graph = TestUtil.graphVariantOne();
-    ProgramContext programContext = mock(ProgramContext.class);
-    when(programContext.getProcessorsToScheduleOn()).thenReturn(2);
-
-    SchedulingAlgorithmStrategy schedulingAlgorithmStrategy = SchedulingAlgorithmStrategy.create(
-      new DepthFirstScheduler(graph, programContext, ScheduleFactory.create())
-    );
-
-    Schedule schedule = schedulingAlgorithmStrategy.schedule();
-    int optimalLength = schedule.getDuration();
-    int expectedLength = 8;
-
-    assertEquals(expectedLength, optimalLength);
-  }
+public class ParallelDepthFirstSchedulerTest {
 
   @Test
   public void testGraphSuiteTwoCores() throws IOException {
@@ -53,10 +36,11 @@ public class DepthFirstSchedulerTest {
 
     ProgramContext programContext = mock(ProgramContext.class);
     when(programContext.getProcessorsToScheduleOn()).thenReturn(2);
+    when(programContext.getCoresToCalculateWith()).thenReturn(8);
 
     for (GraphResult graph : graphs) {
       SchedulingAlgorithmStrategy schedulingAlgorithmStrategy = SchedulingAlgorithmStrategy.create(
-        new DepthFirstScheduler(
+        new ParallelDepthFirstScheduler(
           graph.getGraph(),
           programContext,
           ScheduleFactory.create()
@@ -77,10 +61,11 @@ public class DepthFirstSchedulerTest {
 
     ProgramContext programContext = mock(ProgramContext.class);
     when(programContext.getProcessorsToScheduleOn()).thenReturn(4);
+    when(programContext.getCoresToCalculateWith()).thenReturn(8);
 
     for (GraphResult graph : graphs) {
       SchedulingAlgorithmStrategy schedulingAlgorithmStrategy = SchedulingAlgorithmStrategy.create(
-        new DepthFirstScheduler(
+        new ParallelDepthFirstScheduler(
           graph.getGraph(),
           programContext,
           ScheduleFactory.create()
@@ -101,9 +86,14 @@ public class DepthFirstSchedulerTest {
 
     ProgramContext programContext = mock(ProgramContext.class);
     when(programContext.getProcessorsToScheduleOn()).thenReturn(4);
+    when(programContext.getCoresToCalculateWith()).thenReturn(8);
 
     SchedulingAlgorithmStrategy schedulingAlgorithmStrategy = SchedulingAlgorithmStrategy.create(
-      new DepthFirstScheduler(graph, programContext, ScheduleFactory.create())
+      new ParallelDepthFirstScheduler(
+        graph,
+        programContext,
+        ScheduleFactory.create()
+      )
     );
 
     Schedule schedule = schedulingAlgorithmStrategy.schedule();

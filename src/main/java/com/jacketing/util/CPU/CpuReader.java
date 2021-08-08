@@ -1,12 +1,11 @@
 package com.jacketing.util.CPU;
 
+import com.jacketing.parsing.impl.CpuUsageFormatter;
+import com.sun.management.ThreadMXBean;
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
 import java.lang.management.ThreadInfo;
 import java.util.*;
-
-import com.jacketing.parsing.impl.CpuUsageFormatter;
-import com.sun.management.ThreadMXBean;
 
 public class CpuReader {
 
@@ -24,16 +23,19 @@ public class CpuReader {
     // set this true just in case
     threadBean.setThreadCpuTimeEnabled(true);
 
-    new Thread(() -> {
-      while(true) {
-        pollCpu();
-        try {
-          Thread.sleep(25);
-        } catch (InterruptedException e) {
-          e.printStackTrace();
+    new Thread(
+      () -> {
+        while (true) {
+          pollCpu();
+          try {
+            Thread.sleep(25);
+          } catch (InterruptedException e) {
+            e.printStackTrace();
+          }
         }
       }
-    }).start();
+    )
+      .start();
   }
 
   /**
@@ -68,17 +70,25 @@ public class CpuReader {
 
     ThreadInfo[] threadInfos = threadBean.dumpAllThreads(false, false);
     for (ThreadInfo info : threadInfos) {
-      threadInitialCPU.put(info.getThreadId(), threadBean.getThreadCpuTime(info.getThreadId()));
+      threadInitialCPU.put(
+        info.getThreadId(),
+        threadBean.getThreadCpuTime(info.getThreadId())
+      );
     }
 
-    try {Thread.sleep(sampleTime);} catch (InterruptedException ignored) {}
+    try {
+      Thread.sleep(sampleTime);
+    } catch (InterruptedException ignored) {}
 
     long upTime = runtimeBean.getUptime();
 
     Map<Long, Long> threadCurrentCPU = new HashMap<>();
     threadInfos = threadBean.dumpAllThreads(false, false);
     for (ThreadInfo info : threadInfos) {
-      threadCurrentCPU.put(info.getThreadId(), threadBean.getThreadCpuTime(info.getThreadId()));
+      threadCurrentCPU.put(
+        info.getThreadId(),
+        threadBean.getThreadCpuTime(info.getThreadId())
+      );
     }
 
     // elapsedTime is in ms.
@@ -98,7 +108,4 @@ public class CpuReader {
       model.change(CpuUsageFormatter.format(threadCPUUsage));
     }
   }
-
 }
-
-
