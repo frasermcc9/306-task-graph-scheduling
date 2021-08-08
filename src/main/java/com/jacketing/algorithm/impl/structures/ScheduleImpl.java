@@ -37,7 +37,14 @@ public class ScheduleImpl implements Schedule {
     this.context = context;
     this.processorMap = processorMap;
     this.taskIdToTaskMap = taskIdToTaskMap;
+
     inverseProcessorMap = new HashMap<>();
+    for (Map.Entry<Integer, ProcessorTaskList> entry : this.processorMap.entrySet()) {
+      for (Task task : entry.getValue()) {
+        inverseProcessorMap.put(task, entry.getKey());
+      }
+    }
+
     int numberProcessors = context.getProcessorsToScheduleOn();
     cloned = false;
   }
