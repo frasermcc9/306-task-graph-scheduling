@@ -42,4 +42,8 @@ public interface Schedule {
   boolean isFullyPopulated(int graphSize);
 
   String stringIdentifier();
+
+  void revert();
+
+  Schedule clone();
 }

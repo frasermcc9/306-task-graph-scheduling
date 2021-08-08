@@ -24,6 +24,10 @@ public class ScheduleImpl implements Schedule {
   private final Map<Integer, ProcessorTaskList> processorMap;
   private final Map<Integer, Task> taskIdToTaskMap;
   private final Map<Task, Integer> inverseProcessorMap;
+  private final boolean cloned;
+
+  private Task newTask;
+  private int newProc;
 
   public ScheduleImpl(
     AlgorithmContext context,
@@ -35,34 +39,45 @@ public class ScheduleImpl implements Schedule {
     this.taskIdToTaskMap = taskIdToTaskMap;
     inverseProcessorMap = new HashMap<>();
     int numberProcessors = context.getProcessorsToScheduleOn();
-
-    for (int i = 0; i < numberProcessors; i++) {
-      processorMap.put(i, new ProcessorTaskList());
-    }
+    cloned = false;
   }
 
   public ScheduleImpl(ScheduleImpl scheduleImpl) {
     this.context = scheduleImpl.context;
 
-    this.processorMap = new HashMap<>();
-    this.inverseProcessorMap = new HashMap<>();
-    for (Map.Entry<Integer, ProcessorTaskList> entry : scheduleImpl.processorMap.entrySet()) {
-      this.processorMap.put(
+    this.processorMap = scheduleImpl.processorMap;
+    this.inverseProcessorMap = scheduleImpl.inverseProcessorMap;
+    this.taskIdToTaskMap = scheduleImpl.taskIdToTaskMap;
+    cloned = true;
+  }
+
+  public ScheduleImpl clone() {
+
+    Map<Integer, ProcessorTaskList> processorMap = new HashMap<>();
+    Map<Task, Integer> inverseProcessorMap = new HashMap<>();
+    for (Map.Entry<Integer, ProcessorTaskList> entry : this.processorMap.entrySet()) {
+      processorMap.put(
           entry.getKey(),
           new ProcessorTaskList(entry.getValue())
         );
       for (Task task : entry.getValue()) {
-        this.inverseProcessorMap.put(task, entry.getKey());
+        inverseProcessorMap.put(task, entry.getKey());
       }
     }
 
-    this.taskIdToTaskMap = new HashMap<>();
-    for (Map.Entry<Integer, Task> entry : scheduleImpl.taskIdToTaskMap.entrySet()) {
-      this.taskIdToTaskMap.put(entry.getKey(), entry.getValue());
+    Map<Integer, Task> taskIdToTaskMap = new HashMap<>();
+    for (Map.Entry<Integer, Task> entry : this.taskIdToTaskMap.entrySet()) {
+      taskIdToTaskMap.put(entry.getKey(), entry.getValue());
     }
+
+    return new ScheduleImpl(this.context, processorMap, taskIdToTaskMap);
   }
 
   public void addTask(Task task, int processor) {
+    if (cloned) {
+      newTask = task;
+      newProc = processor;
+    }
     processorMap.get(processor).add(task);
     taskIdToTaskMap.put(task.getId(), task);
     inverseProcessorMap.put(task, processor);
@@ -186,5 +201,13 @@ public class ScheduleImpl implements Schedule {
     Arrays.sort(strings);
 
     return String.join("", strings);
+  }
+
+  public void revert() {
+    if (!cloned){return;}
+
+    processorMap.get(newProc).remove(newTask);
+    taskIdToTaskMap.remove(newTask.getId());
+    inverseProcessorMap.remove(newTask);
   }
 }
