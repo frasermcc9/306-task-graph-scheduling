@@ -27,9 +27,10 @@ public class ApplicationEntry extends Application {
       getClass().getClassLoader().getResource("final.fxml")
     );
     Parent root;
-
+    
     root = loader.load();
     Scene scene = new Scene(root);
+    primaryStage.setTitle("Jacketing Studio");
     primaryStage.setScene(scene);
     primaryStage.show();
   }
