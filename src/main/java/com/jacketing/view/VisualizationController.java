@@ -7,10 +7,9 @@ import com.jacketing.util.RAM.RamStatModel;
 import javafx.fxml.FXML;
 import javafx.scene.chart.*;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-
-import java.awt.*;
 
 public class VisualizationController {
 
