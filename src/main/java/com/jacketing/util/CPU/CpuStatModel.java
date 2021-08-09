@@ -19,11 +19,9 @@ public class CpuStatModel {
     this.index = index;
   }
 
-  public void change(double[] data) {
+  public void change(double[] data, Date now) {
     Platform.runLater(
       () -> {
-        Date now = new Date();
-
         if (series.getData().size() > 100) {
           series.getData().remove(0);
         }
