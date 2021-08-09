@@ -7,12 +7,16 @@ import com.jacketing.util.RAM.RamStatModel;
 import javafx.fxml.FXML;
 import javafx.scene.chart.Axis;
 import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 
 public class VisualizationController {
 
   @FXML
   private LineChart<String, Double> threadGraph;
+
+  @FXML
+  private NumberAxis threadAxis;
 
   @FXML
   private LineChart<String, Long> ramGraph;
@@ -29,11 +33,15 @@ public class VisualizationController {
     for (int i = 0; i < 4; i++) {
       XYChart.Series<String, Double> series = new XYChart.Series<>();
       CpuStatModel model = new CpuStatModel(series, i);
-      reader.setSyntheticLoad();
+      //reader.setSyntheticLoad();
       reader.addModel(model);
       threadGraph.getData().add(series);
     }
     threadGraph.setLegendVisible(false);
+    threadAxis.setAutoRanging(false);
+    threadAxis.setUpperBound(100);
+    threadAxis.setLowerBound(0);
+    threadAxis.setTickUnit(5);
 
     XYChart.Series<String, Long> ramSeries = new XYChart.Series<>();
     ramGraph.getData().add(ramSeries);

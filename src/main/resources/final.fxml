@@ -133,7 +133,7 @@
                                   <CategoryAxis side="BOTTOM" />
                                 </xAxis>
                                 <yAxis>
-                                  <NumberAxis side="LEFT" />
+                                  <NumberAxis side="LEFT" fx:id="threadAxis"/>
                                 </yAxis>
                               </LineChart>
                            </children>
