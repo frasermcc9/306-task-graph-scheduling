@@ -19,7 +19,7 @@
 <?import javafx.scene.text.Text?>
 
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="794.0" prefWidth="1319.0" style="-fx-background-color: #2f2d2e;" stylesheets="styles.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jacketing.view.VisualizationController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="794.0" prefWidth="1319.0" style="-fx-background-color: #2f2d2e;" stylesheets="styles.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jacketing.view.VisualizationController">
    <top>
       <HBox prefHeight="50.0" prefWidth="200.0" style="-fx-border-color: black; -fx-border-width: 0 0 5 0;" BorderPane.alignment="CENTER">
          <children>
