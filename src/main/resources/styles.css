@@ -40,6 +40,6 @@
 }
 
 .default-color0.chart-series-line { -fx-stroke: #00aeef; }
-.default-color1.chart-series-line { -fx-stroke: #00aeef; }
-.default-color2.chart-series-line { -fx-stroke: #00aeef; }
-.default-color3.chart-series-line { -fx-stroke: #00aeef; }
+.default-color1.chart-series-line { -fx-stroke: #e84855; }
+.default-color2.chart-series-line { -fx-stroke: #8bsfbf; }
+.default-color3.chart-series-line { -fx-stroke: #f7f4f3; }
