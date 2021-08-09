@@ -24,7 +24,7 @@ public class ApplicationEntry extends Application {
   @Override
   public void start(Stage primaryStage) throws Exception {
     FXMLLoader loader = new FXMLLoader(
-      getClass().getClassLoader().getResource("mockup.fxml")
+      getClass().getClassLoader().getResource("final.fxml")
     );
     Parent root;
 

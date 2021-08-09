@@ -12,16 +12,7 @@ import javafx.scene.chart.XYChart;
 public class VisualizationController {
 
   @FXML
-  private LineChart<String, Double> thread1Graph;
-
-  @FXML
-  private LineChart<String, Double> thread2Graph;
-
-  @FXML
-  private LineChart<String, Double> thread3Graph;
-
-  @FXML
-  private LineChart<String, Double> thread4Graph;
+  private LineChart<String, Double> threadGraph;
 
   @FXML
   private LineChart<String, Long> ramGraph;
@@ -29,31 +20,20 @@ public class VisualizationController {
   @FXML
   public void initialize() {
     LineChart[] allUpdatingCharts = {
-      thread1Graph,
-      thread2Graph,
-      thread3Graph,
-      thread4Graph,
-      ramGraph,
+      threadGraph,
+      ramGraph
     };
     removeAnimationsAndTicks(allUpdatingCharts);
-
-    LineChart[] cpuCharts = {
-      thread1Graph,
-      thread2Graph,
-      thread3Graph,
-      thread4Graph,
-    };
     CpuReader reader = new CpuReader();
 
-    int i = 0;
-    for (LineChart<String, Double> chart : cpuCharts) {
+    for (int i = 0; i < 4; i++) {
       XYChart.Series<String, Double> series = new XYChart.Series<>();
       CpuStatModel model = new CpuStatModel(series, i);
+      reader.setSyntheticLoad();
       reader.addModel(model);
-      //reader.setSyntheticLoad();
-      chart.getData().add(series);
-      i++;
+      threadGraph.getData().add(series);
     }
+    threadGraph.setLegendVisible(false);
 
     XYChart.Series<String, Long> ramSeries = new XYChart.Series<>();
     ramGraph.getData().add(ramSeries);
