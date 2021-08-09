@@ -33,7 +33,7 @@ public class VisualizationController {
   private VBox scheduleList;
 
   @FXML
-  private StackedBarChart bestScheduleGraph;
+  private StackedBarChart<String, Double> bestScheduleGraph;
 
   @FXML
   private TextArea logs;
