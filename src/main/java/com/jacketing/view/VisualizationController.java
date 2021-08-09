@@ -5,10 +5,12 @@ import com.jacketing.util.CPU.CpuStatModel;
 import com.jacketing.util.RAM.RamReader;
 import com.jacketing.util.RAM.RamStatModel;
 import javafx.fxml.FXML;
-import javafx.scene.chart.Axis;
-import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.XYChart;
+import javafx.scene.chart.*;
+import javafx.scene.control.Button;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
+
+import java.awt.*;
 
 public class VisualizationController {
 
@@ -20,6 +22,21 @@ public class VisualizationController {
 
   @FXML
   private LineChart<String, Long> ramGraph;
+
+  @FXML
+  private Text duration, schedulesChecked, improvements, peakRam, peakCpu, currentBestTime, numberCores, numberProcessors, algorithm, time, inputFile;
+
+  @FXML
+  private Button stop;
+
+  @FXML
+  private VBox scheduleList;
+
+  @FXML
+  private StackedBarChart bestScheduleGraph;
+
+  @FXML
+  private TextArea logs;
 
   @FXML
   public void initialize() {
