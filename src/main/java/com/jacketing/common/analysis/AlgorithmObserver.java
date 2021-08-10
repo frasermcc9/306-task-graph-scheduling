@@ -112,4 +112,8 @@ public class AlgorithmObserver implements Observer {
   public Graph getGraph() {
     return graph;
   }
+
+  public boolean hasGraph() {
+    return this.graph != null;
+  }
 }
