@@ -15,7 +15,7 @@ jobs:
         run: java -version
 
       - name: "Run tests"
-        run: gradle test
+        run: gradle test --build-file=./../buildci.gradle
 
       - name: Attempt compilation
-        run: gradle --build-file=./../buildci.gradle
+        run: gradle build --build-file=./../buildci.gradle
