@@ -59,6 +59,10 @@ public class Entry {
     );
     Graph graph = graphLoader.load();
 
+    if (observer != null) {
+      observer.setGraph(graph);
+    }
+
     Loader<Schedule> scheduleLoader = AlgorithmLoader.create(
       graph,
       context,

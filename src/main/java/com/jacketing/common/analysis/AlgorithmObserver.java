@@ -14,6 +14,8 @@
 package com.jacketing.common.analysis;
 
 import com.jacketing.algorithm.interfaces.structures.Schedule;
+import com.jacketing.parsing.impl.structures.Graph;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,6 +31,7 @@ public class AlgorithmObserver implements Observer {
   private final AtomicInteger improvementsFoundCount = new AtomicInteger();
   private final AtomicInteger duplicateSchedules = new AtomicInteger();
   private Schedule currentBestSchedule;
+  private Graph graph;
 
   @Override
   public void on(AlgorithmEvent event, AlgorithmUpdateHandler updateHandler) {
@@ -100,5 +103,13 @@ public class AlgorithmObserver implements Observer {
   @Override
   public int getImprovementsFound() {
     return improvementsFoundCount.get();
+  }
+
+  public void setGraph(Graph graph) {
+    this.graph = graph;
+  }
+
+  public Graph getGraph() {
+    return graph;
   }
 }
