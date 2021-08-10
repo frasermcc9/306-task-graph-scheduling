@@ -14,11 +14,8 @@ jobs:
       - name: "Run tests"
         run: gradle test --build-file=buildci.gradle
 
-      - name: "Give executable permissions to gradlew"
-        run: "chmod +x ./gradlew"
-
       - name: Run Test Coverage
-        run: ./gradlew jacocoTestReport
+        run: gradle jacocoTestReport --build-file=buildci.gradle
 
       - name: Generate JaCoCo Badge
         uses: cicirello/jacoco-badge-generator@v2
