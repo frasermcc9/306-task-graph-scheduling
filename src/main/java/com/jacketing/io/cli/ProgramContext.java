@@ -136,8 +136,10 @@ public class ProgramContext implements ApplicationContext {
         "Visualize: " +
         visualize +
         "\n" +
-        "Output will NOT be saved\n" +
-        "------------------------------------ \n"
+        "Output will be saved to: " +
+        getInputFile() +
+        "-output\n" +
+        "------------------------------------"
       );
     } else if (outputName == null) {
       return (
@@ -152,8 +154,10 @@ public class ProgramContext implements ApplicationContext {
         "Visualize: " +
         visualize +
         "\n" +
-        "Output will NOT be saved\n" +
-        "------------------------------------ \n"
+        "Output will be saved to: " +
+        getInputFile() +
+        "-output\n" +
+        "------------------------------------"
       );
     } else if (coresToCalculateWith == 0) {
       return (
@@ -171,7 +175,7 @@ public class ProgramContext implements ApplicationContext {
         "Output will be saved to: " +
         outputName +
         "\n" +
-        "------------------------------------ \n"
+        "------------------------------------"
       );
     } else {
       return (
@@ -191,7 +195,7 @@ public class ProgramContext implements ApplicationContext {
         "Output will be saved to: " +
         outputName +
         "\n" +
-        "------------------------------------ \n"
+        "------------------------------------"
       );
     }
   }
