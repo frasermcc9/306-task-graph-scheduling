@@ -28,7 +28,7 @@ public class CpuReader {
         while (true) {
           pollCpu();
           try {
-            Thread.sleep(25);
+            Thread.sleep(500);
           } catch (InterruptedException e) {
             e.printStackTrace();
           }
@@ -63,7 +63,7 @@ public class CpuReader {
    * Inspired by: https://stackoverflow.com/questions/29931391/obtaining-cpu-thread-usage-in-java
    */
   private void pollCpu() {
-    int sampleTime = 200;
+    int sampleTime = 500;
     Map<Long, Long> threadInitialCPU = new HashMap<>();
     Map<Long, Float> threadCPUUsage = new HashMap<>();
     long initialUptime = runtimeBean.getUptime();
@@ -104,8 +104,9 @@ public class CpuReader {
       }
     }
 
+    Date now = new Date();
     for (CpuStatModel model : models) {
-      model.change(CpuUsageFormatter.format(threadCPUUsage));
+      model.change(CpuUsageFormatter.format(threadCPUUsage), now);
     }
   }
 }

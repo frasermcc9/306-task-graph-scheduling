@@ -1,79 +1,47 @@
 package com.jacketing.view;
 
-import com.jacketing.util.CPU.CpuReader;
-import com.jacketing.util.CPU.CpuStatModel;
-import com.jacketing.util.RAM.RamReader;
-import com.jacketing.util.RAM.RamStatModel;
+import com.jacketing.view.innercontrollers.*;
 import javafx.fxml.FXML;
-import javafx.scene.chart.Axis;
-import javafx.scene.chart.LineChart;
-import javafx.scene.chart.XYChart;
+import javafx.scene.chart.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextArea;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 
 public class VisualizationController {
 
   @FXML
-  private LineChart<String, Double> thread1Graph;
+  private LineChart<String, Double> threadGraph;
 
   @FXML
-  private LineChart<String, Double> thread2Graph;
-
-  @FXML
-  private LineChart<String, Double> thread3Graph;
-
-  @FXML
-  private LineChart<String, Double> thread4Graph;
+  private NumberAxis threadAxis;
 
   @FXML
   private LineChart<String, Long> ramGraph;
 
   @FXML
+  private Text duration, schedulesChecked, improvements, peakRam, peakCpu, currentBestTime, numberCores, numberProcessors, algorithm, time, inputFile;
+
+  @FXML
+  private Button stop;
+
+  @FXML
+  private VBox scheduleList;
+
+  @FXML
+  private StackedBarChart<String, Double> bestScheduleGraph;
+
+  @FXML
+  private TextArea logs;
+
+  @FXML
   public void initialize() {
-    LineChart[] allUpdatingCharts = {
-      thread1Graph,
-      thread2Graph,
-      thread3Graph,
-      thread4Graph,
-      ramGraph,
-    };
-    removeAnimationsAndTicks(allUpdatingCharts);
-
-    LineChart[] cpuCharts = {
-      thread1Graph,
-      thread2Graph,
-      thread3Graph,
-      thread4Graph,
-    };
-    CpuReader reader = new CpuReader();
-
-    int i = 0;
-    for (LineChart<String, Double> chart : cpuCharts) {
-      XYChart.Series<String, Double> series = new XYChart.Series<>();
-      CpuStatModel model = new CpuStatModel(series, i);
-      reader.addModel(model);
-      //reader.setSyntheticLoad();
-      chart.getData().add(series);
-      i++;
-    }
-
-    XYChart.Series<String, Long> ramSeries = new XYChart.Series<>();
-    ramGraph.getData().add(ramSeries);
-    ramGraph.setLegendVisible(false);
-    ramGraph.setTitle("RAM Usage (MB)");
-    RamStatModel model = new RamStatModel(ramSeries);
-    new RamReader(model);
+    new CpuGraphController(threadGraph, threadAxis);
+    new RamGraphController(ramGraph);
+    new StatsTextController(duration, schedulesChecked, improvements, peakRam, peakCpu, currentBestTime, numberCores, numberProcessors, algorithm, time, inputFile);
+    new LogsController(logs);
+    new ScheduleController(bestScheduleGraph, scheduleList);
   }
 
-  private void removeAnimationsAndTicks(LineChart[] charts) {
-    for (LineChart chart : charts) {
-      Axis xAxis = chart.getXAxis();
-      xAxis.setTickLabelsVisible(false);
-      xAxis.setAnimated(false);
 
-      Axis yAxis = chart.getYAxis();
-      yAxis.setAnimated(false);
-
-      chart.setCreateSymbols(false);
-      chart.setAnimated(false);
-    }
-  }
 }
