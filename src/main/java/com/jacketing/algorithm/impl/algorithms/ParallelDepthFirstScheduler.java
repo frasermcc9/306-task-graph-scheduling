@@ -81,10 +81,6 @@ public class ParallelDepthFirstScheduler
       e.printStackTrace();
     }
 
-    System.out.println(
-      "Found best schedule of " + bestSchedule.getDuration() + " time!"
-    );
-
     return bestSchedule;
   }
 
