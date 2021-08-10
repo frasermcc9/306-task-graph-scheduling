@@ -5,10 +5,29 @@ import com.jacketing.parsing.impl.structures.Graph;
 
 public class SearchSpaceController {
 
-  private Graph graph;
+  private AlgorithmObserver observer;
 
   public SearchSpaceController(AlgorithmObserver observer) {
-    this.graph = observer.getGraph();
+    this.observer = observer;
+
+    new Thread(
+      () -> {
+        while (true) {
+          pollGraph();
+          try {
+            Thread.sleep(1000);
+          } catch (InterruptedException e) {
+            e.printStackTrace();
+          }
+        }
+      }
+    ).start();
+  }
+
+  public void pollGraph() {
+    if (observer.hasGraph()) {
+
+    }
   }
 
 

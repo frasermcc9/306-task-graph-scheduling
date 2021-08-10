@@ -43,6 +43,7 @@ public class VisualizationController {
 
   public void setAlgorithmObserver(AlgorithmObserver observer) {
     this.observer = observer;
+    new SearchSpaceController(observer);
   }
 
   @FXML
@@ -52,7 +53,6 @@ public class VisualizationController {
     new StatsTextController(duration, schedulesChecked, improvements, peakRam, peakCpu, currentBestTime, numberCores, numberProcessors, algorithm, time, inputFile);
     new LogsController(logs);
     new ScheduleController(bestScheduleGraph, scheduleList);
-
   }
 
 
