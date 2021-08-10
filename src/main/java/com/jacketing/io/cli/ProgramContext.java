@@ -120,18 +120,79 @@ public class ProgramContext implements ApplicationContext {
 
   @Override
   public String toString() {
-    return (
-      "ProgramContext{" +
-      "input=" +
-      input +
-      ", coresToCalculateWith=" +
-      coresToCalculateWith +
-      ", visualize=" +
-      visualize +
-      ", outputName='" +
-      outputName +
-      '\'' +
-      '}'
-    );
+    if (input.size() != 2) {
+      return "";
+    }
+    if (coresToCalculateWith == 0 && outputName == null) {
+      return (
+        "------------------------------------ \n" +
+        "Input file: " +
+        getInputFile() +
+        "\n" +
+        "Processors to schedule on: " +
+        getProcessorsToScheduleOn() +
+        "\n" +
+        "Threads to calculate with: 1\n" +
+        "Visualize: " +
+        visualize +
+        "\n" +
+        "Output will NOT be saved\n" +
+        "------------------------------------ \n"
+      );
+    } else if (outputName == null) {
+      return (
+        "------------------------------------ \n" +
+        "Input file: " +
+        getInputFile() +
+        "\n" +
+        "Processors to schedule on: " +
+        getProcessorsToScheduleOn() +
+        "\n" +
+        "Threads to calculate with: 1\n" +
+        "Visualize: " +
+        visualize +
+        "\n" +
+        "Output will NOT be saved\n" +
+        "------------------------------------ \n"
+      );
+    } else if (coresToCalculateWith == 0) {
+      return (
+        "------------------------------------ \n" +
+        "Input file: " +
+        getInputFile() +
+        "\n" +
+        "Processors to schedule on: " +
+        getProcessorsToScheduleOn() +
+        "\n" +
+        "Threads to calculate with: 1\n" +
+        "Visualize: " +
+        visualize +
+        "\n" +
+        "Output will be saved to: " +
+        outputName +
+        "\n" +
+        "------------------------------------ \n"
+      );
+    } else {
+      return (
+        "------------------------------------ \n" +
+        "Input file: " +
+        getInputFile() +
+        "\n" +
+        "Processors to schedule on: " +
+        getProcessorsToScheduleOn() +
+        "\n" +
+        "Threads to calculate with: " +
+        coresToCalculateWith +
+        "\n" +
+        "Visualize: " +
+        visualize +
+        "\n" +
+        "Output will be saved to: " +
+        outputName +
+        "\n" +
+        "------------------------------------ \n"
+      );
+    }
   }
 }

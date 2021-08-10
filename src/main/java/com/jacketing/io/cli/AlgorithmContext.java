@@ -21,4 +21,6 @@ public interface AlgorithmContext {
   int getCoresToCalculateWith();
 
   UpdatesFromAlgorithm getObserver();
+
+  String toString();
 }
