@@ -12,7 +12,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: "Run tests"
-        run: gradle test
+        run: gradle test --build-file=buildci.gradle
 
       - name: "Give executable permissions to gradlew"
         run: "chmod +x ./gradlew"
@@ -43,4 +43,4 @@ jobs:
           path: target/site/jacoco/
 
       - name: Attempt compilation
-        run: gradle build
+        run: gradle build --build-file=buildci.gradle
