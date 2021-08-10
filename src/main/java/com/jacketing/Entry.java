@@ -34,6 +34,8 @@ import javafx.application.Application;
 
 public class Entry {
 
+  public static AlgorithmObserver observer;
+
   public static void main(String... argv) {
     ApplicationContext programContext = new ProgramContext();
 
@@ -42,8 +44,9 @@ public class Entry {
       programContext.validate();
 
       if (programContext.isVisualized()) {
-        programContext.giveObserver(new AlgorithmObserver());
-        Application.launch(ApplicationEntry.class);
+        observer = new AlgorithmObserver();
+        programContext.giveObserver(observer);
+        ApplicationEntry.launch(observer);
       }
       beginSearch(programContext);
     } catch (ParameterException e) {

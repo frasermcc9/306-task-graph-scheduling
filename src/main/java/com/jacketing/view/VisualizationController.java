@@ -1,10 +1,12 @@
 package com.jacketing.view;
 
+import com.jacketing.common.analysis.AlgorithmObserver;
 import com.jacketing.view.innercontrollers.*;
 import javafx.fxml.FXML;
 import javafx.scene.chart.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
@@ -35,12 +37,22 @@ public class VisualizationController {
   private TextArea logs;
 
   @FXML
+  private StackPane searchSpaceStackPane;
+
+  private AlgorithmObserver observer;
+
+  public void setAlgorithmObserver(AlgorithmObserver observer) {
+    this.observer = observer;
+  }
+
+  @FXML
   public void initialize() {
     new CpuGraphController(threadGraph, threadAxis);
     new RamGraphController(ramGraph);
     new StatsTextController(duration, schedulesChecked, improvements, peakRam, peakCpu, currentBestTime, numberCores, numberProcessors, algorithm, time, inputFile);
     new LogsController(logs);
     new ScheduleController(bestScheduleGraph, scheduleList);
+
   }
 
 

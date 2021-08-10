@@ -13,6 +13,7 @@
 
 package com.jacketing.view;
 
+import com.jacketing.common.analysis.AlgorithmObserver;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -21,14 +22,25 @@ import javafx.stage.Stage;
 
 public class ApplicationEntry extends Application {
 
+  private static AlgorithmObserver observer;
+
+  public static void launch(AlgorithmObserver algorithmObserver) {
+    observer = algorithmObserver;
+    ApplicationEntry.launch(ApplicationEntry.class);
+  }
+
   @Override
   public void start(Stage primaryStage) throws Exception {
     FXMLLoader loader = new FXMLLoader(
       getClass().getClassLoader().getResource("final.fxml")
     );
+
     Parent root;
-    
     root = loader.load();
+
+    VisualizationController controller = loader.getController();
+    controller.setAlgorithmObserver(observer);
+
     Scene scene = new Scene(root);
     primaryStage.setTitle("Jacketing Studio");
     primaryStage.setScene(scene);
