@@ -28,6 +28,7 @@ import com.jacketing.io.output.format.DotFileFormatter;
 import com.jacketing.io.output.saver.StandardFileSaver;
 import com.jacketing.parsing.ParserLoader;
 import com.jacketing.parsing.impl.structures.Graph;
+import com.jacketing.util.RAM.RamReader;
 import com.jacketing.view.ApplicationEntry;
 import java.util.HashMap;
 import javafx.application.Application;
@@ -46,9 +47,15 @@ public class Entry {
       if (programContext.isVisualized()) {
         observer = new AlgorithmObserver();
         programContext.giveObserver(observer);
+
+        new Thread(() -> {
+          beginSearch(programContext);
+        }).start();
+
         ApplicationEntry.launch(observer);
+      } else {
+        beginSearch(programContext);
       }
-      beginSearch(programContext);
     } catch (ParameterException e) {
       System.out.println(e.getMessage());
       System.out.println(programContext.helpText());
