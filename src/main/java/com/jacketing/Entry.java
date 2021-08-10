@@ -24,6 +24,7 @@ import com.jacketing.common.analysis.AlgorithmObserver;
 import com.jacketing.io.cli.ApplicationContext;
 import com.jacketing.io.cli.ProgramContext;
 import com.jacketing.io.output.OutputLoader;
+import com.jacketing.io.output.commandOut.CommandLineOutput;
 import com.jacketing.io.output.format.DotFileFormatter;
 import com.jacketing.io.output.saver.StandardFileSaver;
 import com.jacketing.parsing.ParserLoader;
@@ -43,6 +44,7 @@ public class Entry {
 
       if (programContext.isVisualized()) {
         programContext.giveObserver(new AlgorithmObserver());
+
         Application.launch(ApplicationEntry.class);
       }
       beginSearch(programContext);
@@ -53,6 +55,8 @@ public class Entry {
   }
 
   public static void beginSearch(ApplicationContext context) {
+    CommandLineOutput out = new CommandLineOutput();
+    out.printCmdOutput(context);
     Loader<Graph> graphLoader = ParserLoader.create(
       context.getInputFile(),
       HashMap::new
