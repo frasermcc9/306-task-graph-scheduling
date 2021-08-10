@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.RecursiveAction;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ParallelDepthFirstScheduler
@@ -74,13 +73,6 @@ public class ParallelDepthFirstScheduler
       new RecursiveDfs(scheduleFactory.newSchedule(context), freeNodes, visited)
     );
 
-    executor.shutdown();
-    try {
-      executor.awaitTermination(20, TimeUnit.SECONDS);
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    }
-
     return bestSchedule;
   }
 
@@ -105,7 +97,7 @@ public class ParallelDepthFirstScheduler
       int compute
     ) {
       if (compute < upperBound.get()) {
-        bestSchedule = schedule;
+        bestSchedule = schedule.clone();
         upperBound.getAndSet(compute);
       }
     }
@@ -145,11 +137,13 @@ public class ParallelDepthFirstScheduler
           // cull this branch if it exceeds best schedule so far
           int intUpper = upperBound.get();
           if (bestSchedule != null && nextState.getDuration() >= intUpper) {
+            nextState.revert();
             continue;
           }
 
           String identifier = nextState.toString();
           if (equivalents.contains(identifier)) {
+            nextState.revert();
             continue;
           }
           equivalents.add(identifier);
@@ -176,9 +170,8 @@ public class ParallelDepthFirstScheduler
             }
           }
 
-          executor.invoke(
-            new RecursiveDfs(nextState, nextFreeNodes, nextVisited)
-          );
+          invokeAll(new RecursiveDfs(nextState, nextFreeNodes, nextVisited));
+          nextState.revert();
         }
       }
     }

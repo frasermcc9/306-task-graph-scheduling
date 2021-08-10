@@ -89,7 +89,8 @@ public class BruteForceScheduler extends AbstractSchedulingAlgorithm {
           nodeWeight,
           node
         );
-        Schedule nextState = scheduleFactory.copy(curState);
+
+        Schedule nextState = curState.clone();
         // Add the task to next state
         nextState.addTask(task, processor);
 
