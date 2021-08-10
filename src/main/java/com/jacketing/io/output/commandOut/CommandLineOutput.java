@@ -1,11 +1,11 @@
 package com.jacketing.io.output.commandOut;
 
-import com.jacketing.io.cli.IOContext;
+import com.jacketing.io.cli.ApplicationContext;
 
 public class CommandLineOutput implements CmdOutFactory {
 
   @Override
-  public void printCmdOutput(IOContext ioContext) {
-    System.out.println(ioContext.toString());
+  public void printCmdOutput(ApplicationContext context) {
+    System.out.println(context.toString());
   }
 }
