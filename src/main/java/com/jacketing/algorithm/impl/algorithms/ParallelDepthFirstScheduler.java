@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.RecursiveAction;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ParallelDepthFirstScheduler
@@ -73,13 +72,6 @@ public class ParallelDepthFirstScheduler
     executor.invoke(
       new RecursiveDfs(scheduleFactory.newSchedule(context), freeNodes, visited)
     );
-
-    executor.shutdown();
-    try {
-      executor.awaitTermination(20, TimeUnit.SECONDS);
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    }
 
     System.out.println(
       "Found best schedule of " + bestSchedule.getDuration() + " time!"
@@ -182,9 +174,7 @@ public class ParallelDepthFirstScheduler
             }
           }
 
-          executor.invoke(
-            new RecursiveDfs(nextState, nextFreeNodes, nextVisited)
-          );
+          invokeAll(new RecursiveDfs(nextState, nextFreeNodes, nextVisited));
           nextState.revert();
         }
       }

@@ -59,14 +59,10 @@ public class ScheduleImpl implements Schedule {
   }
 
   public ScheduleImpl clone() {
-
     Map<Integer, ProcessorTaskList> processorMap = new HashMap<>();
     Map<Task, Integer> inverseProcessorMap = new HashMap<>();
     for (Map.Entry<Integer, ProcessorTaskList> entry : this.processorMap.entrySet()) {
-      processorMap.put(
-          entry.getKey(),
-          new ProcessorTaskList(entry.getValue())
-        );
+      processorMap.put(entry.getKey(), new ProcessorTaskList(entry.getValue()));
       for (Task task : entry.getValue()) {
         inverseProcessorMap.put(task, entry.getKey());
       }
@@ -211,7 +207,9 @@ public class ScheduleImpl implements Schedule {
   }
 
   public void revert() {
-    if (!cloned){return;}
+    if (!cloned) {
+      return;
+    }
 
     processorMap.get(newProc).remove(newTask);
     taskIdToTaskMap.remove(newTask.getId());
