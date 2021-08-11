@@ -23,6 +23,12 @@ import java.util.List;
 
 public class ProgramContext implements ApplicationContext {
 
+  public ProgramContext(List<String> input) {
+    this.input = input;
+  }
+
+  public ProgramContext() { }
+
   @Parameter
   private List<String> input = new ArrayList<>();
 
