@@ -57,9 +57,9 @@ Building locally requires Oracle Java 8
 
 1. Clone Repo
 2. In IntelliJ:
-   Set Project SDK to Java 8 (if you have multiple Java installations)
-   Set Gradle SDK to Java 8 (if you have multiple Java installations)
-   Sync Gradle
+   - Set Project SDK to Java 8 (if you have multiple Java installations)
+   - Set Gradle SDK to Java 8 (if you have multiple Java installations)
+   - Sync Gradle
 3. Run com.jacketing.Entry
 
 <h3>Wiki</h3>
