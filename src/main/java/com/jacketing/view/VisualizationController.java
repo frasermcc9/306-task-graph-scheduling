@@ -11,13 +11,13 @@ import javafx.scene.text.Text;
 public class VisualizationController {
 
   @FXML
-  private StackedBarChart<String, Double> bestScheduleGraph;
+  private StackedBarChart<String, Integer> bestScheduleGraph;
 
   @FXML
   private LineChart<String, Double> threadGraph;
 
   @FXML
-  private NumberAxis threadAxis;
+  private NumberAxis threadAxis, scheduleAxis;
 
   @FXML
   private LineChart<String, Long> ramGraph;
@@ -52,6 +52,6 @@ public class VisualizationController {
       inputFile
     );
     new LogsController(logs);
-    new ScheduleController(bestScheduleGraph, scheduleList);
+    new ScheduleController(bestScheduleGraph, scheduleList, scheduleAxis);
   }
 }
