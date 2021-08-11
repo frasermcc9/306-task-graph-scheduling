@@ -28,5 +28,8 @@
   "lint-staged": {
     "*.{js,css}": "prettier --write",
     "*.java": "prettier --write"
+  },
+  "dependencies": {
+    "@frasermcc/overcord": "^0.4.7"
   }
 }

@@ -1,6 +1,7 @@
 # https://editorconfig.org
 root = true
 
+# All files
 [*]
 charset = utf-8
 end_of_line = lf
@@ -10,6 +11,7 @@ insert_final_newline = true
 max_line_length = 80
 trim_trailing_whitespace = true
 
+# Markdown files
 [*.md]
 max_line_length = 0
 trim_trailing_whitespace = false

@@ -2,6 +2,7 @@
 overrides:
   - files:
       - "*.java"
+      - "*.js"
     options:
       printWidth: 80
       tabWidth: 2

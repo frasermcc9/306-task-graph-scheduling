@@ -90,6 +90,10 @@ public class TestUtil {
     return createGraphFromFile("examples/g5/g5.dot");
   }
 
+  public static Graph graphVariantSix() {
+    return createGraphFromFile("examples/hard/hard.dot");
+  }
+
   public static Graph emptyGraph() {
     StringBuffer graphString = new StringBuffer(
       "digraph \"empty\" {\n" + "}\n"

@@ -11,11 +11,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Print JDK
-        run: java -version
+      - name: Install packages
+        run: npm i
 
       - name: "Run tests"
-        run: gradle test
+        run: gradle test --build-file=buildci.gradle
 
       - name: Attempt compilation
-        run: gradle build
+        run: gradle build --build-file=buildci.gradle
+
+

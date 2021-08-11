@@ -1,0 +1,53 @@
+.text-area .content {
+  -fx-background-color: #2f2d2e;
+  -fx-background-radius: 0;
+}
+
+.text-input {
+  -fx-text-fill: white;
+  -fx-background-color: black;
+  -fx-border-color: black;
+}
+
+.chart {
+  -fx-background: #2f2d2e;
+  -fx-text-fill: white;
+}
+
+.chart-horizontal-grid-lines {
+  -fx-stroke: black;
+  -fx-stroke-width: 1px;
+}
+
+.axis-tick-mark {
+  -fx-stroke: black;
+}
+
+.axis-minor-tick-mark {
+  -fx-stroke: black;
+}
+
+.axis {
+  -fx-background-radius: 0;
+}
+
+.axis:left {
+  -fx-border-color: transparent black transparent transparent;
+}
+
+.axis:bottom {
+  -fx-border-color: black transparent transparent transparent;
+}
+
+.default-color0.chart-series-line {
+  -fx-stroke: #00aeef;
+}
+.default-color1.chart-series-line {
+  -fx-stroke: #e84855;
+}
+.default-color2.chart-series-line {
+  -fx-stroke: #8b5fbf;
+}
+.default-color3.chart-series-line {
+  -fx-stroke: #f7f4f3;
+}

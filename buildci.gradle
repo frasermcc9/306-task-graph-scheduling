@@ -1,6 +1,7 @@
 plugins {
   id 'java'
   id 'jacoco'
+  id 'org.openjfx.javafxplugin' version '0.0.10'
 }
 
 group 'com.jacketing'
@@ -8,6 +9,10 @@ version '1.0-SNAPSHOT'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
+
+javafx {
+  modules = [ 'javafx.controls', 'javafx.fxml' ]
+}
 
 jar {
   manifest {
