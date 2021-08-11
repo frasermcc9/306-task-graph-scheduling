@@ -11,16 +11,16 @@ public class GraphController {
     this.chart = chart;
     removeAnimationsAndTicks(chart);
   }
+
   private void removeAnimationsAndTicks(LineChart<String, ?> chart) {
-      Axis xAxis = chart.getXAxis();
-      xAxis.setTickLabelsVisible(false);
-      xAxis.setAnimated(false);
+    Axis xAxis = chart.getXAxis();
+    xAxis.setTickLabelsVisible(false);
+    xAxis.setAnimated(false);
 
-      Axis yAxis = chart.getYAxis();
-      yAxis.setAnimated(false);
+    Axis yAxis = chart.getYAxis();
+    yAxis.setAnimated(false);
 
-      chart.setCreateSymbols(false);
-      chart.setAnimated(false);
+    chart.setCreateSymbols(false);
+    chart.setAnimated(false);
   }
-
 }

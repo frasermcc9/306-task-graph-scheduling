@@ -8,9 +8,11 @@ import javafx.scene.chart.XYChart;
 
 public class CpuGraphController extends GraphController {
 
-  public CpuGraphController(LineChart<String, Double> chart, NumberAxis threadAxis) {
+  public CpuGraphController(
+    LineChart<String, Double> chart,
+    NumberAxis threadAxis
+  ) {
     super(chart);
-
     CpuReader reader = new CpuReader();
     for (int i = 0; i < 4; i++) {
       XYChart.Series<String, Double> series = new XYChart.Series<>();
@@ -26,5 +28,4 @@ public class CpuGraphController extends GraphController {
     threadAxis.setLowerBound(0);
     threadAxis.setTickUnit(5);
   }
-
 }

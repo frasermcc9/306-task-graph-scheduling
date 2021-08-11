@@ -23,7 +23,6 @@ import java.util.HashMap;
 public class ScheduleFactoryImpl implements ScheduleFactory {
 
   public Schedule newSchedule(AlgorithmContext ctx) {
-
     HashMap<Integer, ProcessorTaskList> map = new HashMap<>();
     for (int i = 0; i < ctx.getProcessorsToScheduleOn(); i++) {
       map.put(i, new ProcessorTaskList());

@@ -124,7 +124,6 @@ public class DepthFirstScheduler extends AbstractSchedulingAlgorithm {
         }
         equivalents.add(identifier);
 
-
         List<Integer> nextFreeNodes = new ArrayList<>();
         for (Integer freeNode : orphanNodes) {
           // exclude the node that has already been scheduled.
