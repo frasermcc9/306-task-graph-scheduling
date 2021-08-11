@@ -51,3 +51,7 @@
 .default-color3.chart-series-line {
   -fx-stroke: #f7f4f3;
 }
+
+.chart-bar {
+  -fx-bar-fill: #00aeef;
+}
