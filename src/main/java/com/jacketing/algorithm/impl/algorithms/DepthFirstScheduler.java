@@ -13,6 +13,7 @@
 
 package com.jacketing.algorithm.impl.algorithms;
 
+import com.jacketing.algorithm.impl.X.AlgorithmSchedule;
 import com.jacketing.algorithm.impl.structures.Task;
 import com.jacketing.algorithm.impl.util.topological.TopologicalSortContext;
 import com.jacketing.algorithm.interfaces.SchedulingAlgorithmStrategy;
@@ -33,7 +34,7 @@ public class DepthFirstScheduler extends AbstractSchedulingAlgorithm {
 
   private final Set<String> equivalents = new HashSet<>();
 
-  private Schedule bestSchedule;
+  private AlgorithmSchedule bestSchedule;
   private int upperBound;
 
   public DepthFirstScheduler(
@@ -49,7 +50,7 @@ public class DepthFirstScheduler extends AbstractSchedulingAlgorithm {
     SchedulingAlgorithmStrategy algorithm = SchedulingAlgorithmStrategy.create(
       new ListScheduler(graph, context, scheduleFactory)
     );
-    Schedule estimateSchedule = algorithm.schedule();
+    AlgorithmSchedule estimateSchedule = algorithm.schedule();
     upperBound = estimateSchedule.getDuration();
     bestSchedule = estimateSchedule;
   }
@@ -63,7 +64,7 @@ public class DepthFirstScheduler extends AbstractSchedulingAlgorithm {
    * cost function to prune the recursion tree.
    */
   @Override
-  public Schedule schedule() {
+  public AlgorithmSchedule schedule() {
     List<List<Integer>> topological = topologicalOrderFinder.sortedTopological();
 
     if (topological.size() == 0) {

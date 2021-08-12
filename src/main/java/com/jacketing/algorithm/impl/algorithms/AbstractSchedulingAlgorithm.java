@@ -13,17 +13,20 @@
 
 package com.jacketing.algorithm.impl.algorithms;
 
+import com.jacketing.algorithm.impl.X.StaticCache;
 import com.jacketing.algorithm.interfaces.SchedulingAlgorithmStrategy;
 import com.jacketing.algorithm.interfaces.structures.Schedule;
 import com.jacketing.algorithm.interfaces.util.ScheduleFactory;
 import com.jacketing.common.analysis.UpdatesFromAlgorithm;
 import com.jacketing.io.cli.AlgorithmContext;
 import com.jacketing.parsing.impl.structures.Graph;
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AbstractSchedulingAlgorithm
   implements SchedulingAlgorithmStrategy {
 
+  private static final List<StaticCache> staticCache = new ArrayList<>();
   protected final Graph graph;
   protected final AlgorithmContext context;
   protected final ScheduleFactory scheduleFactory;
@@ -37,6 +40,16 @@ public abstract class AbstractSchedulingAlgorithm
     this.graph = graph;
     this.context = context;
     this.scheduleFactory = scheduleFactory;
+  }
+
+  public static StaticCache getCache(int key) {
+    return staticCache.get(key);
+  }
+
+  public int useCache(StaticCache cache) {
+    int position = staticCache.size();
+    staticCache.add(cache);
+    return position;
   }
 
   @Override
