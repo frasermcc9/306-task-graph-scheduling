@@ -19,8 +19,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.jacketing.TestUtil;
+import com.jacketing.algorithm.impl.X.AlgorithmSchedule;
 import com.jacketing.algorithm.interfaces.SchedulingAlgorithmStrategy;
-import com.jacketing.algorithm.interfaces.structures.Schedule;
 import com.jacketing.algorithm.interfaces.util.ScheduleFactory;
 import com.jacketing.io.cli.ProgramContext;
 import com.jacketing.parsing.impl.structures.Graph;
@@ -40,7 +40,7 @@ public class ListSchedulerTest {
       new ListScheduler(graph, programContext, ScheduleFactory.create())
     );
 
-    Schedule schedule = schedulingAlgorithmStrategy.schedule();
+    AlgorithmSchedule schedule = schedulingAlgorithmStrategy.schedule();
     schedule.getDuration();
 
     assertEquals(10, schedule.getDuration());
@@ -62,7 +62,7 @@ public class ListSchedulerTest {
         )
       );
 
-      Schedule schedule = schedulingAlgorithmStrategy.schedule();
+      AlgorithmSchedule schedule = schedulingAlgorithmStrategy.schedule();
       int duration = schedule.getDuration();
       int best = graphResult.getTwoCoresResult();
 

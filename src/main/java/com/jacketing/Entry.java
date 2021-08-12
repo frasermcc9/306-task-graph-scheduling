@@ -16,9 +16,9 @@ package com.jacketing;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.ParameterException;
 import com.jacketing.algorithm.AlgorithmLoader;
-import com.jacketing.algorithm.impl.algorithms.DepthFirstScheduler;
+import com.jacketing.algorithm.impl.X.AlgorithmSchedule;
+import com.jacketing.algorithm.impl.X.IterativeDfs;
 import com.jacketing.algorithm.impl.algorithms.ParallelDepthFirstScheduler;
-import com.jacketing.algorithm.interfaces.structures.Schedule;
 import com.jacketing.common.Loader;
 import com.jacketing.common.analysis.AlgorithmObserver;
 import com.jacketing.io.cli.ApplicationContext;
@@ -71,11 +71,11 @@ public class Entry {
     );
     Graph graph = graphLoader.load();
 
-    Loader<Schedule> scheduleLoader = AlgorithmLoader.create(
+    Loader<AlgorithmSchedule> scheduleLoader = AlgorithmLoader.create(
       graph,
       context,
       (data, ctx, scheduleFactory) -> {
-        if (ctx.getCoresToCalculateWith() <= 1) return new DepthFirstScheduler(
+        if (ctx.getCoresToCalculateWith() <= 1) return new IterativeDfs(
           data,
           ctx,
           scheduleFactory
@@ -89,7 +89,7 @@ public class Entry {
     double startTime = System.nanoTime();
 
     //Start search
-    Schedule schedule = scheduleLoader.load();
+    AlgorithmSchedule schedule = scheduleLoader.load();
 
     double endTime = System.nanoTime();
     double timeElapsed = endTime - startTime;

@@ -13,7 +13,9 @@
 
 package com.jacketing.algorithm.impl.structures;
 
-public class Task {
+import com.jacketing.common.FormattableTask;
+
+public class Task implements FormattableTask {
 
   private final int id;
   private final int start;

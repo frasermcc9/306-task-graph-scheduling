@@ -1,6 +1,6 @@
 package com.jacketing.io.output.commandOut;
 
-import com.jacketing.algorithm.interfaces.structures.Schedule;
+import com.jacketing.algorithm.impl.X.AlgorithmSchedule;
 import com.jacketing.io.cli.ApplicationContext;
 
 public class CommandLineOutput implements CommandOutput {
@@ -24,7 +24,7 @@ public class CommandLineOutput implements CommandOutput {
     System.out.println("Finished\n" + "Time taken: " + outTime);
   }
 
-  public void printScheduleTime(Schedule schedule) {
+  public void printScheduleTime(AlgorithmSchedule schedule) {
     System.out.println("Schedule Cost: " + schedule.getDuration());
   }
 }

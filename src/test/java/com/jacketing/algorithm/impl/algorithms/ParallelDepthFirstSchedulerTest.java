@@ -19,8 +19,8 @@ import static org.mockito.Mockito.when;
 
 import com.jacketing.TestUtil;
 import com.jacketing.TestUtil.GraphResult;
+import com.jacketing.algorithm.impl.X.AlgorithmSchedule;
 import com.jacketing.algorithm.interfaces.SchedulingAlgorithmStrategy;
-import com.jacketing.algorithm.interfaces.structures.Schedule;
 import com.jacketing.algorithm.interfaces.util.ScheduleFactory;
 import com.jacketing.io.cli.ProgramContext;
 import com.jacketing.parsing.impl.structures.Graph;
@@ -47,7 +47,7 @@ public class ParallelDepthFirstSchedulerTest {
         )
       );
 
-      Schedule schedule = schedulingAlgorithmStrategy.schedule();
+      AlgorithmSchedule schedule = schedulingAlgorithmStrategy.schedule();
       int optimalLength = schedule.getDuration();
       int expectedLength = graph.getTwoCoresResult();
 
@@ -72,7 +72,7 @@ public class ParallelDepthFirstSchedulerTest {
         )
       );
 
-      Schedule schedule = schedulingAlgorithmStrategy.schedule();
+      AlgorithmSchedule schedule = schedulingAlgorithmStrategy.schedule();
       int optimalLength = schedule.getDuration();
       int expectedLength = graph.getFourCoresResult();
 
@@ -96,7 +96,7 @@ public class ParallelDepthFirstSchedulerTest {
       )
     );
 
-    Schedule schedule = schedulingAlgorithmStrategy.schedule();
+    AlgorithmSchedule schedule = schedulingAlgorithmStrategy.schedule();
     int duration = schedule.getDuration();
 
     assertEquals(0, duration);

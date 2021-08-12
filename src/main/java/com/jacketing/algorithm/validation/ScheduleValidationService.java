@@ -15,6 +15,7 @@ package com.jacketing.algorithm.validation;
 
 import com.jacketing.algorithm.impl.structures.Task;
 import com.jacketing.algorithm.interfaces.structures.Schedule;
+import com.jacketing.common.FormattableTask;
 import com.jacketing.parsing.impl.structures.EnumeratedAdjacencyList;
 import com.jacketing.parsing.impl.structures.Graph;
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ public class ScheduleValidationService implements ScheduleValidator {
     EnumeratedAdjacencyList enumeratedAdjacencyList = graph.getAdjacencyList();
     Map<Integer, List<Integer>> childToParentsMap = enumeratedAdjacencyList.getInAdjacencyList();
 
-    for (Task childTask : schedule.getAllTasks()) {
+    for (FormattableTask childTask : schedule.getAllTasks()) {
       int childId = childTask.getId();
       List<Integer> parentNodeIds = childToParentsMap.get(childId);
 
@@ -67,7 +68,7 @@ public class ScheduleValidationService implements ScheduleValidator {
 
   public boolean validateTasksUnique(Schedule schedule) {
     ArrayList<Integer> seenTasks = new ArrayList<>();
-    for (Task task : schedule.getAllTasks()) {
+    for (FormattableTask task : schedule.getAllTasks()) {
       if (seenTasks.contains(task.getId())) {
         return false;
       } else {
