@@ -1,7 +1,6 @@
 package com.jacketing.parsing.impl.structures;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertEquals;
 
 import com.jacketing.TestUtil;
 import org.junit.Assert;
@@ -32,10 +31,30 @@ public class GraphTest {
   @Test
   public void testCriticalTime() {
     int criticalTime = graph.getCriticalTime();
-    assertTrue(criticalTime == 7);
+    assertEquals(7, criticalTime);
 
     graph = TestUtil.graphVariantTwo();
     criticalTime = graph.getCriticalTime();
-    assertTrue(criticalTime == 18);
+    assertEquals(18, criticalTime);
+  }
+
+  @Test
+  public void testBLevelGraphOne() {
+    graph = TestUtil.graphVariantThree();
+    assertEquals(315, graph.getBLevel(0));
+    assertEquals(126, graph.getBLevel(8));
+  }
+
+  @Test
+  public void testBLevelGraphFive() {
+    graph = TestUtil.graphVariantFive();
+    assertEquals(18, graph.getBLevel(0));
+    assertEquals(7, graph.getBLevel(5));
+  }
+
+  @Test
+  public void testBLevelGraphComplex() {
+    graph = TestUtil.graphVariantSix();
+    assertEquals(94, graph.getBLevel(7));
   }
 }
