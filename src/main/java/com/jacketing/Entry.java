@@ -16,8 +16,8 @@ package com.jacketing;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.ParameterException;
 import com.jacketing.algorithm.AlgorithmLoader;
+import com.jacketing.algorithm.impl.X.AStar;
 import com.jacketing.algorithm.impl.X.AlgorithmSchedule;
-import com.jacketing.algorithm.impl.X.IterativeDfs;
 import com.jacketing.algorithm.impl.algorithms.ParallelDepthFirstScheduler;
 import com.jacketing.common.Loader;
 import com.jacketing.common.analysis.AlgorithmObserver;
@@ -75,7 +75,7 @@ public class Entry {
       graph,
       context,
       (data, ctx, scheduleFactory) -> {
-        if (ctx.getCoresToCalculateWith() <= 1) return new IterativeDfs(
+        if (ctx.getCoresToCalculateWith() <= 1) return new AStar(
           data,
           ctx,
           scheduleFactory
