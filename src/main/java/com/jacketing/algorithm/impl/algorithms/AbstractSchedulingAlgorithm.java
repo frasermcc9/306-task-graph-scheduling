@@ -89,4 +89,12 @@ public abstract class AbstractSchedulingAlgorithm
     }
     return startTime;
   }
+
+  protected int listToBitfield(List<Integer> integers) {
+    int freeNodeBitfield = 0;
+    for (int orphan : integers) {
+      freeNodeBitfield |= (1 << orphan);
+    }
+    return freeNodeBitfield;
+  }
 }
