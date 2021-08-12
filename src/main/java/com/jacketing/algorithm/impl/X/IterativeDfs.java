@@ -23,8 +23,8 @@ import com.jacketing.io.cli.AlgorithmContext;
 import com.jacketing.parsing.impl.structures.Graph;
 import java.util.ArrayList;
 import java.util.Deque;
+import java.util.HashSet;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 public class IterativeDfs extends AbstractSchedulingAlgorithm {
@@ -38,10 +38,7 @@ public class IterativeDfs extends AbstractSchedulingAlgorithm {
     ScheduleFactory scheduleFactory
   ) {
     super(graph, context, scheduleFactory);
-    cacheKey =
-      useCache(
-        new StaticCacheImpl(graph, context, ConcurrentHashMap::newKeySet)
-      );
+    cacheKey = useCache(new StaticCacheImpl(graph, context, HashSet::new));
 
     topologicalOrderFinder =
       new TopologicalSortContext<>(TopologicalSort.withLayers(graph));
@@ -69,13 +66,15 @@ public class IterativeDfs extends AbstractSchedulingAlgorithm {
       freeNodeBitfield |= (1 << orphan);
     }
 
-    Deque<IterativeSchedule> stack = new ConcurrentLinkedDeque<>();
+    Deque<AbstractIterativeSchedule> stack = new ConcurrentLinkedDeque<>();
     stack.addFirst(
       new IterativeSchedule(freeNodeBitfield, null, stack, cacheKey)
     );
 
+    int count = 0;
+
     while (!stack.isEmpty()) {
-      IterativeSchedule next = stack.removeFirst();
+      AbstractIterativeSchedule next = stack.removeFirst();
       if (next.saturated()) {
         int scheduleLength = next.getTotalTime();
         if (scheduleLength < getCache(cacheKey).getUpperBound()) {
@@ -83,9 +82,10 @@ public class IterativeDfs extends AbstractSchedulingAlgorithm {
         }
         continue;
       }
+      count++;
       next.propagate();
     }
-
+    System.out.println(count);
     return getCache(cacheKey).getBestSchedule();
   }
 }

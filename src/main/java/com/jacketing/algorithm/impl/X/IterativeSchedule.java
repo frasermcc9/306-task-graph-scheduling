@@ -13,37 +13,22 @@
 
 package com.jacketing.algorithm.impl.X;
 
-import com.google.common.base.Strings;
 import com.jacketing.algorithm.impl.algorithms.AbstractSchedulingAlgorithm;
-import com.jacketing.common.FormattableTask;
 import com.jacketing.parsing.impl.structures.Graph;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Deque;
 import java.util.List;
 
-public class IterativeSchedule implements AlgorithmSchedule {
+public class IterativeSchedule
+  extends AbstractIterativeSchedule
+  implements AlgorithmSchedule {
 
-  private final Deque<IterativeSchedule> globalStack;
-
-  private final IterativeSchedule parent;
-
-  private final Integer[] procCache;
-  private final Task[] taskCache;
-  private final int cacheKey;
-  private final String[] permutationStrings;
-  private final int orphans; // bitfield
-  private final int[] totalTime;
-  private boolean cacheComplete = false;
-  private int task = -1;
-  private int proc = -1;
-  private int time = -1;
-  private int duration = -1;
+  private final Deque<AbstractIterativeSchedule> globalStack;
 
   public IterativeSchedule(
     int orphans,
     IterativeSchedule parent,
-    Deque<IterativeSchedule> globalStack,
+    Deque<AbstractIterativeSchedule> globalStack,
     int cacheKey
   ) {
     this(
@@ -65,47 +50,37 @@ public class IterativeSchedule implements AlgorithmSchedule {
 
   public IterativeSchedule(
     int orphans,
-    IterativeSchedule parent,
-    Deque<IterativeSchedule> globalStack,
+    AbstractIterativeSchedule parent,
+    Deque<AbstractIterativeSchedule> globalStack,
     int[] totalTime,
     int cacheKey,
     String[] permutationStrings
   ) {
-    this.orphans = orphans;
-    this.parent = parent;
+    super(orphans, parent, totalTime, cacheKey, permutationStrings);
     this.globalStack = globalStack;
-    this.totalTime = totalTime;
-    this.cacheKey = cacheKey;
-    this.permutationStrings = permutationStrings;
-
-    taskCache =
-      new Task[getCache().getGraph().getAdjacencyList().getNodeCount()];
-
-    procCache =
-      new Integer[getCache().getContext().getProcessorsToScheduleOn()];
   }
 
-  public int getTotalTime() {
-    int max = totalTime[0];
-    int len = totalTime.length;
-    for (int i = 1; i < len; i++) {
-      int time = totalTime[i];
-      if (time > max) {
-        max = time;
-      }
-    }
-    return max;
+  @Override
+  public AbstractIterativeSchedule buildSchedule(
+    AbstractIterativeSchedule parent,
+    int nextOrphans,
+    int[] totalTimeArray,
+    int cacheKey,
+    String[] permutationStrings
+  ) {
+    return new IterativeSchedule(
+      orphans,
+      parent,
+      globalStack,
+      totalTimeArray,
+      cacheKey,
+      permutationStrings
+    );
   }
 
-  public void setAddedTask(int proc, int time, int task, int duration) {
-    this.proc = proc;
-    this.time = time;
-    this.task = task;
-    this.duration = duration;
-  }
-
-  public boolean saturated() {
-    return orphans == 0;
+  @Override
+  public void addItem(AbstractIterativeSchedule schedule) {
+    this.globalStack.addFirst(schedule);
   }
 
   public void propagate() {
@@ -188,7 +163,7 @@ public class IterativeSchedule implements AlgorithmSchedule {
           System.arraycopy(totalTime, 0, totalTimeCopy, 0, processors);
           totalTimeCopy[processor] = startTime + taskWeight;
 
-          IterativeSchedule schedule = new IterativeSchedule(
+          AbstractIterativeSchedule schedule = new IterativeSchedule(
             nextOrphans,
             this,
             globalStack,
@@ -200,185 +175,6 @@ public class IterativeSchedule implements AlgorithmSchedule {
           globalStack.addFirst(schedule);
         }
       }
-    }
-  }
-
-  private String getPermutationId(String[] withStrings) {
-    int len = permutationStrings.length;
-    String[] copy = new String[len];
-    System.arraycopy(withStrings, 0, copy, 0, len);
-
-    Arrays.sort(copy);
-    StringBuilder sb = new StringBuilder();
-
-    for (int i = 0; i < len; i++) {
-      sb.append(copy[i]);
-    }
-    return sb.toString();
-  }
-
-  public Task findTask(int task) {
-    if (taskCache[task] != null) {
-      return taskCache[task];
-    }
-
-    if (cacheComplete) return null;
-
-    IterativeSchedule parent = this;
-    while (parent != null && parent.task != -1) {
-      taskCache[parent.task] =
-        new Task(parent.proc, parent.time, parent.duration, task);
-
-      if (procCache[parent.proc] == null) {
-        procCache[parent.proc] = parent.time + parent.duration;
-      }
-
-      if (parent.task == task) {
-        return new Task(parent.proc, parent.time, parent.duration, task);
-      }
-      parent = parent.parent;
-    }
-    cacheComplete = true;
-    return null;
-  }
-
-  public int findProcEnd(int proc) {
-    if (procCache[proc] != null) {
-      return procCache[proc];
-    }
-
-    IterativeSchedule parent = this;
-    while (parent != null) {
-      if (parent.proc == proc) {
-        return parent.time + parent.duration;
-      }
-      parent = parent.parent;
-    }
-    return 0;
-  }
-
-  @Override
-  public List<FormattableTask> getAllTasks() {
-    IterativeSchedule parent = this;
-    List<FormattableTask> tasks = new ArrayList<>();
-    while (parent != null && parent.proc != -1) {
-      tasks.add(
-        new Task(parent.proc, parent.time, parent.duration, parent.task)
-      );
-      parent = parent.parent;
-    }
-
-    return tasks;
-  }
-
-  @Override
-  public int getProcessor(int forTask) {
-    Task task = this.findTask(forTask);
-    return task.processor;
-  }
-
-  @Override
-  public int getNumberOfProcessors() {
-    return getCache().getContext().getProcessorsToScheduleOn();
-  }
-
-  public void printGantt() {
-    try {
-      int processorCount = getCache().getContext().getProcessorsToScheduleOn();
-      IterativeSchedule schedule = this;
-      String[] schedules = new String[processorCount];
-
-      for (int i = 0; i < processorCount; i++) {
-        int repeatCount = this.getTotalTime();
-        schedules[i] = Strings.repeat("_", repeatCount);
-      }
-
-      while (schedule != null && schedule.proc != -1) {
-        int processor = schedule.proc;
-        int duration = schedule.duration;
-        int id = schedule.task;
-        int start = schedule.time;
-
-        String current = schedules[processor];
-
-        int len = Math.max(0, duration - 2);
-
-        current =
-          current.substring(0, start) +
-          "|" +
-          Strings.repeat(id + "", len) +
-          "|" +
-          current.substring(start + duration);
-
-        schedules[processor] = current;
-        schedule = schedule.parent;
-      }
-
-      System.out.println("BEGIN_SCHEDULE");
-      for (String s : schedules) {
-        System.out.println("[" + s + "]");
-      }
-      System.out.println("END_SCHEDULE\n");
-    } catch (Exception ignored) {}
-  }
-
-  public void printDetail() {
-    IterativeSchedule schedule = this;
-    System.out.println("BEGIN_SCHEDULE");
-    while (schedule != null) {
-      System.out.println(schedule.toString());
-      schedule = schedule.parent;
-    }
-    System.out.println("END_SCHEDULE\n");
-  }
-
-  @Override
-  public String toString() {
-    return (
-      "IterativeSchedule{" +
-      "task=" +
-      task +
-      ", proc=" +
-      proc +
-      ", time=" +
-      time +
-      ", duration=" +
-      duration +
-      '}'
-    );
-  }
-
-  @Override
-  public int getDuration() {
-    return this.getTotalTime();
-  }
-
-  private StaticCache getCache() {
-    return AbstractSchedulingAlgorithm.getCache(cacheKey);
-  }
-
-  private static class Task implements FormattableTask {
-
-    private final int processor;
-    private final int time;
-    private final int duration;
-    private final int id;
-
-    public Task(int processor, int time, int duration, int id) {
-      this.processor = processor;
-      this.time = time;
-      this.duration = duration;
-      this.id = id;
-    }
-
-    @Override
-    public int getId() {
-      return id;
-    }
-
-    @Override
-    public int getStartTime() {
-      return time;
     }
   }
 }
