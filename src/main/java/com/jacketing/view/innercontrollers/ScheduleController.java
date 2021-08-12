@@ -5,17 +5,16 @@ import com.jacketing.algorithm.impl.structures.ScheduleImpl;
 import com.jacketing.algorithm.impl.structures.Task;
 import com.jacketing.algorithm.interfaces.structures.Schedule;
 import com.jacketing.io.cli.AlgorithmContext;
-import com.jacketing.io.cli.ApplicationContext;
 import com.jacketing.io.cli.ProgramContext;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import javafx.collections.ObservableList;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.StackedBarChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.layout.VBox;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.*;
 
 public class ScheduleController {
 
@@ -62,9 +61,7 @@ public class ScheduleController {
     // need to split tasks into lists for each processor
     int upperBound = 0;
     for (int i = 0; i < processorMap.size(); i++) {
-
       for (Task task : processorMap.get(0)) {
-
         // find last task for upper bound of graph
         int endTime = task.getEndTime();
         if (endTime > upperBound) {
@@ -105,7 +102,9 @@ public class ScheduleController {
       // the rest of the tasks
       for (int i = 1; i < taskList.size(); i++) {
         // check for delays (if this task starts later than the previous end time)
-        if (taskList.get(i - 1).getEndTime() != taskList.get(i).getStartTime()) {
+        if (
+          taskList.get(i - 1).getEndTime() != taskList.get(i).getStartTime()
+        ) {
           XYChart.Data<String, Integer> bar = new XYChart.Data(
             Integer.toString(processorIndex),
             taskList.get(i).getStartTime() - taskList.get(i - 1).getEndTime()
@@ -123,7 +122,8 @@ public class ScheduleController {
         bar
           .nodeProperty()
           .addListener(
-            (ov, oldNode, newNode) -> newNode.setStyle("-fx-border-color: black")
+            (ov, oldNode, newNode) ->
+              newNode.setStyle("-fx-border-color: black")
           );
         procSeries.getData().add(bar);
       }
@@ -132,7 +132,5 @@ public class ScheduleController {
       series.addAll(procSeries);
       processorIndex++;
     }
-
-
   }
 }

@@ -27,7 +27,7 @@ public class ProgramContext implements ApplicationContext {
     this.input = input;
   }
 
-  public ProgramContext() { }
+  public ProgramContext() {}
 
   @Parameter
   private List<String> input = new ArrayList<>();
