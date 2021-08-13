@@ -69,10 +69,11 @@ const runBenchmark = async (filename) => {
   const jarPath = path.join(__dirname, "306-a1-1.0-SNAPSHOT.jar");
   const command = `java -jar "${jarPath}" "${fullPath}" 2`;
   console.log(`running benchmark: [${filename}]`);
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     exec(command, (err, stdout) => {
       if (err) {
         console.error(err);
+        reject(err)
       } else {
         console.log(stdout);
         resolve();
