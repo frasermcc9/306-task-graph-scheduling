@@ -25,39 +25,11 @@ const removeOutputFiles = async () => {
 
   if (outputFilenames.length === 0) return;
 
-  /*****************************************************/
-  /**
-   * Uncomment this code if we want user confirmation for deleting files.
-   */
-  // const rl = readline.createInterface({
-  //   input: process.stdin,
-  //   output: process.stdout,
-  // });
-  //
-  // const ok = await new Promise((resolve) => {
-  //   rl.question('Are you sure? [Y/n]:', (answer) => {
-  //     if (answer.trim() === '') {
-  //       resolve(true)
-  //     } else {
-  //       resolve(answer.toLowerCase() === 'y')
-  //     }
-  //   })
-  // })
-  //
-  // rl.close()
-  /*****************************************************/
-
-  const ok = true;
-
-  if (ok) {
-    outputFilenames.forEach((fn) => {
-      const fullPath = path.join(graphDirectory, fn);
-      fs.rmSync(fullPath);
-    });
-    console.log(`Tried removing ${outputFilenames.length} files`);
-  } else {
-    console.log("User canceled");
-  }
+  outputFilenames.forEach((fn) => {
+    const fullPath = path.join(graphDirectory, fn);
+    fs.rmSync(fullPath);
+  });
+  console.log(`Tried removing ${outputFilenames.length} files`);
 };
 
 const parseBenchmarkOutput = (stdoutstr) => {
@@ -73,7 +45,7 @@ const runBenchmark = async (filename) => {
     exec(command, (err, stdout) => {
       if (err) {
         console.error(err);
-        reject(err)
+        reject(err);
       } else {
         console.log(stdout);
         resolve();
