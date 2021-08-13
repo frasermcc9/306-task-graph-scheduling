@@ -48,12 +48,12 @@ const runBenchmark = async (filename, processorCount) => {
   });
 };
 
-const appendResultsToCsv = (testName, processorCount, averageTime) => {
+const appendResultsToCsv = (processorCount, averageTimes) => {
   // time
   const currentDate = new Date().toISOString();
 
   const fpCsv = path.join(__dirname, "test.csv");
-  const data = `${currentDate},${testName},${processorCount},${averageTime}\n`;
+  const data = `${currentDate},${processorCount},${averageTimes[0]},${averageTimes[1]},${averageTimes[2]},${averageTimes[3]},${averageTimes[4]},${averageTimes[5]},${averageTimes[6]},${averageTimes[7]},${averageTimes[8]},${averageTimes[9]},${averageTimes[10]},\n`;
   fs.appendFileSync(fpCsv, data);
 };
 
@@ -78,9 +78,10 @@ const benchmark = async (processorCount) => {
     testGroup[testName] = testFilesArray;
   });
 
-  let totalTime = 0;
+  let allAveTimes = [];
 
   for (const testName of Object.keys(testGroup)) {
+    let totalTime = 0;
     const testFilesArray = testGroup[testName];
     console.log("----------------------------------------");
     console.log(`Now testing ${testName} found ${testFilesArray.length} tests`);
@@ -94,10 +95,11 @@ const benchmark = async (processorCount) => {
       totalTime += currentTime;
     }
     const averageTime = parseFloat((totalTime / 3).toFixed(3));
-
-    // append to csv
-    appendResultsToCsv(testName, processorCount, averageTime);
+    allAveTimes.push(averageTime);
   }
+
+  // append to csv
+  appendResultsToCsv(processorCount, allAveTimes);
 };
 
 const main = async () => {
