@@ -1,5 +1,5 @@
 /**
- * Benchmarks algorithm with every type of graph on 10/16 nodes.
+ * Benchmarks algorithm with every type of graph from the graph directory.
  */
 const fs = require("fs");
 const path = require("path");
@@ -26,6 +26,9 @@ const removeOutputFiles = async () => {
   if (outputFilenames.length === 0) return;
 
   /*****************************************************/
+  /**
+   * Uncomment this code if we want user confirmation for deleting files.
+   */
   // const rl = readline.createInterface({
   //   input: process.stdin,
   //   output: process.stdout,
