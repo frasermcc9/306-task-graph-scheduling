@@ -107,6 +107,7 @@ const main = async () => {
   // fileNames should be all valid now
   await benchmark(4);
   //await benchmark(2); ** UNCOMMENT WHEN INDEPENDENTNODES ARE FIXED IN ENTRY
+  await removeOutputFiles();
 };
 
 main().then();
