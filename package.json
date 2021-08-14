@@ -7,6 +7,8 @@
     "lint": "prettier --write \"./src/**/*.java\"",
     "prepare": "husky install",
     "postinstall": "npm run prepare",
+    "copy2bench": "cp ./build/libs/306-a1-1.0-SNAPSHOT.jar ./tools/benchmarking",
+    "bench:npx": "npx node@16 ./tools/benchmarking/benchmark.js",
     "benchmark": "node tools/benchmarking/benchmark.js"
   },
   "repository": {
