@@ -1,9 +1,12 @@
+#!npx node@16
+
 /**
  * Benchmarks algorithm with every type of graph from the graph directory.
  */
 const fs = require("fs");
 const path = require("path");
 const exec = require("child_process").exec;
+const { performance } = require("perf_hooks");
 
 const graphDirectory = path.join(__dirname, "graphs");
 
@@ -34,17 +37,25 @@ const removeOutputFiles = async () => {
 const runBenchmark = async (filename, processorCount) => {
   const fullPath = path.join(__dirname, `graphs/${filename}`);
   const jarPath = path.join(__dirname, "306-a1-1.0-SNAPSHOT.jar");
-  const command = `java -jar "${jarPath}" "${fullPath}" ${processorCount}`;
+  const command = `java -jar "${jarPath}" "${fullPath}" ${processorCount} --no-output`;
   console.log(`running benchmark: [${filename}]`);
   return new Promise((resolve, reject) => {
-    exec(command, (err) => {
+    let processTimeout;
+    const proc = exec(command, (err) => {
+      clearTimeout(processTimeout);
       if (err) {
-        console.error(err);
+        console.error(
+          `Error with ${filename} @ ${processorCount} processors. Likely timed out.`
+        );
         reject(err);
       } else {
         resolve();
       }
     });
+
+    processTimeout = setTimeout(() => {
+      proc.kill();
+    }, 15000);
   });
 };
 
@@ -52,7 +63,7 @@ const appendResultsToCsv = (processorCount, averageTimes) => {
   // time
   const currentDate = new Date().toISOString();
 
-  const fpCsv = path.join(__dirname, "test.csv");
+  const fpCsv = path.join(__dirname, `${processorCount}-core.csv`);
   const data = `${currentDate},${processorCount},${averageTimes[0]},${averageTimes[1]},${averageTimes[2]},${averageTimes[3]},${averageTimes[4]},${averageTimes[5]},${averageTimes[6]},${averageTimes[7]},${averageTimes[8]},${averageTimes[9]},${averageTimes[10]},\n`;
   fs.appendFileSync(fpCsv, data);
 };
@@ -80,19 +91,26 @@ const benchmark = async (processorCount) => {
 
   let allAveTimes = [];
 
-  for (const testName of Object.keys(testGroup)) {
+  outer: for (const testName of Object.keys(testGroup)) {
     let totalTime = 0;
     const testFilesArray = testGroup[testName];
     console.log("----------------------------------------");
     console.log(`Now testing ${testName} found ${testFilesArray.length} tests`);
 
     for (const filename of testFilesArray) {
-      const t0 = performance.now();
-      await runBenchmark(filename, processorCount);
-      const t1 = performance.now();
-      console.log("result");
-      const currentTime = t1 - t0;
-      totalTime += currentTime;
+      try {
+        const t0 = performance.now();
+        await runBenchmark(filename, processorCount);
+        const t1 = performance.now();
+        console.log("result");
+        const currentTime = t1 - t0;
+        totalTime += currentTime;
+      } catch (e) {
+        // skip remaining if did not finish
+        totalTime = -1;
+        allAveTimes.push(totalTime);
+        continue outer;
+      }
     }
     const averageTime = parseFloat((totalTime / 3).toFixed(3));
     allAveTimes.push(averageTime);
@@ -106,7 +124,7 @@ const main = async () => {
   await removeOutputFiles();
   // fileNames should be all valid now
   await benchmark(4);
-  //await benchmark(2); ** UNCOMMENT WHEN INDEPENDENTNODES ARE FIXED IN ENTRY
+  await benchmark(2); //** UNCOMMENT WHEN INDEPENDENTNODES ARE FIXED IN ENTRY
   await removeOutputFiles();
 };
 
