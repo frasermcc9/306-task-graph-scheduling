@@ -16,13 +16,13 @@ package com.jacketing.algorithm.impl.X;
 import java.util.PriorityQueue;
 import org.jetbrains.annotations.NotNull;
 
-public class SinglePropagationSchedule
+public class AStarSchedule
   extends AbstractIterativeSchedule
-  implements Comparable<SinglePropagationSchedule> {
+  implements Comparable<AStarSchedule> {
 
   private final PriorityQueue<AbstractIterativeSchedule> queue;
 
-  public SinglePropagationSchedule(
+  public AStarSchedule(
     int orphans,
     AbstractIterativeSchedule parent,
     PriorityQueue<AbstractIterativeSchedule> scheduleQueue,
@@ -32,7 +32,7 @@ public class SinglePropagationSchedule
     this.queue = scheduleQueue;
   }
 
-  public SinglePropagationSchedule(
+  public AStarSchedule(
     int orphans,
     AbstractIterativeSchedule parent,
     int[] totalTime,
@@ -52,7 +52,7 @@ public class SinglePropagationSchedule
     int cacheKey,
     String[] permutationStrings
   ) {
-    return new SinglePropagationSchedule(
+    return new AStarSchedule(
       nextOrphans,
       parent,
       totalTimeArray,
@@ -77,7 +77,7 @@ public class SinglePropagationSchedule
   }
 
   @Override
-  public int compareTo(@NotNull SinglePropagationSchedule other) {
+  public int compareTo(@NotNull AStarSchedule other) {
     return Integer.compare(this.heuristic, other.heuristic);
   }
 }

@@ -59,7 +59,7 @@ public class AStar extends AbstractSchedulingAlgorithm {
     int orphans = listToBitfield(topological.get(0));
 
     final PriorityQueue<AbstractIterativeSchedule> queue = new PriorityQueue<>();
-    queue.offer(new SinglePropagationSchedule(orphans, null, queue, cacheKey));
+    queue.offer(new AStarSchedule(orphans, null, queue, cacheKey));
 
     int count = 0;
 
