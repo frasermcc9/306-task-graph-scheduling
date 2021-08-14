@@ -23,12 +23,6 @@ import java.util.List;
 
 public class ProgramContext implements ApplicationContext {
 
-  public ProgramContext(List<String> input) {
-    this.input = input;
-  }
-
-  public ProgramContext() {}
-
   @Parameter
   private List<String> input = new ArrayList<>();
 
@@ -41,7 +35,16 @@ public class ProgramContext implements ApplicationContext {
   @Parameter(names = { "-o" })
   private String outputName;
 
+  @Parameter(names = { "--no-output" })
+  private boolean noOutput;
+
   private Observer algorithmObserver;
+
+  public ProgramContext(List<String> input) {
+    this.input = input;
+  }
+
+  public ProgramContext() {}
 
   @Override
   public String getInputFile() {
@@ -77,6 +80,11 @@ public class ProgramContext implements ApplicationContext {
       input = input.substring(0, input.length() - 4);
       return input + "-output.dot";
     }
+  }
+
+  @Override
+  public boolean outputIsDisabled() {
+    return this.noOutput;
   }
 
   @Override

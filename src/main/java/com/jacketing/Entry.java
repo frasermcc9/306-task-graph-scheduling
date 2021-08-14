@@ -96,14 +96,17 @@ public class Entry {
 
     //print end of search
     out.printEndOfSearch(timeElapsed);
-    Loader<Void> outputLoader = OutputLoader.create(
-      schedule,
-      context,
-      graph,
-      StandardFileSaver::new,
-      DotFileFormatter::new
-    );
-    outputLoader.load();
+
+    if (!context.outputIsDisabled()) {
+      Loader<Void> outputLoader = OutputLoader.create(
+        schedule,
+        context,
+        graph,
+        StandardFileSaver::new,
+        DotFileFormatter::new
+      );
+      outputLoader.load();
+    }
     out.printScheduleTime(schedule);
   }
 }

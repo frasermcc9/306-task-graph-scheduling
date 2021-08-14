@@ -19,4 +19,6 @@ public interface IOContext {
   boolean isVisualized();
 
   String getOutputName();
+
+  boolean outputIsDisabled();
 }
