@@ -6,7 +6,8 @@
   "scripts": {
     "lint": "prettier --write \"./src/**/*.java\"",
     "prepare": "husky install",
-    "postinstall": "npm run prepare"
+    "postinstall": "npm run prepare",
+    "benchmark": "node tools/benchmarking/benchmark.js"
   },
   "repository": {
     "type": "git",
