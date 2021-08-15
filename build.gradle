@@ -46,6 +46,7 @@ repositories {
 
 dependencies {
   implementation "org.graphstream:gs-core:2.0"
+  implementation "org.graphstream:gs-ui-javafx:2.0"
   implementation "com.beust:jcommander:1.81"
   implementation("com.google.guava:guava:30.1.1-jre")
   implementation "com.paypal.digraph:digraph-parser:1.0"
