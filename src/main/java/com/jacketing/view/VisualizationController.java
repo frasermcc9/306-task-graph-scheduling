@@ -1,7 +1,10 @@
 package com.jacketing.view;
 
 import com.jacketing.common.analysis.AlgorithmObserver;
+import com.jacketing.io.cli.ApplicationContext;
 import com.jacketing.view.innercontrollers.*;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import javafx.fxml.FXML;
 import javafx.scene.chart.*;
 import javafx.scene.control.Button;
@@ -41,6 +44,11 @@ public class VisualizationController {
 
   private AlgorithmObserver observer;
 
+  private PrintStream ps;
+  private ApplicationContext context;
+
+  private LogsController logsController;
+
   public void setAlgorithmObserver(AlgorithmObserver observer) {
     this.observer = observer;
     new SearchSpaceController(observer, searchSpaceStackPane);
@@ -48,6 +56,9 @@ public class VisualizationController {
 
   @FXML
   public void initialize() {
+    logsController = new LogsController(logs);
+    ps = new PrintStream(logsController);
+    System.setOut(ps);
     new CpuGraphController(threadGraph, threadAxis);
     new RamGraphController(ramGraph);
     new StatsTextController(
@@ -63,7 +74,6 @@ public class VisualizationController {
       time,
       inputFile
     );
-    new LogsController(logs);
     new ScheduleController(bestScheduleGraph, scheduleList, scheduleAxis);
   }
 }

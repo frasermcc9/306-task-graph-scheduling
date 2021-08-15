@@ -33,6 +33,8 @@ import com.jacketing.parsing.ParserLoader;
 import com.jacketing.parsing.impl.structures.Graph;
 import com.jacketing.util.RAM.RamReader;
 import com.jacketing.view.ApplicationEntry;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.util.HashMap;
 import javafx.application.Application;
 
@@ -50,12 +52,17 @@ public class Entry {
       if (programContext.isVisualized()) {
         observer = new AlgorithmObserver();
         programContext.giveObserver(observer);
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(os));
 
-        new Thread(() -> {
-          beginSearch(programContext, CommandLineOutput::new);
-        }).start();
+        new Thread(
+          () -> {
+            beginSearch(programContext, CommandLineOutput::new);
+          }
+        )
+          .start();
 
-        ApplicationEntry.launch(observer);
+        ApplicationEntry.launch(observer, os);
       } else {
         beginSearch(programContext, CommandLineOutput::new);
       }
