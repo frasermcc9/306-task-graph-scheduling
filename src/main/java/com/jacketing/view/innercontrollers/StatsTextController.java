@@ -6,7 +6,19 @@ public class StatsTextController {
 
   private Text duration, schedulesChecked, improvements, peakRam, peakCpu, currentBestTime, numberCores, numberProcessors, algorithm, time, inputFile;
 
-  public StatsTextController(Text duration, Text schedulesChecked, Text improvements, Text peakRam, Text peakCpu, Text currentBestTime, Text numberCores, Text numberProcessors, Text algorithm, Text time, Text inputFile) {
+  public StatsTextController(
+    Text duration,
+    Text schedulesChecked,
+    Text improvements,
+    Text peakRam,
+    Text peakCpu,
+    Text currentBestTime,
+    Text numberCores,
+    Text numberProcessors,
+    Text algorithm,
+    Text time,
+    Text inputFile
+  ) {
     this.duration = duration;
     this.schedulesChecked = schedulesChecked;
     this.improvements = improvements;
@@ -19,6 +31,4 @@ public class StatsTextController {
     this.time = time;
     this.inputFile = inputFile;
   }
-
-
 }

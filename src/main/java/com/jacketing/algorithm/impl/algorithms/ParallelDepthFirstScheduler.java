@@ -73,10 +73,6 @@ public class ParallelDepthFirstScheduler
       new RecursiveDfs(scheduleFactory.newSchedule(context), freeNodes, visited)
     );
 
-    System.out.println(
-      "Found best schedule of " + bestSchedule.getDuration() + " time!"
-    );
-
     return bestSchedule;
   }
 

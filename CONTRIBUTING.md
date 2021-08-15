@@ -55,3 +55,4 @@ Use emojis to quickly convey the commit where possible:
 | Fixing on Linux          | :penguin: `:penguin:`               |
 | Fixing on Windows        | :checkered_flag: `:checkered_flag:` |
 | Work in progress         | :construction: `:construction:`     |
+| Pull request touch-ups   | :rage: `:rage:`                     |

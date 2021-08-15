@@ -16,25 +16,34 @@ package com.jacketing.algorithm.impl.util.topological;
 import com.jacketing.algorithm.interfaces.util.topological.TopologicalSort;
 import com.jacketing.parsing.impl.structures.Graph;
 import java.util.*;
+import org.checkerframework.common.returnsreceiver.qual.This;
 
 public class LayeredTopologicalOrderFinder
   implements TopologicalSort<List<Integer>> {
 
-  //Here we store the size of the in-degree of all nodes. I use a map as this
-  // allows constant access time of
-  // finding the in-degree of the given node.
+  /**
+   * Here we store the size of the in-degree of all nodes. I use a map as this
+   * allows constant access time of
+   * finding the in-degree of the given node.
+   */
   private final Map<Integer, Integer> inDegreeQuantity;
-  //Here we store all 'candidates' - nodes which have in degree 0. The
-  // priority queue ensures we always remove
-  // the smallest element first, ensuring that it is sorted.
+  /**
+   * Here we store all 'candidates' - nodes which have in degree 0. The
+   * priority queue ensures we always remove
+   * the smallest element first, ensuring that it is sorted.
+   */
   private final Queue<Integer> candidates = new PriorityQueue<>();
-  //This is the list of the final sorted topological order
+  /**
+   * This is the list of the final sorted topological order
+   */
   private final List<List<Integer>> ordered = new ArrayList<>();
-  //This is where we store nodes before we add them to the queue. This is
-  // important since in this case, the sorted
-  //topological order requires 'layered' orders, so we want to make sure we
-  // dont add things to the queue until we
-  //have finished with the layer.
+  /**
+   * This is where we store nodes before we add them to the queue. This is
+   * important since in this case, the sorted
+   * topological order requires 'layered' orders, so we want to make sure we
+   * dont add things to the queue until we
+   * have finished with the layer.
+   */
   private final List<Integer> queueBuffer = new ArrayList<>();
 
   private final int nodeCount;

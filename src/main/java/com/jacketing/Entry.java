@@ -24,6 +24,9 @@ import com.jacketing.common.analysis.AlgorithmObserver;
 import com.jacketing.io.cli.ApplicationContext;
 import com.jacketing.io.cli.ProgramContext;
 import com.jacketing.io.output.OutputLoader;
+import com.jacketing.io.output.commandOut.CommandLineOutput;
+import com.jacketing.io.output.commandOut.CommandOutput;
+import com.jacketing.io.output.commandOut.CommandOutputFactory;
 import com.jacketing.io.output.format.DotFileFormatter;
 import com.jacketing.io.output.saver.StandardFileSaver;
 import com.jacketing.parsing.ParserLoader;
@@ -49,12 +52,12 @@ public class Entry {
         programContext.giveObserver(observer);
 
         new Thread(() -> {
-          beginSearch(programContext);
+          beginSearch(programContext, CommandLineOutput::new);
         }).start();
 
         ApplicationEntry.launch(observer);
       } else {
-        beginSearch(programContext);
+        beginSearch(programContext, CommandLineOutput::new);
       }
     } catch (ParameterException e) {
       System.out.println(e.getMessage());
@@ -62,7 +65,14 @@ public class Entry {
     }
   }
 
-  public static void beginSearch(ApplicationContext context) {
+  public static void beginSearch(
+    ApplicationContext context,
+    CommandOutputFactory commandOutputFactory
+  ) {
+    //print general context info
+    CommandOutput out = commandOutputFactory.create();
+    out.printCmdOutput(context);
+
     Loader<Graph> graphLoader = ParserLoader.create(
       context.getInputFile(),
       HashMap::new
@@ -85,8 +95,19 @@ public class Entry {
         return new ParallelDepthFirstScheduler(data, ctx, scheduleFactory);
       }
     );
+
+    //print start of search
+    out.printStartOfSearch();
+    double startTime = System.nanoTime();
+
+    //Start search
     Schedule schedule = scheduleLoader.load();
 
+    double endTime = System.nanoTime();
+    double timeElapsed = endTime - startTime;
+
+    //print end of search
+    out.printEndOfSearch(timeElapsed);
     Loader<Void> outputLoader = OutputLoader.create(
       schedule,
       context,
@@ -95,5 +116,6 @@ public class Entry {
       DotFileFormatter::new
     );
     outputLoader.load();
+    out.printScheduleTime(schedule);
   }
 }

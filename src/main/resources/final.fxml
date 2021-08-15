@@ -90,12 +90,12 @@
                   <Insets bottom="5.0" right="5.0" top="5.0" />
                </HBox.margin>
                <children>
-                  <StackedBarChart fx:id="bestScheduleGraph" legendVisible="false">
+                  <StackedBarChart fx:id="bestScheduleGraph" legendVisible="false" categoryGap="0">
                     <xAxis>
                       <CategoryAxis side="BOTTOM" />
                     </xAxis>
                     <yAxis>
-                      <NumberAxis side="LEFT" />
+                      <NumberAxis side="LEFT" fx:id="scheduleAxis"/>
                     </yAxis>
                   </StackedBarChart>
                </children>

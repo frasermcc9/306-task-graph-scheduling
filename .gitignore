@@ -1,8 +1,13 @@
-build
+# Don't include java config files
 .idea
 .gradle
-node_modules
-bin
 .classpath
 .settings
 .project
+
+# Don't include output files
+bin
+build
+
+# Don't include node modules
+node_modules
