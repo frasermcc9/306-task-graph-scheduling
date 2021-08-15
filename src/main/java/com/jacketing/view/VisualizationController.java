@@ -43,7 +43,7 @@ public class VisualizationController {
 
   public void setAlgorithmObserver(AlgorithmObserver observer) {
     this.observer = observer;
-    new SearchSpaceController(observer);
+    new SearchSpaceController(observer, searchSpaceStackPane);
   }
 
   @FXML
