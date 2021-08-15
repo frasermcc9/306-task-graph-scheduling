@@ -4,12 +4,11 @@ import com.jacketing.common.analysis.AlgorithmObserver;
 import com.jacketing.parsing.impl.structures.EnumeratedAdjacencyList;
 import javafx.scene.layout.StackPane;
 import org.graphstream.graph.Graph;
+import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.SingleGraph;
 import org.graphstream.ui.fx_viewer.FxViewPanel;
 import org.graphstream.ui.fx_viewer.FxViewer;
 import org.graphstream.ui.javafx.FxGraphRenderer;
-
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -37,7 +36,12 @@ public class SearchSpaceController {
       }
     }
 
-    graph.setAttribute("ui.stylesheet", "graph { fill-color: #2f2d2e; } node { fill-color: #00aeef; }");
+    for (Node node : graph) {
+      node.setAttribute("ui.label", "  " + node.getId());
+      node.setAttribute("size", "big");
+    }
+
+    graph.setAttribute("ui.stylesheet", "graph { fill-color: #2f2d2e; } node { fill-color: #00aeef; size: 30px; } edge { size: 3px; }");
     FxViewer view = new FxViewer(graph, FxViewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
     view.enableAutoLayout();
 
