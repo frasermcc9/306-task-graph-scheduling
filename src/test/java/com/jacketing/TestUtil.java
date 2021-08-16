@@ -86,6 +86,10 @@ public class TestUtil {
     return createGraphFromFile("examples/independent/independent.dot");
   }
 
+  public static Graph graphVariantIndependentOneEdge() {
+    return createGraphFromFile("examples/independent/independent-1edge.dot");
+  }
+
   public static Graph graphVariantFour() {
     return createGraphFromFile("examples/g4/g4.dot");
   }
