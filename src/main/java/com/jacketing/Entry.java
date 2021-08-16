@@ -31,12 +31,17 @@ import com.jacketing.io.output.format.DotFileFormatter;
 import com.jacketing.io.output.saver.StandardFileSaver;
 import com.jacketing.parsing.ParserLoader;
 import com.jacketing.parsing.impl.structures.Graph;
+import com.jacketing.util.RAM.RamReader;
 import com.jacketing.view.ApplicationEntry;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.util.HashMap;
 import javafx.application.Application;
 import org.fusesource.jansi.AnsiConsole;
 
 public class Entry {
+
+  public static AlgorithmObserver observer;
 
   public static void main(String... argv) {
     ApplicationContext programContext = new ProgramContext();
@@ -48,12 +53,22 @@ public class Entry {
       AnsiConsole.systemInstall();
 
       if (programContext.isVisualized()) {
-        programContext.giveObserver(new AlgorithmObserver());
+        observer = new AlgorithmObserver();
+        programContext.giveObserver(observer);
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(os));
 
-        Application.launch(ApplicationEntry.class);
+        new Thread(
+          () -> {
+            beginSearch(programContext, CommandLineOutput::new);
+          }
+        )
+          .start();
+
+        ApplicationEntry.launch(observer, os);
+      } else {
+        beginSearch(programContext, CommandLineOutput::new);
       }
-
-      beginSearch(programContext, CommandLineOutput::new);
     } catch (ParameterException e) {
       System.out.println(e.getMessage());
       System.out.println(programContext.helpText());
@@ -73,6 +88,10 @@ public class Entry {
       HashMap::new
     );
     Graph graph = graphLoader.load();
+
+    if (observer != null) {
+      observer.setGraph(graph);
+    }
 
     Loader<AlgorithmSchedule> scheduleLoader = AlgorithmLoader.create(
       graph,

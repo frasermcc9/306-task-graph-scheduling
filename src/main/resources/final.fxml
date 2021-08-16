@@ -18,8 +18,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="794.0" prefWidth="1319.0" style="-fx-background-color: #2f2d2e;" stylesheets="styles.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jacketing.view.VisualizationController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="794.0" prefWidth="1319.0" style="-fx-background-color: #2f2d2e;" stylesheets="styles.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jacketing.view.VisualizationController">
    <top>
       <HBox prefHeight="50.0" prefWidth="200.0" style="-fx-border-color: black; -fx-border-width: 0 0 5 0;" BorderPane.alignment="CENTER">
          <children>
@@ -91,12 +90,12 @@
                   <Insets bottom="5.0" right="5.0" top="5.0" />
                </HBox.margin>
                <children>
-                  <StackedBarChart fx:id="bestScheduleGraph" legendVisible="false" categoryGap="0">
+                  <StackedBarChart fx:id="bestScheduleGraph" categoryGap="0" legendVisible="false">
                     <xAxis>
                       <CategoryAxis side="BOTTOM" />
                     </xAxis>
                     <yAxis>
-                      <NumberAxis side="LEFT" fx:id="scheduleAxis"/>
+                      <NumberAxis fx:id="scheduleAxis" side="LEFT" />
                     </yAxis>
                   </StackedBarChart>
                </children>
@@ -105,7 +104,7 @@
       </HBox>
    </left>
    <bottom>
-      <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="300.0" prefWidth="1319.0" style="-fx-border-color: black; -fx-border-width: 5 0 0 0;" BorderPane.alignment="CENTER" >
+      <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="300.0" prefWidth="1319.0" style="-fx-border-color: black; -fx-border-width: 5 0 0 0;" BorderPane.alignment="CENTER">
          <children>
             <StackPane prefHeight="150.0" prefWidth="200.0" style="-fx-border-color: black; -fx-border-width: 0 5 0 0;" HBox.hgrow="ALWAYS">
                <children>
@@ -133,7 +132,7 @@
                                   <CategoryAxis side="BOTTOM" />
                                 </xAxis>
                                 <yAxis>
-                                  <NumberAxis side="LEFT" fx:id="threadAxis"/>
+                                  <NumberAxis fx:id="threadAxis" side="LEFT" />
                                 </yAxis>
                               </LineChart>
                            </children>
@@ -161,7 +160,7 @@
       </HBox>
    </bottom>
    <center>
-      <StackPane minHeight="300.0" minWidth="400.0" prefHeight="150.0" prefWidth="200.0" style="-fx-border-color: black; -fx-border-width: 0 0 0 5;" BorderPane.alignment="CENTER">
+      <StackPane fx:id="searchSpaceStackPane" minHeight="300.0" minWidth="400.0" prefHeight="150.0" prefWidth="200.0" style="-fx-border-color: black; -fx-border-width: 0 0 0 5;" BorderPane.alignment="CENTER">
          <opaqueInsets>
             <Insets />
          </opaqueInsets>
