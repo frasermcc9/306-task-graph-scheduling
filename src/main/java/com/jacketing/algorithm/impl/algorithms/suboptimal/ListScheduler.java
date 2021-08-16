@@ -11,8 +11,9 @@
  *
  */
 
-package com.jacketing.algorithm.impl.algorithms;
+package com.jacketing.algorithm.impl.algorithms.suboptimal;
 
+import com.jacketing.algorithm.impl.algorithms.AbstractSchedulingAlgorithm;
 import com.jacketing.algorithm.impl.structures.Task;
 import com.jacketing.algorithm.impl.util.topological.TopologicalSortContext;
 import com.jacketing.algorithm.interfaces.structures.Schedule;
@@ -24,7 +25,7 @@ import java.util.List;
 
 public class ListScheduler extends AbstractSchedulingAlgorithm {
 
-  private final List<Integer> topologicalOrderFinder;
+  private final TopologicalSort<Integer> topologicalOrderFinder;
   private final int numberOfProcessors;
 
   public ListScheduler(
@@ -34,17 +35,18 @@ public class ListScheduler extends AbstractSchedulingAlgorithm {
   ) {
     super(graph, context, scheduleFactory);
     topologicalOrderFinder =
-      new TopologicalSortContext<>(TopologicalSort.withoutLayers(graph))
-        .sortedTopological();
+      new TopologicalSortContext<>(TopologicalSort.withoutLayers(graph));
+
     numberOfProcessors = context.getProcessorsToScheduleOn();
   }
 
   @Override
   public Schedule schedule() {
     Schedule schedule = scheduleFactory.newSchedule(context);
+    List<Integer> topologicalOrder = getOrder();
 
     // Schedule nodes in topological order.
-    for (int node : topologicalOrderFinder) {
+    for (int node : topologicalOrder) {
       int nodeWeight = graph.getNodeWeight(node);
       List<Integer> parentNodes = graph.getAdjacencyList().getParentNodes(node);
       int earliestStartTime = Integer.MAX_VALUE;
@@ -57,6 +59,7 @@ public class ListScheduler extends AbstractSchedulingAlgorithm {
           schedule,
           processor
         );
+        startTime = Math.max(startTime, schedule.getProcessorEnd(processor));
         if (earliestStartTime > startTime) {
           earliestStartTime = startTime;
           curProc = processor;
@@ -64,14 +67,14 @@ public class ListScheduler extends AbstractSchedulingAlgorithm {
         earliestStartTime = Math.min(earliestStartTime, startTime);
       }
 
-      Task task = new Task(
-        Math.max(earliestStartTime, schedule.getProcessorEnd(curProc)),
-        nodeWeight,
-        node
-      );
+      Task task = new Task(earliestStartTime, nodeWeight, node);
 
       schedule.addTask(task, curProc);
     }
     return schedule;
+  }
+
+  public List<Integer> getOrder() {
+    return topologicalOrderFinder.sortedTopological();
   }
 }
