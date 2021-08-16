@@ -24,13 +24,12 @@ public abstract class AbstractIterativeSchedule
   implements AlgorithmSchedule, HeuristicSchedule {
 
   protected final int orphans; // bitfield
-  //  protected final String[] permutationStrings;
 
   protected final String permString;
 
   protected final AbstractIterativeSchedule parent;
-  protected final Integer[] procCache;
-  protected final Task[] taskCache;
+  //  protected final Integer[] procCache;
+  //  protected final Task[] taskCache;
   protected final int cacheKey;
   protected final int[] totalTime;
 
@@ -38,7 +37,7 @@ public abstract class AbstractIterativeSchedule
   protected int maxBottomLevel;
   protected int idleTime;
 
-  protected boolean cacheComplete = false;
+  //  protected boolean cacheComplete = false;
   protected int task = -1;
   protected int proc = -1;
   protected int time = -1;
@@ -57,13 +56,8 @@ public abstract class AbstractIterativeSchedule
         .getContext()
         .getProcessorsToScheduleOn()],
       cacheKey,
-      //      new String[AbstractSchedulingAlgorithm
-      //        .getCache(cacheKey)
-      //        .getContext()
-      //        .getProcessorsToScheduleOn()],
       AbstractSchedulingAlgorithm.getCache(cacheKey).defaultNodeString()
     );
-    //    Arrays.fill(permutationStrings, "");
   }
 
   public AbstractIterativeSchedule(
@@ -71,24 +65,21 @@ public abstract class AbstractIterativeSchedule
     AbstractIterativeSchedule parent,
     int[] totalTime,
     int cacheKey,
-    //    String[] permutationStrings,
     String permString
   ) {
     this.orphans = orphans;
     this.parent = parent;
     this.totalTime = totalTime;
     this.cacheKey = cacheKey;
-    //    this.permutationStrings = permutationStrings;
     this.permString = permString;
-
-    taskCache =
-      new IterativeSchedule.Task[getCache()
-        .getGraph()
-        .getAdjacencyList()
-        .getNodeCount()];
-
-    procCache =
-      new Integer[getCache().getContext().getProcessorsToScheduleOn()];
+    //    taskCache =
+    //      new IterativeSchedule.Task[getCache()
+    //        .getGraph()
+    //        .getAdjacencyList()
+    //        .getNodeCount()];
+    //
+    //    procCache =
+    //      new Integer[getCache().getContext().getProcessorsToScheduleOn()];
   }
 
   public int getTotalTime() {
@@ -158,19 +149,6 @@ public abstract class AbstractIterativeSchedule
           builder.setCharAt(orphan * 2 + 1, (char) startTime);
           String permutationId = builder.toString();
 
-          //          String[] permutationStringsCopy = new String[processors];
-          //          System.arraycopy(
-          //            permutationStrings,
-          //            0,
-          //            permutationStringsCopy,
-          //            0,
-          //            processors
-          //          );
-          //          permutationStringsCopy[processor] =
-          //            permutationStringsCopy[processor].concat("" + orphan)
-          //              .concat("" + startTime);
-          //
-          //          String permutationId = getPermutationId(permutationStringsCopy);
           if (getCache().isPermutation(permutationId)) {
             continue;
           }
@@ -203,7 +181,6 @@ public abstract class AbstractIterativeSchedule
             nextOrphans,
             totalTimeCopy,
             cacheKey,
-            //            permutationStringsCopy
             permutationId
           );
           schedule.setAddedTask(processor, startTime, orphan, taskWeight);
@@ -240,58 +217,47 @@ public abstract class AbstractIterativeSchedule
     int nextOrphans,
     int[] totalTimeArray,
     int cacheKey,
-    //    String[] permutationStrings
     String permutationId
   );
 
   public abstract void addItem(AbstractIterativeSchedule schedule);
 
-  //  protected String getPermutationId(String[] withStrings) {
-  //    int len = permutationStrings.length;
-  //    String[] copy = new String[len];
-  //    System.arraycopy(withStrings, 0, copy, 0, len);
-  //
-  //    Arrays.sort(copy);
-  //    StringBuilder sb = new StringBuilder();
-  //
-  //    for (int i = 0; i < len; i++) {
-  //      sb.append(copy[i]);
-  //    }
-  //    return sb.toString();
-  //  }
-
   public Task findTask(int task) {
-    if (taskCache[task] != null) {
-      return taskCache[task];
-    }
+    //    if (taskCache[task] != null) {
+    //      return taskCache[task];
+    //    }
 
-    if (cacheComplete) return null;
+    //    if (cacheComplete) return null;
 
     AbstractIterativeSchedule parent = this;
     while (parent != null && parent.task != -1) {
-      taskCache[parent.task] =
-        new Task(parent.proc, parent.time, parent.duration, task);
+      //      taskCache[parent.task] =
+      //        new Task(parent.proc, parent.time, parent.duration, task);
 
-      if (procCache[parent.proc] == null) {
-        procCache[parent.proc] = parent.time + parent.duration;
-      }
+      //      if (procCache[parent.proc] == null) {
+      //        procCache[parent.proc] = parent.time + parent.duration;
+      //      }
 
       if (parent.task == task) {
         return new Task(parent.proc, parent.time, parent.duration, task);
       }
       parent = parent.parent;
     }
-    cacheComplete = true;
+    //    cacheComplete = true;
     return null;
   }
 
   public int findProcEnd(int proc) {
-    if (procCache[proc] != null) {
-      return procCache[proc];
-    }
+    //    if (procCache[proc] != null) {
+    //      return procCache[proc];
+    //    }
 
     AbstractIterativeSchedule parent = this;
     while (parent != null) {
+      //      if (parent.proc != -1 && procCache[parent.proc] == null) {
+      //        procCache[parent.proc] = parent.time + parent.duration;
+      //      }
+
       if (parent.proc == proc) {
         return parent.time + parent.duration;
       }
