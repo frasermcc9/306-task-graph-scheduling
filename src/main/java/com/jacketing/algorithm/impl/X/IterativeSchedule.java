@@ -70,7 +70,7 @@ public class IterativeSchedule
     String[] permutationStrings
   ) {
     return new IterativeSchedule(
-      orphans,
+      nextOrphans,
       parent,
       globalStack,
       totalTimeArray,
@@ -164,14 +164,14 @@ public class IterativeSchedule
           System.arraycopy(totalTime, 0, totalTimeCopy, 0, processors);
           totalTimeCopy[processor] = startTime + taskWeight;
 
-          AbstractIterativeSchedule schedule = new IterativeSchedule(
-            nextOrphans,
+          AbstractIterativeSchedule schedule = buildSchedule(
             this,
-            globalStack,
+            nextOrphans,
             totalTimeCopy,
             cacheKey,
             permutationStringsCopy
           );
+
           schedule.setAddedTask(processor, startTime, orphan, taskWeight);
           globalStack.addFirst(schedule);
         }

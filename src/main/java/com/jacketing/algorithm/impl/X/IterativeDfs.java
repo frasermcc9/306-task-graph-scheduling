@@ -14,7 +14,7 @@
 package com.jacketing.algorithm.impl.X;
 
 import com.jacketing.algorithm.impl.algorithms.AbstractSchedulingAlgorithm;
-import com.jacketing.algorithm.impl.algorithms.ListScheduler;
+import com.jacketing.algorithm.impl.algorithms.suboptimal.ListScheduler;
 import com.jacketing.algorithm.impl.util.topological.TopologicalSortContext;
 import com.jacketing.algorithm.interfaces.SchedulingAlgorithmStrategy;
 import com.jacketing.algorithm.interfaces.util.ScheduleFactory;
