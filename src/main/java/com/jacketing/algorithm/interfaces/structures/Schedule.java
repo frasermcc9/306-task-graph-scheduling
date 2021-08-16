@@ -13,10 +13,12 @@
 
 package com.jacketing.algorithm.interfaces.structures;
 
+import com.jacketing.algorithm.impl.X.AlgorithmSchedule;
 import com.jacketing.algorithm.impl.structures.Task;
+import com.jacketing.common.FormattableTask;
 import java.util.List;
 
-public interface Schedule {
+public interface Schedule extends AlgorithmSchedule {
   void addTask(Task task, int processor);
 
   int getDuration();
@@ -27,7 +29,7 @@ public interface Schedule {
 
   int getNumberOfProcessors();
 
-  List<Task> getAllTasks();
+  List<FormattableTask> getAllTasks();
 
   Task getTaskForNode(int nodeId);
 

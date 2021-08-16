@@ -2,6 +2,8 @@ package com.jacketing.view.innercontrollers;
 
 import com.jacketing.common.analysis.AlgorithmObserver;
 import com.jacketing.parsing.impl.structures.EnumeratedAdjacencyList;
+import java.util.List;
+import java.util.Map;
 import javafx.scene.layout.StackPane;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
@@ -9,8 +11,6 @@ import org.graphstream.graph.implementations.SingleGraph;
 import org.graphstream.ui.fx_viewer.FxViewPanel;
 import org.graphstream.ui.fx_viewer.FxViewer;
 import org.graphstream.ui.javafx.FxGraphRenderer;
-import java.util.List;
-import java.util.Map;
 
 public class SearchSpaceController {
 
@@ -28,7 +28,9 @@ public class SearchSpaceController {
       graph.addNode(nodeId + "");
     }
 
-    for (Map.Entry<Integer, List<Integer>> entry : list.getInAdjacencyList().entrySet()) {
+    for (Map.Entry<Integer, List<Integer>> entry : list
+      .getInAdjacencyList()
+      .entrySet()) {
       String key = Integer.toString(entry.getKey());
       for (int value : entry.getValue()) {
         String node = Integer.toString(value);
@@ -41,11 +43,20 @@ public class SearchSpaceController {
       node.setAttribute("size", "big");
     }
 
-    graph.setAttribute("ui.stylesheet", "graph { fill-color: #2f2d2e; } node { fill-color: #00aeef; size: 30px; } edge { size: 3px; }");
-    FxViewer view = new FxViewer(graph, FxViewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
+    graph.setAttribute(
+      "ui.stylesheet",
+      "graph { fill-color: #2f2d2e; } node { fill-color: #00aeef; size: 30px; } edge { size: 3px; }"
+    );
+    FxViewer view = new FxViewer(
+      graph,
+      FxViewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD
+    );
     view.enableAutoLayout();
 
-    FxViewPanel panel = (FxViewPanel) view.addView(FxViewer.DEFAULT_VIEW_ID, new FxGraphRenderer());
+    FxViewPanel panel = (FxViewPanel) view.addView(
+      FxViewer.DEFAULT_VIEW_ID,
+      new FxGraphRenderer()
+    );
     pane.getChildren().addAll(panel); // prevent UI shift issues
     this.observer = observer;
 
@@ -60,17 +71,11 @@ public class SearchSpaceController {
           }
         }
       }
-    ).start();
+    )
+      .start();
   }
 
   public void pollGraph() {
-    if (observer.hasGraph()) {
-
-    }
+    if (observer.hasGraph()) {}
   }
-
-
-
-
-
 }

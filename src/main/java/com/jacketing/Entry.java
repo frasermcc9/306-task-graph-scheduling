@@ -16,9 +16,10 @@ package com.jacketing;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.ParameterException;
 import com.jacketing.algorithm.AlgorithmLoader;
-import com.jacketing.algorithm.impl.algorithms.DepthFirstScheduler;
-import com.jacketing.algorithm.impl.algorithms.ParallelDepthFirstScheduler;
-import com.jacketing.algorithm.interfaces.structures.Schedule;
+import com.jacketing.algorithm.impl.X.AlgorithmSchedule;
+import com.jacketing.algorithm.impl.X.IterativeDfs;
+import com.jacketing.algorithm.impl.X.ParallelAStar;
+import com.jacketing.algorithm.impl.X.SmartAlgorithm;
 import com.jacketing.common.Loader;
 import com.jacketing.common.analysis.AlgorithmObserver;
 import com.jacketing.io.cli.ApplicationContext;
@@ -31,12 +32,11 @@ import com.jacketing.io.output.format.DotFileFormatter;
 import com.jacketing.io.output.saver.StandardFileSaver;
 import com.jacketing.parsing.ParserLoader;
 import com.jacketing.parsing.impl.structures.Graph;
-import com.jacketing.util.RAM.RamReader;
 import com.jacketing.view.ApplicationEntry;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.HashMap;
-import javafx.application.Application;
+import org.fusesource.jansi.AnsiConsole;
 
 public class Entry {
 
@@ -48,6 +48,8 @@ public class Entry {
     try {
       JCommander.newBuilder().addObject(programContext).build().parse(argv);
       programContext.validate();
+
+      AnsiConsole.systemInstall();
 
       if (programContext.isVisualized()) {
         observer = new AlgorithmObserver();
@@ -90,39 +92,41 @@ public class Entry {
       observer.setGraph(graph);
     }
 
-    Loader<Schedule> scheduleLoader = AlgorithmLoader.create(
-      graph,
-      context,
-      (data, ctx, scheduleFactory) -> {
-        if (ctx.getCoresToCalculateWith() <= 1) return new DepthFirstScheduler(
-          data,
-          ctx,
-          scheduleFactory
-        );
-        return new ParallelDepthFirstScheduler(data, ctx, scheduleFactory);
-      }
-    );
+    Loader<AlgorithmSchedule> scheduleLoader;
+
+    if (context.isVisualized()) {
+      scheduleLoader =
+        AlgorithmLoader.create(graph, context, IterativeDfs::new);
+    } else if (context.getCoresToCalculateWith() <= 1) {
+      scheduleLoader =
+        AlgorithmLoader.create(graph, context, SmartAlgorithm::new);
+    } else scheduleLoader =
+      AlgorithmLoader.create(graph, context, ParallelAStar::new);
 
     //print start of search
     out.printStartOfSearch();
     double startTime = System.nanoTime();
 
     //Start search
-    Schedule schedule = scheduleLoader.load();
+    AlgorithmSchedule schedule = scheduleLoader.load();
 
     double endTime = System.nanoTime();
     double timeElapsed = endTime - startTime;
 
     //print end of search
     out.printEndOfSearch(timeElapsed);
-    Loader<Void> outputLoader = OutputLoader.create(
-      schedule,
-      context,
-      graph,
-      StandardFileSaver::new,
-      DotFileFormatter::new
-    );
-    outputLoader.load();
+
+    if (!context.outputIsDisabled()) {
+      Loader<Void> outputLoader = OutputLoader.create(
+        schedule,
+        context,
+        graph,
+        StandardFileSaver::new,
+        DotFileFormatter::new
+      );
+      outputLoader.load();
+    }
+
     out.printScheduleTime(schedule);
   }
 }

@@ -1,6 +1,6 @@
 package com.jacketing.io.output.commandOut;
 
-import com.jacketing.algorithm.interfaces.structures.Schedule;
+import com.jacketing.algorithm.impl.X.AlgorithmSchedule;
 import com.jacketing.io.cli.ApplicationContext;
 
 public interface CommandOutput {
@@ -10,5 +10,5 @@ public interface CommandOutput {
 
   void printEndOfSearch(Double time);
 
-  void printScheduleTime(Schedule schedule);
+  void printScheduleTime(AlgorithmSchedule schedule);
 }

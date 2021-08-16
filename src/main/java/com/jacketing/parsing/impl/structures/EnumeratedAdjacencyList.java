@@ -18,6 +18,7 @@ import com.paypal.digraph.parser.GraphEdge;
 import com.paypal.digraph.parser.GraphNode;
 import com.paypal.digraph.parser.GraphParser;
 import java.util.*;
+import org.jetbrains.annotations.Contract;
 
 public class EnumeratedAdjacencyList {
 
@@ -27,6 +28,7 @@ public class EnumeratedAdjacencyList {
   private final EnumeratedNodeMap enumeratedNodeMap;
 
   private int nodeCount;
+  private int edgeCount;
 
   public EnumeratedAdjacencyList(
     GraphParser sourceGraph,
@@ -45,6 +47,7 @@ public class EnumeratedAdjacencyList {
     introduceEdges();
   }
 
+  @Contract(pure = true)
   public List<Integer> getNodeIds() {
     List<Integer> nodes = new ArrayList<>();
     inAdjacencyList.forEach((key, value) -> nodes.add(key));
@@ -91,7 +94,23 @@ public class EnumeratedAdjacencyList {
   }
 
   public int getNodeCount() {
-    return nodeCount;
+    return this.nodeCount;
+  }
+
+  public int getEdgeCount() {
+    return this.edgeCount;
+  }
+
+  /**
+   * Gets the ratio of nodes to edges. If there are more nodes than edges, will
+   * return > 1. Otherwise will return < 1.
+   *
+   * @return the node to edge ratio (number of nodes / number of edges).
+   */
+  public int getNodeToEdgeRatio() {
+    // avoid divide by 0
+    if (edgeCount == 0) return Integer.MAX_VALUE;
+    return this.nodeCount / this.edgeCount;
   }
 
   private void introduceEdges() {
@@ -102,6 +121,7 @@ public class EnumeratedAdjacencyList {
       inAdjacencyList.get(target).add(source);
       outAdjacencyList.get(source).add(target);
     }
+    edgeCount = edges.size();
   }
 
   public EnumeratedNodeMap getEnumeratedNodeMap() {

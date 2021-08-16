@@ -30,9 +30,10 @@ public class EntryTest {
   public void testInvalidEntry() {
     String[] args = {};
     Entry.main(args);
+    String output = outContent.toString();
     Assert.assertEquals(
       "2 arguments expected, received 0",
-      outContent.toString().trim().split("\n")[0].trim()
+      output.trim().split("\n")[0].trim()
     );
   }
 

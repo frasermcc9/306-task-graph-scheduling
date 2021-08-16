@@ -13,9 +13,9 @@
 
 package com.jacketing.io.output.format;
 
-import com.jacketing.algorithm.interfaces.structures.Schedule;
+import com.jacketing.common.FormattableSchedule;
 import com.jacketing.parsing.impl.structures.Graph;
 
 public interface Formatter {
-  String formatSchedule(Schedule schedule, Graph graph);
+  String formatSchedule(FormattableSchedule schedule, Graph graph);
 }

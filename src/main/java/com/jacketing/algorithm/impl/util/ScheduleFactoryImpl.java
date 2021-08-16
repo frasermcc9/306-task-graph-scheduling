@@ -19,11 +19,12 @@ import com.jacketing.algorithm.interfaces.structures.Schedule;
 import com.jacketing.algorithm.interfaces.util.ScheduleFactory;
 import com.jacketing.io.cli.AlgorithmContext;
 import java.util.HashMap;
+import java.util.Map;
 
 public class ScheduleFactoryImpl implements ScheduleFactory {
 
   public Schedule newSchedule(AlgorithmContext ctx) {
-    HashMap<Integer, ProcessorTaskList> map = new HashMap<>();
+    Map<Integer, ProcessorTaskList> map = new HashMap<>();
     for (int i = 0; i < ctx.getProcessorsToScheduleOn(); i++) {
       map.put(i, new ProcessorTaskList());
     }

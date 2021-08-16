@@ -17,7 +17,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.jacketing.TestUtil;
-import com.jacketing.algorithm.interfaces.structures.Schedule;
+import com.jacketing.algorithm.impl.X.AlgorithmSchedule;
 import com.jacketing.common.Loader;
 import com.jacketing.io.cli.IOContext;
 import com.jacketing.io.cli.ProgramContext;
@@ -43,7 +43,7 @@ public class OutputLoaderTest {
     when(context.getOutputName()).thenReturn(null);
 
     Graph graph = TestUtil.graphVariantOne();
-    Schedule schedule = TestUtil.graphVariantOneSchedule2C();
+    AlgorithmSchedule schedule = TestUtil.graphVariantOneSchedule2C();
 
     Loader<Void> voidLoader = OutputLoader.create(
       schedule,

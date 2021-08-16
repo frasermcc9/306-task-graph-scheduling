@@ -20,6 +20,8 @@ public interface GraphWeightService {
 
   EdgeWeightFrom edgeWeight();
 
+  int getGraphWeight();
+
   interface EdgeWeightFrom {
     EdgeWeightTo from(int source);
   }

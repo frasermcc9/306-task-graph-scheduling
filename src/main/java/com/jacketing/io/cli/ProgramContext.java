@@ -13,6 +13,8 @@
 
 package com.jacketing.io.cli;
 
+import static org.fusesource.jansi.Ansi.ansi;
+
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParameterException;
 import com.beust.jcommander.validators.PositiveInteger;
@@ -22,12 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProgramContext implements ApplicationContext {
-
-  public ProgramContext(List<String> input) {
-    this.input = input;
-  }
-
-  public ProgramContext() { }
 
   @Parameter
   private List<String> input = new ArrayList<>();
@@ -41,7 +37,16 @@ public class ProgramContext implements ApplicationContext {
   @Parameter(names = { "-o" })
   private String outputName;
 
+  @Parameter(names = { "--no-output" })
+  private boolean noOutput;
+
   private Observer algorithmObserver;
+
+  public ProgramContext(List<String> input) {
+    this.input = input;
+  }
+
+  public ProgramContext() {}
 
   @Override
   public String getInputFile() {
@@ -77,6 +82,11 @@ public class ProgramContext implements ApplicationContext {
       input = input.substring(0, input.length() - 4);
       return input + "-output.dot";
     }
+  }
+
+  @Override
+  public boolean outputIsDisabled() {
+    return this.noOutput;
   }
 
   @Override
@@ -124,85 +134,51 @@ public class ProgramContext implements ApplicationContext {
     this.algorithmObserver = observer;
   }
 
-  @Override
   public String toString() {
     if (input.size() != 2) {
       return "";
     }
-    if (coresToCalculateWith == 0 && outputName == null) {
-      return (
-        "------------------------------------ \n" +
-        "Input file: " +
-        getInputFile() +
-        "\n" +
-        "Processors to schedule on: " +
-        getProcessorsToScheduleOn() +
-        "\n" +
-        "Threads to calculate with: 1\n" +
-        "Visualize: " +
-        visualize +
-        "\n" +
-        "Output will be saved to: " +
-        getInputFile() +
-        "-output\n" +
-        "------------------------------------"
-      );
-    } else if (outputName == null) {
-      return (
-        "------------------------------------ \n" +
-        "Input file: " +
-        getInputFile() +
-        "\n" +
-        "Processors to schedule on: " +
-        getProcessorsToScheduleOn() +
-        "\n" +
-        "Threads to calculate with: 1\n" +
-        "Visualize: " +
-        visualize +
-        "\n" +
-        "Output will be saved to: " +
-        getInputFile() +
-        "-output\n" +
-        "------------------------------------"
-      );
-    } else if (coresToCalculateWith == 0) {
-      return (
-        "------------------------------------ \n" +
-        "Input file: " +
-        getInputFile() +
-        "\n" +
-        "Processors to schedule on: " +
-        getProcessorsToScheduleOn() +
-        "\n" +
-        "Threads to calculate with: 1\n" +
-        "Visualize: " +
-        visualize +
-        "\n" +
-        "Output will be saved to: " +
-        outputName +
-        "\n" +
-        "------------------------------------"
-      );
-    } else {
-      return (
-        "------------------------------------ \n" +
-        "Input file: " +
-        getInputFile() +
-        "\n" +
-        "Processors to schedule on: " +
-        getProcessorsToScheduleOn() +
-        "\n" +
-        "Threads to calculate with: " +
-        coresToCalculateWith +
-        "\n" +
-        "Visualize: " +
-        visualize +
-        "\n" +
-        "Output will be saved to: " +
-        outputName +
-        "\n" +
-        "------------------------------------"
-      );
-    }
+
+    int useCores = coresToCalculateWith == 0 ? 1 : coresToCalculateWith;
+
+    String vizColor = visualize ? "green " : "red ";
+
+    String outName = outputName == null
+      ? getInputFile() + "-output"
+      : outputName;
+    String outText = outputIsDisabled()
+      ? "@|red Output will not be saved|@"
+      : "Output will be saved to: @|yellow " + outName + "|@";
+
+    return (
+      ansi()
+        .render(
+          "------------------------------------ \n" +
+          "Input file: " +
+          "@|cyan " +
+          getInputFile() +
+          "|@" +
+          "\n" +
+          "Processors to schedule on: " +
+          "@|cyan " +
+          getProcessorsToScheduleOn() +
+          "|@" +
+          "\n" +
+          "Threads to calculate with: " +
+          "@|cyan " +
+          useCores +
+          "|@ " +
+          "\n" +
+          "Visualize: " +
+          "@|" +
+          vizColor +
+          visualize +
+          "|@" +
+          "\n" +
+          outText +
+          "\n" +
+          "------------------------------------"
+        )
+    ).toString();
   }
 }

@@ -6,9 +6,9 @@ import static org.mockito.Mockito.when;
 import com.google.common.base.Charsets;
 import com.google.common.collect.HashBiMap;
 import com.google.common.io.Resources;
+import com.jacketing.algorithm.impl.X.AlgorithmSchedule;
 import com.jacketing.algorithm.impl.algorithms.DepthFirstScheduler;
 import com.jacketing.algorithm.interfaces.SchedulingAlgorithmStrategy;
-import com.jacketing.algorithm.interfaces.structures.Schedule;
 import com.jacketing.algorithm.interfaces.util.ScheduleFactory;
 import com.jacketing.io.cli.ProgramContext;
 import com.jacketing.parsing.impl.Parser;
@@ -44,7 +44,7 @@ public class TestUtil {
     return createGraphFromBuffer(graphString);
   }
 
-  public static Schedule graphVariantOneSchedule2C() {
+  public static AlgorithmSchedule graphVariantOneSchedule2C() {
     Graph graph = graphVariantOne();
     ProgramContext programContext = mock(ProgramContext.class);
     when(programContext.getProcessorsToScheduleOn()).thenReturn(4);
@@ -80,6 +80,14 @@ public class TestUtil {
 
   public static Graph graphVariantThree() {
     return createGraphFromFile("examples/g3/g3.dot");
+  }
+
+  public static Graph graphVariantIndependent() {
+    return createGraphFromFile("examples/independent/independent.dot");
+  }
+
+  public static Graph graphVariantIndependentOneEdge() {
+    return createGraphFromFile("examples/independent/independent-1edge.dot");
   }
 
   public static Graph graphVariantFour() {
