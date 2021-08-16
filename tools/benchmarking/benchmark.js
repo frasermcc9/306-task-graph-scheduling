@@ -7,6 +7,7 @@ const fs = require("fs");
 const path = require("path");
 const exec = require("child_process").exec;
 const { performance } = require("perf_hooks");
+const os = require("os");
 
 const graphDirectory = path.join(__dirname, "graphs");
 
@@ -37,7 +38,7 @@ const removeOutputFiles = async () => {
 const runBenchmark = async (filename, processorCount) => {
   const fullPath = path.join(__dirname, `graphs/${filename}`);
   const jarPath = path.join(__dirname, "306-a1-1.0-SNAPSHOT.jar");
-  const command = `java -jar "${jarPath}" "${fullPath}" ${processorCount} --no-output`;
+  const command = `java -jar -Xmx4g "${jarPath}" "${fullPath}" ${processorCount} --no-output`;
   console.log(`running benchmark: [${filename}]`);
   return new Promise((resolve, reject) => {
     let processTimeout;
@@ -54,7 +55,12 @@ const runBenchmark = async (filename, processorCount) => {
     });
 
     processTimeout = setTimeout(() => {
-      proc.kill();
+      console.log("Killing Process...");
+      if (os.platform() === "win32") {
+        exec("taskkill /pid " + proc.pid + " /T /F");
+      } else {
+        proc.kill();
+      }
     }, 15000);
   });
 };
