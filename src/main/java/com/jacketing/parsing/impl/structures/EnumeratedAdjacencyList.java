@@ -18,6 +18,7 @@ import com.paypal.digraph.parser.GraphEdge;
 import com.paypal.digraph.parser.GraphNode;
 import com.paypal.digraph.parser.GraphParser;
 import java.util.*;
+import org.jetbrains.annotations.Contract;
 
 public class EnumeratedAdjacencyList {
 
@@ -46,6 +47,7 @@ public class EnumeratedAdjacencyList {
     introduceEdges();
   }
 
+  @Contract(pure = true)
   public List<Integer> getNodeIds() {
     List<Integer> nodes = new ArrayList<>();
     inAdjacencyList.forEach((key, value) -> nodes.add(key));
