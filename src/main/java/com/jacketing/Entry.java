@@ -17,8 +17,8 @@ import com.beust.jcommander.JCommander;
 import com.beust.jcommander.ParameterException;
 import com.jacketing.algorithm.AlgorithmLoader;
 import com.jacketing.algorithm.impl.X.AlgorithmSchedule;
+import com.jacketing.algorithm.impl.X.ParallelAStar;
 import com.jacketing.algorithm.impl.X.SmartAlgorithm;
-import com.jacketing.algorithm.impl.algorithms.ParallelDepthFirstScheduler;
 import com.jacketing.common.Loader;
 import com.jacketing.common.analysis.AlgorithmObserver;
 import com.jacketing.io.cli.ApplicationContext;
@@ -34,6 +34,7 @@ import com.jacketing.parsing.impl.structures.Graph;
 import com.jacketing.view.ApplicationEntry;
 import java.util.HashMap;
 import javafx.application.Application;
+import org.fusesource.jansi.AnsiConsole;
 
 public class Entry {
 
@@ -43,6 +44,8 @@ public class Entry {
     try {
       JCommander.newBuilder().addObject(programContext).build().parse(argv);
       programContext.validate();
+
+      AnsiConsole.systemInstall();
 
       if (programContext.isVisualized()) {
         programContext.giveObserver(new AlgorithmObserver());
@@ -80,7 +83,7 @@ public class Entry {
           ctx,
           scheduleFactory
         );
-        return new ParallelDepthFirstScheduler(data, ctx, scheduleFactory);
+        return new ParallelAStar(data, ctx, scheduleFactory);
       }
     );
 
