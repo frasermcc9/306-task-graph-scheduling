@@ -14,7 +14,6 @@
 package com.jacketing.algorithm.impl.X;
 
 import com.jacketing.algorithm.impl.algorithms.AbstractSchedulingAlgorithm;
-import com.jacketing.algorithm.impl.algorithms.suboptimal.ListScheduler;
 import com.jacketing.algorithm.impl.util.topological.TopologicalSortContext;
 import com.jacketing.algorithm.interfaces.SchedulingAlgorithmStrategy;
 import com.jacketing.algorithm.interfaces.util.ScheduleFactory;
@@ -43,8 +42,10 @@ public class IterativeDfs extends AbstractSchedulingAlgorithm {
     topologicalOrderFinder =
       new TopologicalSortContext<>(TopologicalSort.withLayers(graph));
 
-    SchedulingAlgorithmStrategy algorithm = SchedulingAlgorithmStrategy.create(
-      new ListScheduler(graph, context, scheduleFactory)
+    SchedulingAlgorithmStrategy algorithm = estimateAlgorithmFactory.createAlgorithm(
+      graph,
+      context,
+      scheduleFactory
     );
     AlgorithmSchedule estimateSchedule = algorithm.schedule();
 
