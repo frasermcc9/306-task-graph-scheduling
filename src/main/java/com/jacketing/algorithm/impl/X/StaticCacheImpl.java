@@ -33,11 +33,7 @@ public class StaticCacheImpl implements StaticCache {
 
   private final String defaultNodeString;
 
-  public StaticCacheImpl(
-    Graph g,
-    AlgorithmContext ctx,
-    SetFactory<String> factory
-  ) {
+  public StaticCacheImpl(Graph g, AlgorithmContext ctx, SetFactory factory) {
     this.graph = g;
     this.context = ctx;
     this.duplicateCache = factory.create();
