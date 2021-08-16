@@ -13,26 +13,42 @@
 
 package com.jacketing.algorithm.impl.X;
 
+import com.jacketing.algorithm.AlgorithmFactory;
 import com.jacketing.algorithm.impl.algorithms.AbstractSchedulingAlgorithm;
+import com.jacketing.algorithm.interfaces.SchedulingAlgorithmStrategy;
 import com.jacketing.algorithm.interfaces.util.ScheduleFactory;
 import com.jacketing.io.cli.AlgorithmContext;
 import com.jacketing.parsing.impl.structures.Graph;
 
 public class SmartAlgorithm extends AbstractSchedulingAlgorithm {
 
-  private final AbstractSchedulingAlgorithm algorithm;
+  private final SchedulingAlgorithmStrategy algorithm;
+
+  public SmartAlgorithm(
+    Graph graph,
+    AlgorithmContext context,
+    ScheduleFactory scheduleFactory,
+    AlgorithmSource algorithmSource
+  ) {
+    super(graph, context, scheduleFactory);
+    AlgorithmFactory algorithmFactory;
+
+    if (graph.getAdjacencyList().getNodeToEdgeRatio() > 2) {
+      algorithmFactory = algorithmSource.getDfs();
+    } else {
+      algorithmFactory = algorithmSource.getAStar();
+    }
+
+    algorithm =
+      algorithmFactory.createAlgorithm(graph, context, scheduleFactory);
+  }
 
   public SmartAlgorithm(
     Graph graph,
     AlgorithmContext context,
     ScheduleFactory scheduleFactory
   ) {
-    super(graph, context, scheduleFactory);
-    if (graph.getAdjacencyList().getNodeToEdgeRatio() > 2) {
-      algorithm = new IterativeDfs(graph, context, scheduleFactory);
-    } else {
-      algorithm = new AStar(graph, context, scheduleFactory);
-    }
+    this(graph, context, scheduleFactory, new AlgorithmSource() {});
   }
 
   @Override
