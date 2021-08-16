@@ -14,6 +14,8 @@
 package com.jacketing.algorithm.impl.X;
 
 import com.jacketing.algorithm.AlgorithmFactory;
+import com.jacketing.algorithm.impl.algorithms.suboptimal.IndependentScheduler;
+import com.jacketing.algorithm.impl.algorithms.suboptimal.ListScheduler;
 
 public interface AlgorithmSource {
   default AlgorithmFactory getDfs() {
@@ -22,5 +24,13 @@ public interface AlgorithmSource {
 
   default AlgorithmFactory getAStar() {
     return AStar::new;
+  }
+
+  default AlgorithmFactory getIndependent() {
+    return IndependentScheduler::new;
+  }
+
+  default AlgorithmFactory getList() {
+    return ListScheduler::new;
   }
 }

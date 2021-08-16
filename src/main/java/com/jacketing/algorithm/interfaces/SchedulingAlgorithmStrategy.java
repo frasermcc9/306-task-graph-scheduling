@@ -13,6 +13,7 @@
 
 package com.jacketing.algorithm.interfaces;
 
+import com.jacketing.algorithm.AlgorithmFactory;
 import com.jacketing.algorithm.impl.X.AlgorithmSchedule;
 import com.jacketing.algorithm.impl.util.SchedulingAlgorithmContextImpl;
 import com.jacketing.common.analysis.UpdatesFromAlgorithm;
@@ -27,4 +28,6 @@ public interface SchedulingAlgorithmStrategy {
   AlgorithmSchedule schedule();
 
   SchedulingAlgorithmStrategy withObservable(UpdatesFromAlgorithm updater);
+
+  SchedulingAlgorithmStrategy withEstimateAlgorithm(AlgorithmFactory factory);
 }

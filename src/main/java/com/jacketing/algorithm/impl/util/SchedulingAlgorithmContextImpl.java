@@ -13,6 +13,7 @@
 
 package com.jacketing.algorithm.impl.util;
 
+import com.jacketing.algorithm.AlgorithmFactory;
 import com.jacketing.algorithm.impl.X.AlgorithmSchedule;
 import com.jacketing.algorithm.interfaces.SchedulingAlgorithmStrategy;
 import com.jacketing.common.analysis.UpdatesFromAlgorithm;
@@ -36,5 +37,12 @@ public class SchedulingAlgorithmContextImpl
     UpdatesFromAlgorithm updater
   ) {
     return algorithm.withObservable(updater);
+  }
+
+  @Override
+  public SchedulingAlgorithmStrategy withEstimateAlgorithm(
+    AlgorithmFactory factory
+  ) {
+    return algorithm.withEstimateAlgorithm(factory);
   }
 }

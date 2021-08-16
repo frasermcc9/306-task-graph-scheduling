@@ -13,7 +13,9 @@
 
 package com.jacketing.algorithm.impl.algorithms;
 
+import com.jacketing.algorithm.AlgorithmFactory;
 import com.jacketing.algorithm.impl.X.StaticCache;
+import com.jacketing.algorithm.impl.algorithms.suboptimal.ListScheduler;
 import com.jacketing.algorithm.interfaces.SchedulingAlgorithmStrategy;
 import com.jacketing.algorithm.interfaces.structures.Schedule;
 import com.jacketing.algorithm.interfaces.util.ScheduleFactory;
@@ -32,6 +34,8 @@ public abstract class AbstractSchedulingAlgorithm
   protected final ScheduleFactory scheduleFactory;
   protected UpdatesFromAlgorithm observer;
 
+  protected AlgorithmFactory estimateAlgorithmFactory;
+
   public AbstractSchedulingAlgorithm(
     Graph graph,
     AlgorithmContext context,
@@ -40,6 +44,8 @@ public abstract class AbstractSchedulingAlgorithm
     this.graph = graph;
     this.context = context;
     this.scheduleFactory = scheduleFactory;
+
+    this.estimateAlgorithmFactory = ListScheduler::new;
   }
 
   public static StaticCache getCache(int key) {
@@ -96,5 +102,12 @@ public abstract class AbstractSchedulingAlgorithm
       freeNodeBitfield |= (1 << orphan);
     }
     return freeNodeBitfield;
+  }
+
+  public AbstractSchedulingAlgorithm withEstimateAlgorithm(
+    AlgorithmFactory factory
+  ) {
+    this.estimateAlgorithmFactory = factory;
+    return this;
   }
 }

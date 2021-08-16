@@ -33,14 +33,29 @@ public class SmartAlgorithm extends AbstractSchedulingAlgorithm {
     super(graph, context, scheduleFactory);
     AlgorithmFactory algorithmFactory;
 
-    if (graph.getAdjacencyList().getNodeToEdgeRatio() > 2) {
+    if (graph.getAdjacencyList().getEdgeCount() == 0) {
       algorithmFactory = algorithmSource.getDfs();
-    } else {
-      algorithmFactory = algorithmSource.getAStar();
+      algorithm =
+        algorithmFactory
+          .createAlgorithm(graph, context, scheduleFactory)
+          .withEstimateAlgorithm(algorithmSource.getIndependent());
+      return;
     }
 
+    if (graph.getAdjacencyList().getNodeToEdgeRatio() > 2) {
+      algorithmFactory = algorithmSource.getDfs();
+      algorithm =
+        algorithmFactory
+          .createAlgorithm(graph, context, scheduleFactory)
+          .withEstimateAlgorithm(algorithmSource.getList());
+      return;
+    }
+
+    algorithmFactory = algorithmSource.getAStar();
     algorithm =
-      algorithmFactory.createAlgorithm(graph, context, scheduleFactory);
+      algorithmFactory
+        .createAlgorithm(graph, context, scheduleFactory)
+        .withEstimateAlgorithm(algorithmSource.getList());
   }
 
   public SmartAlgorithm(
