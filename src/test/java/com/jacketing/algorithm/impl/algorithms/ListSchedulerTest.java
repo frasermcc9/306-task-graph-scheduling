@@ -20,7 +20,7 @@ import static org.mockito.Mockito.when;
 
 import com.jacketing.TestUtil;
 import com.jacketing.algorithm.impl.X.AlgorithmSchedule;
-import com.jacketing.algorithm.impl.algorithms.suboptimal.IndependentScheduler;
+import com.jacketing.algorithm.impl.X.SmartAlgorithm;
 import com.jacketing.algorithm.impl.algorithms.suboptimal.ListScheduler;
 import com.jacketing.algorithm.interfaces.SchedulingAlgorithmStrategy;
 import com.jacketing.algorithm.interfaces.util.ScheduleFactory;
@@ -80,7 +80,7 @@ public class ListSchedulerTest {
     when(programContext.getProcessorsToScheduleOn()).thenReturn(4);
 
     SchedulingAlgorithmStrategy schedulingAlgorithmStrategy = SchedulingAlgorithmStrategy.create(
-      new IndependentScheduler(graph, programContext, ScheduleFactory.create())
+      new SmartAlgorithm(graph, programContext, ScheduleFactory.create())
     );
 
     AlgorithmSchedule schedule = schedulingAlgorithmStrategy.schedule();
@@ -88,6 +88,6 @@ public class ListSchedulerTest {
 
     int expected = 15;
 
-    assertTrue(expected <= duration);
+    assertEquals(expected, duration);
   }
 }
