@@ -21,17 +21,20 @@ import com.jacketing.algorithm.interfaces.util.ScheduleFactory;
 import com.jacketing.algorithm.interfaces.util.topological.TopologicalSort;
 import com.jacketing.io.cli.AlgorithmContext;
 import com.jacketing.parsing.impl.structures.Graph;
-import java.util.AbstractQueue;
 import java.util.HashSet;
 import java.util.List;
-import java.util.PriorityQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.PriorityBlockingQueue;
 
-public class AStar extends AbstractSchedulingAlgorithm {
+public class ParallelAStar extends AbstractSchedulingAlgorithm {
 
-  private final TopologicalSortContext<List<Integer>> layeredTopologicalFinder;
+  private final TopologicalSortContext<List<Integer>> topologicalOrderFinder;
   private final int cacheKey;
 
-  public AStar(
+  private final ExecutorService executor;
+
+  public ParallelAStar(
     Graph graph,
     AlgorithmContext context,
     ScheduleFactory scheduleFactory
@@ -39,7 +42,7 @@ public class AStar extends AbstractSchedulingAlgorithm {
     super(graph, context, scheduleFactory);
     cacheKey = useCache(new StaticCacheImpl(graph, context, HashSet::new));
 
-    layeredTopologicalFinder =
+    topologicalOrderFinder =
       new TopologicalSortContext<>(TopologicalSort.withLayers(graph));
 
     SchedulingAlgorithmStrategy algorithm = SchedulingAlgorithmStrategy.create(
@@ -47,11 +50,13 @@ public class AStar extends AbstractSchedulingAlgorithm {
     );
     AlgorithmSchedule estimateSchedule = algorithm.schedule();
     getCache(cacheKey).updateUpper(estimateSchedule);
+
+    executor = Executors.newFixedThreadPool(128);
   }
 
   @Override
   public AlgorithmSchedule schedule() {
-    List<List<Integer>> topological = layeredTopologicalFinder.sortedTopological();
+    List<List<Integer>> topological = topologicalOrderFinder.sortedTopological();
 
     if (topological.size() == 0) {
       return scheduleFactory.newSchedule(context);
@@ -59,22 +64,27 @@ public class AStar extends AbstractSchedulingAlgorithm {
 
     int orphans = listToBitfield(topological.get(0));
 
-    final AbstractQueue<AbstractIterativeSchedule> queue = new PriorityQueue<>();
+    final PriorityBlockingQueue<AbstractIterativeSchedule> queue = new PriorityBlockingQueue<>();
     queue.offer(new AStarSchedule(orphans, null, queue, cacheKey));
 
-    //    int count=0;
-
-    while (!queue.isEmpty()) {
-      AbstractIterativeSchedule next = queue.poll();
-      //      count++;
-      if (next.saturated()) {
-        //        System.out.println(count);
-        return next;
+    for (;;) {
+      try {
+        AbstractIterativeSchedule next = queue.take();
+        if (next.saturated()) {
+          executor.shutdown();
+          return next;
+        }
+        executor.submit(next::propagate);
+      } catch (InterruptedException e) {
+        e.printStackTrace();
       }
-
-      next.propagate();
     }
-
-    return getCache(cacheKey).getBestSchedule();
+    //    pool.shutdown();
+    //    try {
+    //      pool.awaitTermination(20, TimeUnit.SECONDS);
+    //    } catch (InterruptedException e) {
+    //      e.printStackTrace();
+    //    }
+    //    return getCache(cacheKey).getBestSchedule();
   }
 }

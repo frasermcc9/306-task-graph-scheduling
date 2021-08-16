@@ -31,6 +31,8 @@ public class StaticCacheImpl implements StaticCache {
   private int upperBound = Integer.MAX_VALUE;
   private AlgorithmSchedule bestSchedule;
 
+  private final String defaultNodeString;
+
   public StaticCacheImpl(
     Graph g,
     AlgorithmContext ctx,
@@ -39,6 +41,14 @@ public class StaticCacheImpl implements StaticCache {
     this.graph = g;
     this.context = ctx;
     this.duplicateCache = factory.create();
+
+    int nodeCount = graph.getAdjacencyList().getNodeCount();
+    StringBuilder sb = new StringBuilder();
+    for (int i = 0; i < nodeCount; i++) {
+      sb.append(i);
+      sb.append("X");
+    }
+    defaultNodeString = sb.toString();
   }
 
   @Override
@@ -85,5 +95,10 @@ public class StaticCacheImpl implements StaticCache {
   public void updateUpper(AlgorithmSchedule schedule) {
     this.bestSchedule = schedule;
     this.upperBound = schedule.getDuration();
+  }
+
+  @Override
+  public String defaultNodeString() {
+    return this.defaultNodeString;
   }
 }

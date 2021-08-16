@@ -71,8 +71,6 @@ public class IterativeDfs extends AbstractSchedulingAlgorithm {
       new IterativeSchedule(freeNodeBitfield, null, stack, cacheKey)
     );
 
-    int count = 0;
-
     while (!stack.isEmpty()) {
       AbstractIterativeSchedule next = stack.removeFirst();
       if (next.saturated()) {
@@ -82,10 +80,8 @@ public class IterativeDfs extends AbstractSchedulingAlgorithm {
         }
         continue;
       }
-      count++;
       next.propagate();
     }
-    System.out.println(count);
     return getCache(cacheKey).getBestSchedule();
   }
 }

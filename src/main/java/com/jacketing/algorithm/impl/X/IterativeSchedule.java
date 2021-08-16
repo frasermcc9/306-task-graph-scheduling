@@ -24,6 +24,7 @@ public class IterativeSchedule
   implements AlgorithmSchedule {
 
   private final Deque<AbstractIterativeSchedule> globalStack;
+  private final String[] permutationStrings;
 
   public IterativeSchedule(
     int orphans,
@@ -56,11 +57,11 @@ public class IterativeSchedule
     int cacheKey,
     String[] permutationStrings
   ) {
-    super(orphans, parent, totalTime, cacheKey, permutationStrings);
+    super(orphans, parent, totalTime, cacheKey, "");
     this.globalStack = globalStack;
+    this.permutationStrings = permutationStrings;
   }
 
-  @Override
   public AbstractIterativeSchedule buildSchedule(
     AbstractIterativeSchedule parent,
     int nextOrphans,
@@ -176,5 +177,30 @@ public class IterativeSchedule
         }
       }
     }
+  }
+
+  @Override
+  public AbstractIterativeSchedule buildSchedule(
+    AbstractIterativeSchedule parent,
+    int nextOrphans,
+    int[] totalTimeArray,
+    int cacheKey,
+    String permutationId
+  ) {
+    return null;
+  }
+
+  protected String getPermutationId(String[] withStrings) {
+    int len = permutationStrings.length;
+    String[] copy = new String[len];
+    System.arraycopy(withStrings, 0, copy, 0, len);
+
+    Arrays.sort(copy);
+    StringBuilder sb = new StringBuilder();
+
+    for (int i = 0; i < len; i++) {
+      sb.append(copy[i]);
+    }
+    return sb.toString();
   }
 }

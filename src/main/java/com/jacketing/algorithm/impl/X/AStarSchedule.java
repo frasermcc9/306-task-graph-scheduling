@@ -13,19 +13,19 @@
 
 package com.jacketing.algorithm.impl.X;
 
-import java.util.PriorityQueue;
+import java.util.AbstractQueue;
 import org.jetbrains.annotations.NotNull;
 
 public class AStarSchedule
   extends AbstractIterativeSchedule
   implements Comparable<AStarSchedule> {
 
-  private final PriorityQueue<AbstractIterativeSchedule> queue;
+  private final AbstractQueue<AbstractIterativeSchedule> queue;
 
   public AStarSchedule(
     int orphans,
     AbstractIterativeSchedule parent,
-    PriorityQueue<AbstractIterativeSchedule> scheduleQueue,
+    AbstractQueue<AbstractIterativeSchedule> scheduleQueue,
     int cacheKey
   ) {
     super(orphans, parent, cacheKey);
@@ -37,10 +37,10 @@ public class AStarSchedule
     AbstractIterativeSchedule parent,
     int[] totalTime,
     int cacheKey,
-    String[] permutationStrings,
-    PriorityQueue<AbstractIterativeSchedule> scheduleQueue
+    String permutationId,
+    AbstractQueue<AbstractIterativeSchedule> scheduleQueue
   ) {
-    super(orphans, parent, totalTime, cacheKey, permutationStrings);
+    super(orphans, parent, totalTime, cacheKey, permutationId);
     this.queue = scheduleQueue;
   }
 
@@ -50,14 +50,14 @@ public class AStarSchedule
     int nextOrphans,
     int[] totalTimeArray,
     int cacheKey,
-    String[] permutationStrings
+    String permutationId
   ) {
     return new AStarSchedule(
       nextOrphans,
       parent,
       totalTimeArray,
       cacheKey,
-      permutationStrings,
+      permutationId,
       queue
     );
   }

@@ -18,14 +18,15 @@ import com.jacketing.algorithm.impl.algorithms.AbstractSchedulingAlgorithm;
 import com.jacketing.common.FormattableTask;
 import com.jacketing.parsing.impl.structures.Graph;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public abstract class AbstractIterativeSchedule
   implements AlgorithmSchedule, HeuristicSchedule {
 
   protected final int orphans; // bitfield
-  protected final String[] permutationStrings;
+  //  protected final String[] permutationStrings;
+
+  protected final String permString;
 
   protected final AbstractIterativeSchedule parent;
   protected final Integer[] procCache;
@@ -56,12 +57,13 @@ public abstract class AbstractIterativeSchedule
         .getContext()
         .getProcessorsToScheduleOn()],
       cacheKey,
-      new String[AbstractSchedulingAlgorithm
-        .getCache(cacheKey)
-        .getContext()
-        .getProcessorsToScheduleOn()]
+      //      new String[AbstractSchedulingAlgorithm
+      //        .getCache(cacheKey)
+      //        .getContext()
+      //        .getProcessorsToScheduleOn()],
+      AbstractSchedulingAlgorithm.getCache(cacheKey).defaultNodeString()
     );
-    Arrays.fill(permutationStrings, "");
+    //    Arrays.fill(permutationStrings, "");
   }
 
   public AbstractIterativeSchedule(
@@ -69,13 +71,15 @@ public abstract class AbstractIterativeSchedule
     AbstractIterativeSchedule parent,
     int[] totalTime,
     int cacheKey,
-    String[] permutationStrings
+    //    String[] permutationStrings,
+    String permString
   ) {
     this.orphans = orphans;
     this.parent = parent;
     this.totalTime = totalTime;
     this.cacheKey = cacheKey;
-    this.permutationStrings = permutationStrings;
+    //    this.permutationStrings = permutationStrings;
+    this.permString = permString;
 
     taskCache =
       new IterativeSchedule.Task[getCache()
@@ -115,7 +119,6 @@ public abstract class AbstractIterativeSchedule
     Graph graph = getCache().getGraph();
 
     int orphansCopy = orphans;
-    // better xor method?
     for (int orphan = 0; orphansCopy != 0; ++orphan, orphansCopy >>>= 1) {
       if ((orphansCopy & 1) != 0) {
         int nextOrphans = orphans;
@@ -150,19 +153,24 @@ public abstract class AbstractIterativeSchedule
             continue;
           }
 
-          String[] permutationStringsCopy = new String[processors];
-          System.arraycopy(
-            permutationStrings,
-            0,
-            permutationStringsCopy,
-            0,
-            processors
-          );
-          permutationStringsCopy[processor] =
-            permutationStringsCopy[processor].concat("" + orphan)
-              .concat("" + startTime);
+          StringBuilder builder = new StringBuilder(permString);
+          // char MAX = 65,534
+          builder.setCharAt(orphan * 2 + 1, (char) startTime);
+          String permutationId = builder.toString();
 
-          String permutationId = getPermutationId(permutationStringsCopy);
+          //          String[] permutationStringsCopy = new String[processors];
+          //          System.arraycopy(
+          //            permutationStrings,
+          //            0,
+          //            permutationStringsCopy,
+          //            0,
+          //            processors
+          //          );
+          //          permutationStringsCopy[processor] =
+          //            permutationStringsCopy[processor].concat("" + orphan)
+          //              .concat("" + startTime);
+          //
+          //          String permutationId = getPermutationId(permutationStringsCopy);
           if (getCache().isPermutation(permutationId)) {
             continue;
           }
@@ -195,7 +203,8 @@ public abstract class AbstractIterativeSchedule
             nextOrphans,
             totalTimeCopy,
             cacheKey,
-            permutationStringsCopy
+            //            permutationStringsCopy
+            permutationId
           );
           schedule.setAddedTask(processor, startTime, orphan, taskWeight);
 
@@ -231,35 +240,25 @@ public abstract class AbstractIterativeSchedule
     int nextOrphans,
     int[] totalTimeArray,
     int cacheKey,
-    String[] permutationStrings
+    //    String[] permutationStrings
+    String permutationId
   );
 
   public abstract void addItem(AbstractIterativeSchedule schedule);
 
-  protected String getPermutationId(String[] withStrings) {
-    int len = permutationStrings.length;
-    String[] copy = new String[len];
-    System.arraycopy(withStrings, 0, copy, 0, len);
-
-    Arrays.sort(copy);
-    StringBuilder sb = new StringBuilder();
-
-    for (int i = 0; i < len; i++) {
-      sb.append(copy[i]);
-    }
-    return sb.toString();
-  }
-
-  /**
-   * TODO: 13/08/2021 Experiment keeping a string of the nodes sorted in a fixed
-   * way, in the pattern XYXYXY where X is a taskId and Y is the tasks start
-   * time. Ideally this will reduce the cost of building the permutation id.
-   *
-   * @return
-   */
-  protected String v2Permutation() {
-    return "";
-  }
+  //  protected String getPermutationId(String[] withStrings) {
+  //    int len = permutationStrings.length;
+  //    String[] copy = new String[len];
+  //    System.arraycopy(withStrings, 0, copy, 0, len);
+  //
+  //    Arrays.sort(copy);
+  //    StringBuilder sb = new StringBuilder();
+  //
+  //    for (int i = 0; i < len; i++) {
+  //      sb.append(copy[i]);
+  //    }
+  //    return sb.toString();
+  //  }
 
   public Task findTask(int task) {
     if (taskCache[task] != null) {

@@ -35,4 +35,6 @@ public interface StaticCache {
   void addScheduleToCache(String uuid);
 
   void updateUpper(AlgorithmSchedule schedule);
+
+  String defaultNodeString();
 }
