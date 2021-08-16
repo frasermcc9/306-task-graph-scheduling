@@ -47,4 +47,24 @@ public class AStarTest {
       assertEquals(expectedLength, optimalLength);
     }
   }
+
+  @Test
+  public void testGraphSuiteFourCores() throws IOException {
+    List<GraphResult> graphs = TestUtil.getGraphTestSuite();
+
+    ProgramContext programContext = mock(ProgramContext.class);
+    when(programContext.getProcessorsToScheduleOn()).thenReturn(4);
+
+    for (GraphResult graph : graphs) {
+      SchedulingAlgorithmStrategy schedulingAlgorithmStrategy = SchedulingAlgorithmStrategy.create(
+        new AStar(graph.getGraph(), programContext, ScheduleFactory.create())
+      );
+
+      AlgorithmSchedule schedule = schedulingAlgorithmStrategy.schedule();
+      int optimalLength = schedule.getDuration();
+      int expectedLength = graph.getFourCoresResult();
+
+      assertEquals(expectedLength, optimalLength);
+    }
+  }
 }
