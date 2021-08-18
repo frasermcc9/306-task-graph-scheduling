@@ -16,6 +16,7 @@ package com.jacketing.algorithm.impl.algorithms;
 import com.jacketing.algorithm.interfaces.SchedulingAlgorithmStrategy;
 import com.jacketing.algorithm.interfaces.structures.Schedule;
 import com.jacketing.algorithm.interfaces.util.ScheduleFactory;
+import com.jacketing.common.analysis.ObserverUpdater;
 import com.jacketing.common.analysis.UpdatesFromAlgorithm;
 import com.jacketing.io.cli.AlgorithmContext;
 import com.jacketing.parsing.impl.structures.Graph;
@@ -37,6 +38,12 @@ public abstract class AbstractSchedulingAlgorithm
     this.graph = graph;
     this.context = context;
     this.scheduleFactory = scheduleFactory;
+  }
+
+  public void updateObserver(ObserverUpdater update) {
+    if (observer != null) {
+      update.updateObserver(observer);
+    }
   }
 
   @Override
