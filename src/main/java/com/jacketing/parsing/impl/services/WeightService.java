@@ -32,6 +32,8 @@ public class WeightService implements GraphWeightService {
    */
   private final Map<Integer, Map<Integer, Integer>> edgeWeightMap;
 
+  private int weightSum;
+
   public WeightService(
     GraphParser graph,
     EnumeratedNodeMap enumeratedNodeMap,
@@ -44,11 +46,18 @@ public class WeightService implements GraphWeightService {
     this.edgeWeightMap = edgeWeightMap;
   }
 
+  @Override
+  public int getGraphWeight() {
+    return weightSum;
+  }
+
+  @Override
   public void formWeights() {
     introduceNodeWeights();
     introduceEdgeWeights();
   }
 
+  @Override
   public int nodeWeight(int enumeratedNode) {
     return nodeWeightMap.get(enumeratedNode);
   }
@@ -59,12 +68,14 @@ public class WeightService implements GraphWeightService {
   }
 
   private void introduceNodeWeights() {
+    weightSum = 0;
     Collection<GraphNode> nodes = graph.getNodes().values();
     for (GraphNode node : nodes) {
       int enumerated = enumeratedNodeMap.getEnumerated(node.getId());
       int weight = Integer.parseInt(node.getAttribute("Weight").toString());
-      nodeWeightMap.put(enumerated, weight);
+      weightSum += weight;
 
+      nodeWeightMap.put(enumerated, weight);
       edgeWeightMap.put(enumerated, new HashMap<>());
     }
   }

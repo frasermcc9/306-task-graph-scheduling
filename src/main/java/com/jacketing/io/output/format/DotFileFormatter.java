@@ -13,8 +13,8 @@
 
 package com.jacketing.io.output.format;
 
-import com.jacketing.algorithm.impl.structures.Task;
-import com.jacketing.algorithm.interfaces.structures.Schedule;
+import com.jacketing.common.FormattableSchedule;
+import com.jacketing.common.FormattableTask;
 import com.jacketing.parsing.impl.structures.Graph;
 import java.text.MessageFormat;
 import java.util.List;
@@ -23,7 +23,7 @@ import java.util.Map;
 public class DotFileFormatter implements Formatter {
 
   @Override
-  public String formatSchedule(Schedule schedule, Graph graph) {
+  public String formatSchedule(FormattableSchedule schedule, Graph graph) {
     StringBuilder builder = new StringBuilder();
     builder
       .append("digraph ")
@@ -31,9 +31,9 @@ public class DotFileFormatter implements Formatter {
       .append(" {")
       .append("\n");
 
-    List<Task> allTasks = schedule.getAllTasks();
+    List<FormattableTask> allTasks = schedule.getAllTasks();
 
-    for (Task task : allTasks) {
+    for (FormattableTask task : allTasks) {
       int id = task.getId();
 
       int start = task.getStartTime();

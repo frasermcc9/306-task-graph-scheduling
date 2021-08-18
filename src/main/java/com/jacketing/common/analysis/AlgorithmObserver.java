@@ -15,7 +15,6 @@ package com.jacketing.common.analysis;
 
 import com.jacketing.algorithm.interfaces.structures.Schedule;
 import com.jacketing.parsing.impl.structures.Graph;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

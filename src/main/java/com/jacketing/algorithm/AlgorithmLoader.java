@@ -13,15 +13,15 @@
 
 package com.jacketing.algorithm;
 
+import com.jacketing.algorithm.impl.X.AlgorithmSchedule;
 import com.jacketing.algorithm.interfaces.SchedulingAlgorithmStrategy;
-import com.jacketing.algorithm.interfaces.structures.Schedule;
 import com.jacketing.algorithm.interfaces.util.ScheduleFactory;
 import com.jacketing.common.Loader;
 import com.jacketing.io.cli.AlgorithmContext;
 import com.jacketing.parsing.impl.structures.Graph;
 import org.jetbrains.annotations.NotNull;
 
-public class AlgorithmLoader implements Loader<Schedule> {
+public class AlgorithmLoader implements Loader<AlgorithmSchedule> {
 
   private final Graph graph;
   private final AlgorithmContext context;
@@ -37,7 +37,7 @@ public class AlgorithmLoader implements Loader<Schedule> {
     this.algorithmFactory = algorithmFactory;
   }
 
-  public static Loader<Schedule> create(
+  public static Loader<AlgorithmSchedule> create(
     @NotNull final Graph graph,
     @NotNull final AlgorithmContext context,
     @NotNull final AlgorithmFactory algorithmFactory
@@ -45,7 +45,7 @@ public class AlgorithmLoader implements Loader<Schedule> {
     return new AlgorithmLoader(graph, context, algorithmFactory);
   }
 
-  public Schedule load() {
+  public AlgorithmSchedule load() {
     SchedulingAlgorithmStrategy schedulingAlgorithmStrategy = algorithmFactory
       .createAlgorithm(graph, context, ScheduleFactory.create())
       .withObservable(context.getObserver());

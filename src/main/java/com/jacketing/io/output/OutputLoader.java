@@ -13,7 +13,7 @@
 
 package com.jacketing.io.output;
 
-import com.jacketing.algorithm.interfaces.structures.Schedule;
+import com.jacketing.common.FormattableSchedule;
 import com.jacketing.common.Loader;
 import com.jacketing.io.cli.IOContext;
 import com.jacketing.io.output.format.FormatterFactory;
@@ -23,14 +23,14 @@ import java.io.IOException;
 
 public class OutputLoader implements Loader<Void> {
 
-  private final Schedule schedule;
+  private final FormattableSchedule schedule;
   private final IOContext ioContext;
   private final FileSaverFactory fileSaverFactory;
   private final FormatterFactory formatterFactory;
   private final Graph graph;
 
   private OutputLoader(
-    Schedule schedule,
+    FormattableSchedule schedule,
     IOContext ioContext,
     Graph graph,
     FileSaverFactory fileSaverFactory,
@@ -44,7 +44,7 @@ public class OutputLoader implements Loader<Void> {
   }
 
   public static Loader<Void> create(
-    final Schedule schedule,
+    final FormattableSchedule schedule,
     final IOContext ioContext,
     final Graph graph,
     final FileSaverFactory fileSaverFactory,

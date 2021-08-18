@@ -13,12 +13,16 @@
 
 package com.jacketing.algorithm.impl.structures;
 
+import com.jacketing.algorithm.impl.X.AlgorithmSchedule;
 import com.jacketing.algorithm.interfaces.structures.Schedule;
+import com.jacketing.common.FormattableSchedule;
+import com.jacketing.common.FormattableTask;
 import com.jacketing.io.cli.AlgorithmContext;
 import java.util.*;
 import java.util.function.BiFunction;
 
-public class ScheduleImpl implements Schedule {
+public class ScheduleImpl
+  implements Schedule, FormattableSchedule, AlgorithmSchedule {
 
   private final AlgorithmContext context;
   private final Map<Integer, ProcessorTaskList> processorMap;
@@ -114,10 +118,10 @@ public class ScheduleImpl implements Schedule {
   }
 
   @Override
-  public List<Task> getAllTasks() {
+  public List<FormattableTask> getAllTasks() {
     // Convert map of lists, to one list
     Collection<ProcessorTaskList> processorProcessorTaskLists = processorMap.values();
-    ArrayList<Task> allTasks = new ArrayList<>();
+    List<FormattableTask> allTasks = new ArrayList<>();
     for (ProcessorTaskList processorTaskList : processorProcessorTaskLists) {
       allTasks.addAll(processorTaskList);
     }

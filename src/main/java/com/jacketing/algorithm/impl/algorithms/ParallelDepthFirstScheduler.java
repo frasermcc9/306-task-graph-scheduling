@@ -13,6 +13,8 @@
 
 package com.jacketing.algorithm.impl.algorithms;
 
+import com.jacketing.algorithm.impl.X.AlgorithmSchedule;
+import com.jacketing.algorithm.impl.algorithms.suboptimal.ListScheduler;
 import com.jacketing.algorithm.impl.structures.Task;
 import com.jacketing.algorithm.impl.util.topological.TopologicalSortContext;
 import com.jacketing.algorithm.interfaces.SchedulingAlgorithmStrategy;
@@ -37,7 +39,7 @@ public class ParallelDepthFirstScheduler
   private final Set<String> equivalents = ConcurrentHashMap.newKeySet();
 
   private final AtomicInteger upperBound = new AtomicInteger();
-  private volatile Schedule bestSchedule;
+  private volatile AlgorithmSchedule bestSchedule;
 
   public ParallelDepthFirstScheduler(
     Graph graph,
@@ -53,13 +55,13 @@ public class ParallelDepthFirstScheduler
       new ListScheduler(graph, context, scheduleFactory)
     );
 
-    Schedule estimateSchedule = algorithm.schedule();
+    AlgorithmSchedule estimateSchedule = algorithm.schedule();
     upperBound.set(estimateSchedule.getDuration());
     bestSchedule = estimateSchedule;
   }
 
   @Override
-  public Schedule schedule() {
+  public AlgorithmSchedule schedule() {
     List<List<Integer>> topological = topologicalOrderFinder.sortedTopological();
 
     if (topological.size() == 0) {
