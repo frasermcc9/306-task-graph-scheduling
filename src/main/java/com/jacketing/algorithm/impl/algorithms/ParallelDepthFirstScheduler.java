@@ -98,6 +98,7 @@ public class ParallelDepthFirstScheduler
     ) {
       if (compute < upperBound.get()) {
         bestSchedule = schedule.clone();
+        updateObserver(o -> o.updateBestSchedule(bestSchedule));
         upperBound.getAndSet(compute);
       }
     }
@@ -137,12 +138,14 @@ public class ParallelDepthFirstScheduler
           // cull this branch if it exceeds best schedule so far
           int intUpper = upperBound.get();
           if (bestSchedule != null && nextState.getDuration() >= intUpper) {
+            updateObserver(o -> o.incrementCulledSchedules());
             nextState.revert();
             continue;
           }
 
           String identifier = nextState.toString();
           if (equivalents.contains(identifier)) {
+            updateObserver(o -> o.incrementDuplicateSchedules());
             nextState.revert();
             continue;
           }
@@ -170,6 +173,7 @@ public class ParallelDepthFirstScheduler
             }
           }
 
+          updateObserver(o -> o.incrementCheckedSchedules());
           invokeAll(new RecursiveDfs(nextState, nextFreeNodes, nextVisited));
           nextState.revert();
         }
