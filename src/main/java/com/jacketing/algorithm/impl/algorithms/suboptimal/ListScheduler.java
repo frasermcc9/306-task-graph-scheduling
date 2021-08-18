@@ -13,6 +13,7 @@
 
 package com.jacketing.algorithm.impl.algorithms.suboptimal;
 
+import com.jacketing.algorithm.impl.X.AlgorithmSchedule;
 import com.jacketing.algorithm.impl.algorithms.AbstractSchedulingAlgorithm;
 import com.jacketing.algorithm.impl.structures.Task;
 import com.jacketing.algorithm.impl.util.topological.TopologicalSortContext;
@@ -41,7 +42,11 @@ public class ListScheduler extends AbstractSchedulingAlgorithm {
   }
 
   @Override
-  public Schedule schedule() {
+  public AlgorithmSchedule schedule() {
+    return null;
+  }
+
+  public Schedule scheduleOld() {
     Schedule schedule = scheduleFactory.newSchedule(context);
     List<Integer> topologicalOrder = getOrder();
 

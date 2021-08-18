@@ -16,6 +16,7 @@ package com.jacketing.algorithm.impl.algorithms;
 import com.jacketing.algorithm.impl.X.AlgorithmSchedule;
 import com.jacketing.algorithm.impl.algorithms.suboptimal.ListScheduler;
 import com.jacketing.algorithm.impl.structures.Task;
+import com.jacketing.algorithm.impl.util.SchedulingAlgorithmContextImpl;
 import com.jacketing.algorithm.impl.util.topological.TopologicalSortContext;
 import com.jacketing.algorithm.interfaces.SchedulingAlgorithmStrategy;
 import com.jacketing.algorithm.interfaces.structures.Schedule;
@@ -35,7 +36,7 @@ public class DepthFirstScheduler extends AbstractSchedulingAlgorithm {
 
   private final Set<String> equivalents = new HashSet<>();
 
-  private AlgorithmSchedule bestSchedule;
+  private Schedule bestSchedule;
   private int upperBound;
 
   public DepthFirstScheduler(
@@ -48,10 +49,9 @@ public class DepthFirstScheduler extends AbstractSchedulingAlgorithm {
       new TopologicalSortContext<>(TopologicalSort.withLayers(graph));
     numberOfProcessors = context.getProcessorsToScheduleOn();
 
-    SchedulingAlgorithmStrategy algorithm = SchedulingAlgorithmStrategy.create(
-      new ListScheduler(graph, context, scheduleFactory)
-    );
-    AlgorithmSchedule estimateSchedule = algorithm.schedule();
+    ListScheduler scheduler = new ListScheduler(graph, context, scheduleFactory);
+    new SchedulingAlgorithmContextImpl(scheduler);
+    Schedule estimateSchedule = scheduler.scheduleOld();
     upperBound = estimateSchedule.getDuration();
     bestSchedule = estimateSchedule;
   }

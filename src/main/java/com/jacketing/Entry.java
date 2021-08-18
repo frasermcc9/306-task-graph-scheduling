@@ -20,6 +20,7 @@ import com.jacketing.algorithm.impl.X.AlgorithmSchedule;
 import com.jacketing.algorithm.impl.X.IterativeDfs;
 import com.jacketing.algorithm.impl.X.ParallelAStar;
 import com.jacketing.algorithm.impl.X.SmartAlgorithm;
+import com.jacketing.algorithm.impl.algorithms.DepthFirstScheduler;
 import com.jacketing.common.Loader;
 import com.jacketing.common.analysis.AlgorithmObserver;
 import com.jacketing.io.cli.ApplicationContext;
@@ -96,7 +97,7 @@ public class Entry {
 
     if (context.isVisualized()) {
       scheduleLoader =
-        AlgorithmLoader.create(graph, context, IterativeDfs::new);
+        AlgorithmLoader.create(graph, context, DepthFirstScheduler::new);
     } else if (context.getCoresToCalculateWith() <= 1) {
       scheduleLoader =
         AlgorithmLoader.create(graph, context, SmartAlgorithm::new);

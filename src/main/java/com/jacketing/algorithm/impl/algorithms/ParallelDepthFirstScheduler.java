@@ -100,7 +100,7 @@ public class ParallelDepthFirstScheduler
     ) {
       if (compute < upperBound.get()) {
         bestSchedule = schedule.clone();
-        updateObserver(o -> o.updateBestSchedule(bestSchedule));
+        //updateObserver(o -> o.updateBestSchedule(bestSchedule));
         upperBound.getAndSet(compute);
       }
     }
