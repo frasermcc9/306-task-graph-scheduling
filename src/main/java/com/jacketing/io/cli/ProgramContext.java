@@ -33,7 +33,7 @@ public class ProgramContext implements ApplicationContext {
   private List<String> input = new ArrayList<>();
 
   @Parameter(names = { "-p" }, validateWith = PositiveInteger.class)
-  private int coresToCalculateWith;
+  private int coresToCalculateWith = 1;
 
   @Parameter(names = { "-v" })
   private boolean visualize;
