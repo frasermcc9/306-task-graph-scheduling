@@ -62,7 +62,7 @@ public class Entry {
         )
           .start();
 
-        ApplicationEntry.launch(observer, os);
+        ApplicationEntry.launch(observer, os, programContext);
       } else {
         beginSearch(programContext, CommandLineOutput::new);
       }

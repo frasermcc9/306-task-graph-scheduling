@@ -14,6 +14,7 @@
 package com.jacketing.view;
 
 import com.jacketing.common.analysis.AlgorithmObserver;
+import com.jacketing.io.cli.AlgorithmContext;
 import com.jacketing.io.cli.ApplicationContext;
 import java.io.ByteArrayOutputStream;
 import javafx.application.Application;
@@ -26,13 +27,16 @@ public class ApplicationEntry extends Application {
 
   private static AlgorithmObserver observer;
   private static ByteArrayOutputStream outputStream;
+  private static ApplicationContext context;
 
   public static void launch(
     AlgorithmObserver algorithmObserver,
-    ByteArrayOutputStream os
+    ByteArrayOutputStream os,
+    ApplicationContext programContext
   ) {
     observer = algorithmObserver;
     outputStream = os;
+    context = programContext;
     ApplicationEntry.launch(ApplicationEntry.class);
   }
 
@@ -47,6 +51,7 @@ public class ApplicationEntry extends Application {
 
     VisualizationController controller = loader.getController();
     controller.setAlgorithmObserver(observer);
+    controller.setAlgorithmContext(context);
     System.out.println(outputStream);
     Scene scene = new Scene(root);
     primaryStage.setTitle("Jacketing Studio");
