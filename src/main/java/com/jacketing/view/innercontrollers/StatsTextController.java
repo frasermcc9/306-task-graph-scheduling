@@ -1,5 +1,6 @@
 package com.jacketing.view.innercontrollers;
 
+import com.jacketing.algorithm.interfaces.structures.Schedule;
 import com.jacketing.common.analysis.AlgorithmObserver;
 import javafx.scene.text.Text;
 
@@ -61,7 +62,11 @@ public class StatsTextController {
     improvements.setText("Improvements Made: " + observer.getDuplicateSchedules());
     schedulesCulled.setText("Schedules Culled: " + observer.getCulledSchedules());
     duplicatesRemoved.setText("Duplicates Removed: " + observer.getDuplicateSchedules());
-    currentBestTime.setText("Current Best Time: " + observer.getCurrentBestSchedule().getDuration());
+
+    Schedule current = observer.getCurrentBestSchedule();
+    if (current != null) {
+      currentBestTime.setText("Current Best Time: " + observer.getCurrentBestSchedule().getDuration());
+    }
   }
 
 
