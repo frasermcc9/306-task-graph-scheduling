@@ -13,8 +13,10 @@
 
 package com.jacketing.algorithm.interfaces.structures;
 
+import com.jacketing.algorithm.impl.structures.ProcessorTaskList;
 import com.jacketing.algorithm.impl.structures.Task;
 import java.util.List;
+import java.util.Map;
 
 public interface Schedule {
   void addTask(Task task, int processor);
@@ -46,4 +48,6 @@ public interface Schedule {
   void revert();
 
   Schedule clone();
+
+  Map<Integer, ProcessorTaskList> getProcessorMap();
 }

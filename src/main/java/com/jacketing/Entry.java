@@ -109,6 +109,7 @@ public class Entry {
 
     //Start search
     Schedule schedule = scheduleLoader.load();
+    observer.updateBestSchedule(schedule);
 
     double endTime = System.nanoTime();
     double timeElapsed = endTime - startTime;

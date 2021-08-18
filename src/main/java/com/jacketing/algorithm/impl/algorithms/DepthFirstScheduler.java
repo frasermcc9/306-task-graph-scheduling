@@ -86,6 +86,7 @@ public class DepthFirstScheduler extends AbstractSchedulingAlgorithm {
       int completeDuration = partialSchedule.getDuration();
       if (bestSchedule == null || completeDuration < upperBound) {
         bestSchedule = partialSchedule.clone();
+        observer.updateBestSchedule(bestSchedule);
         upperBound = completeDuration;
       }
       return;
@@ -113,12 +114,14 @@ public class DepthFirstScheduler extends AbstractSchedulingAlgorithm {
 
         // cull this branch if it exceeds best schedule so far
         if (bestSchedule != null && nextState.getDuration() >= upperBound) {
+          observer.incrementCulledSchedules();
           nextState.revert();
           continue;
         }
 
         String identifier = nextState.toString();
         if (equivalents.contains(identifier)) {
+          observer.incrementDuplicateSchedules();
           nextState.revert();
           continue;
         }
@@ -146,6 +149,7 @@ public class DepthFirstScheduler extends AbstractSchedulingAlgorithm {
           }
         }
 
+        observer.incrementCheckedSchedules();
         recurseDFS(nextState, nextFreeNodes, nextVisited);
 
         nextState.revert();

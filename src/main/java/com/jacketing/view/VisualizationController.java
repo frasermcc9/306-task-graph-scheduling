@@ -52,16 +52,9 @@ public class VisualizationController {
   public void setAlgorithmObserver(AlgorithmObserver observer) {
     this.observer = observer;
     new SearchSpaceController(observer, searchSpaceStackPane);
-  }
-
-  @FXML
-  public void initialize() {
-    logsController = new LogsController(logs);
-    ps = new PrintStream(logsController);
-    System.setOut(ps);
-    new CpuGraphController(threadGraph, threadAxis);
-    new RamGraphController(ramGraph);
+    new ScheduleController(observer, bestScheduleGraph, scheduleList, scheduleAxis);
     new StatsTextController(
+      observer,
       duration,
       schedulesChecked,
       improvements,
@@ -74,6 +67,14 @@ public class VisualizationController {
       time,
       inputFile
     );
-    new ScheduleController(bestScheduleGraph, scheduleList, scheduleAxis);
+  }
+
+  @FXML
+  public void initialize() {
+    logsController = new LogsController(logs);
+    ps = new PrintStream(logsController);
+    System.setOut(ps);
+    new CpuGraphController(threadGraph, threadAxis);
+    new RamGraphController(ramGraph);
   }
 }

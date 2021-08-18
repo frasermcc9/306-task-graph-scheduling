@@ -215,4 +215,9 @@ public class ScheduleImpl implements Schedule {
     taskIdToTaskMap.remove(newTask.getId());
     inverseProcessorMap.remove(newTask);
   }
+
+  @Override
+  public Map<Integer, ProcessorTaskList> getProcessorMap() {
+    return this.processorMap;
+  }
 }
