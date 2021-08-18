@@ -22,6 +22,7 @@ public class CpuGraphController extends GraphController {
       chart.getData().add(series);
     }
 
+    chart.setTitle("Thread Utilization (%)");
     chart.setLegendVisible(false);
     threadAxis.setAutoRanging(false);
     threadAxis.setUpperBound(100);

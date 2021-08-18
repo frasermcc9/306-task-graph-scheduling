@@ -44,6 +44,7 @@ public class ScheduleController {
     this.scheduleList = new ArrayList<Schedule>();
     this.buttons = new ArrayList<Button>();
 
+    bestScheduleGraph.setTitle("Current Best Schedule");
     bestScheduleGraph.setAnimated(false);
     axis.setAutoRanging(false);
     axis.setLowerBound(0);
