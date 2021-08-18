@@ -9,7 +9,7 @@ import java.util.Date;
 
 public class StatsTextController {
 
-  private Text duration, schedulesChecked, improvements, peakRam, peakCpu, currentBestTime, numberCores, numberProcessors, algorithm, time, inputFile;
+  private Text duration, schedulesChecked, improvements, schedulesCulled, duplicatesRemoved, currentBestTime, numberCores, numberProcessors, algorithm, time, inputFile;
   private AlgorithmObserver observer;
   private Instant then = Instant.now();
 
@@ -18,8 +18,8 @@ public class StatsTextController {
     Text duration,
     Text schedulesChecked,
     Text improvements,
-    Text peakRam,
-    Text peakCpu,
+    Text schedulesCulled,
+    Text duplicatesRemoved,
     Text currentBestTime,
     Text numberCores,
     Text numberProcessors,
@@ -31,16 +31,14 @@ public class StatsTextController {
     this.duration = duration;
     this.schedulesChecked = schedulesChecked;
     this.improvements = improvements;
-    this.peakRam = peakRam;
-    this.peakCpu = peakCpu;
+    this.duplicatesRemoved = duplicatesRemoved;
+    this.schedulesCulled = schedulesCulled;
     this.currentBestTime = currentBestTime;
     this.numberCores = numberCores;
     this.numberProcessors = numberProcessors;
     this.algorithm = algorithm;
     this.time = time;
     this.inputFile = inputFile;
-
-
 
     new Thread(() -> {
       while (true) {
@@ -57,9 +55,13 @@ public class StatsTextController {
   private void pollStats() {
     Duration durationObj = Duration.between(then, Instant.now());
     duration.setText("Duration: " + durationObj.getSeconds() + "s");
+    time.setText(new Date().toString());
 
-    schedulesChecked.setText(observer.getCheckedSchedules() + "");
-    improvements.setText(observer.getDuplicateSchedules() + "");
+    schedulesChecked.setText("Schedules Checked: " + observer.getCheckedSchedules());
+    improvements.setText("Improvements Made: " + observer.getDuplicateSchedules());
+    schedulesCulled.setText("Schedules Culled: " + observer.getCulledSchedules());
+    duplicatesRemoved.setText("Duplicates Removed: " + observer.getDuplicateSchedules());
+    currentBestTime.setText("Current Best Time: " + observer.getCurrentBestSchedule().getDuration());
   }
 
 

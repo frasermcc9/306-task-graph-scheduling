@@ -1,6 +1,7 @@
 package com.jacketing.view;
 
 import com.jacketing.common.analysis.AlgorithmObserver;
+import com.jacketing.io.cli.AlgorithmContext;
 import com.jacketing.io.cli.ApplicationContext;
 import com.jacketing.view.innercontrollers.*;
 import java.io.ByteArrayOutputStream;
@@ -28,7 +29,7 @@ public class VisualizationController {
   private LineChart<String, Long> ramGraph;
 
   @FXML
-  private Text duration, schedulesChecked, improvements, peakRam, peakCpu, currentBestTime, numberCores, numberProcessors, algorithm, time, inputFile;
+  private Text duration, schedulesChecked, schedulesCulled, duplicatesRemoved, improvements, currentBestTime, numberCores, numberProcessors, algorithm, time, inputFile;
 
   @FXML
   private Button stop;
@@ -58,8 +59,8 @@ public class VisualizationController {
       duration,
       schedulesChecked,
       improvements,
-      peakRam,
-      peakCpu,
+      schedulesCulled,
+      duplicatesRemoved,
       currentBestTime,
       numberCores,
       numberProcessors,
@@ -67,6 +68,13 @@ public class VisualizationController {
       time,
       inputFile
     );
+  }
+
+  public void setAlgorithmContext(ApplicationContext context) {
+    inputFile.setText(context.getInputFile());
+    numberCores.setText("Number of Cores: " + context.getCoresToCalculateWith());
+    numberProcessors.setText("Number of Processors: " + context.getProcessorsToScheduleOn());
+    algorithm.setText("Algorithm: DFS");
   }
 
   @FXML
