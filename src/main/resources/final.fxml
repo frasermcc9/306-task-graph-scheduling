@@ -18,7 +18,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="794.0" prefWidth="1319.0" style="-fx-background-color: #2f2d2e;" stylesheets="styles.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jacketing.view.VisualizationController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="794.0" prefWidth="1319.0" style="-fx-background-color: #2f2d2e;" stylesheets="styles.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jacketing.view.VisualizationController">
    <top>
       <HBox prefHeight="50.0" prefWidth="200.0" style="-fx-border-color: black; -fx-border-width: 0 0 5 0;" BorderPane.alignment="CENTER">
          <children>
@@ -173,14 +173,13 @@
                <children>
                   <StackPane prefHeight="50.0" prefWidth="200.0" VBox.vgrow="NEVER">
                      <children>
-                        <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Stats" underline="true">
+                        <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Stats">
                            <font>
-                              <Font size="32.0" />
+                              <Font size="24.0" />
                            </font>
                         </Text>
                      </children>
                   </StackPane>
-                  <StackPane prefHeight="20.0" prefWidth="200.0" />
                   <StackPane alignment="CENTER_LEFT" prefHeight="20.0" prefWidth="200.0">
                      <children>
                         <Text fx:id="duration" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Duration:">
@@ -195,7 +194,7 @@
                   </StackPane>
                   <StackPane alignment="CENTER_LEFT" prefHeight="20.0" prefWidth="200.0">
                      <children>
-                        <Text fx:id="schedulesChecked" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Schedules Checked:">
+                        <Text fx:id="schedulesCulled" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Schedules Culled:">
                            <font>
                               <Font size="14.0" />
                            </font>
@@ -207,7 +206,7 @@
                   </StackPane>
                   <StackPane alignment="CENTER_LEFT" prefHeight="20.0" prefWidth="200.0">
                      <children>
-                        <Text fx:id="improvements" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Imrpovements Made:">
+                        <Text fx:id="improvements" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Improvements Made:">
                            <font>
                               <Font size="14.0" />
                            </font>
@@ -216,7 +215,7 @@
                   </StackPane>
                   <StackPane alignment="CENTER_LEFT" prefHeight="20.0" prefWidth="200.0">
                      <children>
-                        <Text fx:id="peakRam" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Peak RAM Usage:">
+                        <Text fx:id="duplicatesRemoved" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Duplicated Removed:">
                            <font>
                               <Font size="14.0" />
                            </font>
@@ -225,7 +224,7 @@
                   </StackPane>
                   <StackPane alignment="CENTER_LEFT" prefHeight="20.0" prefWidth="200.0">
                      <children>
-                        <Text fx:id="peakCpu" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Peak CPU Usage">
+                        <Text fx:id="schedulesChecked" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Schedules Checked:">
                            <font>
                               <Font size="14.0" />
                            </font>
