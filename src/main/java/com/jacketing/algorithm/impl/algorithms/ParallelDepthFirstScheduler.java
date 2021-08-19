@@ -16,6 +16,7 @@ package com.jacketing.algorithm.impl.algorithms;
 import com.jacketing.algorithm.impl.X.AlgorithmSchedule;
 import com.jacketing.algorithm.impl.algorithms.suboptimal.ListScheduler;
 import com.jacketing.algorithm.impl.structures.Task;
+import com.jacketing.algorithm.impl.util.SchedulingAlgorithmContextImpl;
 import com.jacketing.algorithm.impl.util.topological.TopologicalSortContext;
 import com.jacketing.algorithm.interfaces.SchedulingAlgorithmStrategy;
 import com.jacketing.algorithm.interfaces.structures.Schedule;
@@ -39,7 +40,7 @@ public class ParallelDepthFirstScheduler
   private final Set<String> equivalents = ConcurrentHashMap.newKeySet();
 
   private final AtomicInteger upperBound = new AtomicInteger();
-  private volatile AlgorithmSchedule bestSchedule;
+  private volatile Schedule bestSchedule;
 
   public ParallelDepthFirstScheduler(
     Graph graph,
@@ -51,11 +52,9 @@ public class ParallelDepthFirstScheduler
       new TopologicalSortContext<>(TopologicalSort.withLayers(graph));
     numberOfProcessors = context.getProcessorsToScheduleOn();
 
-    SchedulingAlgorithmStrategy algorithm = SchedulingAlgorithmStrategy.create(
-      new ListScheduler(graph, context, scheduleFactory)
-    );
-
-    AlgorithmSchedule estimateSchedule = algorithm.schedule();
+    ListScheduler scheduler = new ListScheduler(graph, context, scheduleFactory);
+    new SchedulingAlgorithmContextImpl(scheduler);
+    Schedule estimateSchedule = scheduler.scheduleOld();
     upperBound.set(estimateSchedule.getDuration());
     bestSchedule = estimateSchedule;
   }
@@ -100,7 +99,7 @@ public class ParallelDepthFirstScheduler
     ) {
       if (compute < upperBound.get()) {
         bestSchedule = schedule.clone();
-        //updateObserver(o -> o.updateBestSchedule(bestSchedule));
+        updateObserver(o -> o.updateBestSchedule(bestSchedule));
         upperBound.getAndSet(compute);
       }
     }
@@ -175,7 +174,7 @@ public class ParallelDepthFirstScheduler
             }
           }
 
-          updateObserver(o -> o.incrementCheckedSchedules());
+          updateObserver(o -> o.incrementCheckedSchedules(partialSchedule));
           invokeAll(new RecursiveDfs(nextState, nextFreeNodes, nextVisited));
           nextState.revert();
         }

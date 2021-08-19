@@ -21,6 +21,7 @@ import com.jacketing.algorithm.impl.X.IterativeDfs;
 import com.jacketing.algorithm.impl.X.ParallelAStar;
 import com.jacketing.algorithm.impl.X.SmartAlgorithm;
 import com.jacketing.algorithm.impl.algorithms.DepthFirstScheduler;
+import com.jacketing.algorithm.impl.algorithms.ParallelDepthFirstScheduler;
 import com.jacketing.common.Loader;
 import com.jacketing.common.analysis.AlgorithmObserver;
 import com.jacketing.io.cli.ApplicationContext;
@@ -96,8 +97,13 @@ public class Entry {
     Loader<AlgorithmSchedule> scheduleLoader;
 
     if (context.isVisualized()) {
-      scheduleLoader =
-        AlgorithmLoader.create(graph, context, DepthFirstScheduler::new);
+      if (context.getCoresToCalculateWith() <= 1) {
+        scheduleLoader =
+          AlgorithmLoader.create(graph, context, DepthFirstScheduler::new);
+      } else {
+        scheduleLoader =
+          AlgorithmLoader.create(graph, context, ParallelDepthFirstScheduler::new);
+      }
     } else if (context.getCoresToCalculateWith() <= 1) {
       scheduleLoader =
         AlgorithmLoader.create(graph, context, SmartAlgorithm::new);
@@ -110,6 +116,7 @@ public class Entry {
 
     //Start search
     AlgorithmSchedule schedule = scheduleLoader.load();
+    observer.setFinished();
 
     double endTime = System.nanoTime();
     double timeElapsed = endTime - startTime;

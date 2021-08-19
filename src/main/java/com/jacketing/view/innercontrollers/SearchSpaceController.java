@@ -1,7 +1,12 @@
 package com.jacketing.view.innercontrollers;
 
+import com.jacketing.algorithm.impl.structures.ProcessorTaskList;
+import com.jacketing.algorithm.impl.structures.Task;
+import com.jacketing.algorithm.interfaces.structures.Schedule;
 import com.jacketing.common.analysis.AlgorithmObserver;
 import com.jacketing.parsing.impl.structures.EnumeratedAdjacencyList;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import javafx.scene.layout.StackPane;
@@ -16,25 +21,32 @@ public class SearchSpaceController {
 
   private AlgorithmObserver observer;
   private Graph graphData;
+  private Schedule schedule;
+  private List<String> nodes = new ArrayList<>();
+  private List<String> edges = new ArrayList<>();
 
   public SearchSpaceController(AlgorithmObserver observer, StackPane pane) {
     System.setProperty("org.graphstream.ui", "javafx");
     Graph graph = new SingleGraph("Input Display");
     this.graphData = graph;
 
-    EnumeratedAdjacencyList list = observer.getGraph().getAdjacencyList();
+    EnumeratedAdjacencyList adjacencyList = observer.getGraph().getAdjacencyList();
 
-    for (int nodeId : list.getNodeIds()) {
-      graph.addNode(nodeId + "");
+    for (int nodeId : adjacencyList.getNodeIds()) {
+      String id = nodeId + "";
+      nodes.add(id);
+      graph.addNode(id);
     }
 
-    for (Map.Entry<Integer, List<Integer>> entry : list
+    for (Map.Entry<Integer, List<Integer>> entry : adjacencyList
       .getInAdjacencyList()
       .entrySet()) {
       String key = Integer.toString(entry.getKey());
       for (int value : entry.getValue()) {
         String node = Integer.toString(value);
-        graph.addEdge(key + node, key, node);
+        String id = key + node;
+        edges.add(id);
+        graph.addEdge(id, key, node);
       }
     }
 
@@ -45,7 +57,7 @@ public class SearchSpaceController {
 
     graph.setAttribute(
       "ui.stylesheet",
-      "graph { fill-color: #2f2d2e; } node { fill-color: #00aeef; size: 30px; } edge { size: 3px; }"
+      "graph { fill-color: #2f2d2e; } node { fill-color: #00aeef; size: 30px; } node.visited { fill-color: #8b5fbf; } edge { size: 2px; } edge.done { fill-color: green; }"
     );
     FxViewer view = new FxViewer(
       graph,
@@ -65,7 +77,7 @@ public class SearchSpaceController {
         while (true) {
           pollGraph();
           try {
-            Thread.sleep(1000);
+            Thread.sleep(200);
           } catch (InterruptedException e) {
             e.printStackTrace();
           }
@@ -75,7 +87,43 @@ public class SearchSpaceController {
       .start();
   }
 
-  public void pollGraph() {
-    if (observer.hasGraph()) {}
+  private void pollGraph() {
+    Schedule partial = observer.getPartialSchedule();
+    if (partial != null && !observer.isFinished()) {
+        List<Integer> visited = observer.getVisited();
+
+        for (String node : nodes) {
+          graphData.getNode(node).removeAttribute("ui.class");
+        }
+
+        for (String edge : edges) {
+          graphData.getEdge(edge).removeAttribute("ui.class");
+        }
+
+        EnumeratedAdjacencyList adjacencyList = observer.getGraph().getAdjacencyList();
+
+        for (int node1 : visited) {
+          List<Integer> entry = adjacencyList.getInAdjacencyList().get(node1);
+          if (entry != null) {
+            for (int node2: visited) {
+              if (entry.contains(node2)) {
+                graphData.getEdge(node1 + "" + node2).setAttribute("ui.class", "done");
+              }
+            }
+          }
+
+          graphData.getNode(node1 + "").setAttribute("ui.class", "visited");
+        }
+    }
+
+    if (observer.isFinished()) {
+      for (String edge : edges) {
+        graphData.getEdge(edge).setAttribute("ui.class", "done");
+      }
+
+      for (String node : nodes) {
+        graphData.getNode(node).setAttribute("ui.class", "visited");
+      }
+    };
   }
 }

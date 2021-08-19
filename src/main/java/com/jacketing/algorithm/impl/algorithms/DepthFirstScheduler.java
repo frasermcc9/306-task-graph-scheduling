@@ -51,6 +51,7 @@ public class DepthFirstScheduler extends AbstractSchedulingAlgorithm {
 
     ListScheduler scheduler = new ListScheduler(graph, context, scheduleFactory);
     new SchedulingAlgorithmContextImpl(scheduler);
+
     Schedule estimateSchedule = scheduler.scheduleOld();
     upperBound = estimateSchedule.getDuration();
     bestSchedule = estimateSchedule;
@@ -151,7 +152,8 @@ public class DepthFirstScheduler extends AbstractSchedulingAlgorithm {
           }
         }
 
-        updateObserver(o -> o.incrementCheckedSchedules());
+        updateObserver(o -> o.updateVisited(visited));
+        updateObserver(o -> o.incrementCheckedSchedules(partialSchedule));
         recurseDFS(nextState, nextFreeNodes, nextVisited);
 
         nextState.revert();
