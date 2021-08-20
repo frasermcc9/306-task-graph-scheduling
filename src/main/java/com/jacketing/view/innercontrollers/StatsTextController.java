@@ -49,6 +49,7 @@ public class StatsTextController {
             e.printStackTrace();
           }
         }
+        pollStats();
       }
     )
       .start();
