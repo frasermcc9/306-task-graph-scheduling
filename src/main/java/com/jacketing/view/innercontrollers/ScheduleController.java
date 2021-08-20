@@ -7,11 +7,11 @@ import com.jacketing.algorithm.interfaces.structures.Schedule;
 import com.jacketing.common.analysis.AlgorithmObserver;
 import com.jacketing.io.cli.AlgorithmContext;
 import com.jacketing.io.cli.ProgramContext;
-import javafx.application.Platform;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.chart.NumberAxis;
@@ -46,7 +46,15 @@ public class ScheduleController {
     bestScheduleGraph.setTitle("Current Best Schedule");
     bestScheduleGraph.setAnimated(false);
     axis.setAutoRanging(false);
-    axis.setLowerBound(0);
+    axis.setUpperBound(0);
+    axis.setTickLabelFormatter(
+      new NumberAxis.DefaultFormatter(axis) {
+        @Override
+        public String toString(Number value) {
+          return String.format("%d", -value.intValue());
+        }
+      }
+    );
     scheduleListView.setSpacing(1);
 
     new Thread(
@@ -60,17 +68,20 @@ public class ScheduleController {
           }
         }
       }
-    ).start();
+    )
+      .start();
   }
 
   private void pollSchedule() {
     Schedule schedule = observer.getCurrentBestSchedule();
     if (schedule != null) {
       if (!scheduleList.contains(schedule)) {
-        Platform.runLater(() -> {
-          addNewSchedule(schedule);
-          plotSchedule(schedule.getProcessorMap());
-        });
+        Platform.runLater(
+          () -> {
+            addNewSchedule(schedule);
+            plotSchedule(schedule.getProcessorMap());
+          }
+        );
       }
     }
   }
@@ -78,15 +89,21 @@ public class ScheduleController {
   private void addNewSchedule(Schedule schedule) {
     scheduleList.add(schedule);
 
-    String id = (scheduleList.size()-1) + "";
+    String id = (scheduleList.size() - 1) + "";
     String text = "Schedule " + id + " - Time: " + schedule.getDuration();
     Button button = new Button(text);
     buttons.add(button);
     button.setId(id);
-    button.setOnAction((event -> {
-      highlightButton(button);
-      plotSchedule(scheduleList.get(Integer.parseInt(button.getId())).getProcessorMap());
-    }));
+    button.setOnAction(
+      (
+        event -> {
+          highlightButton(button);
+          plotSchedule(
+            scheduleList.get(Integer.parseInt(button.getId())).getProcessorMap()
+          );
+        }
+      )
+    );
     highlightButton(button);
     button.getStyleClass().add("history-button");
     button.setPrefHeight(Double.MAX_VALUE);
@@ -116,18 +133,20 @@ public class ScheduleController {
       }
     }
 
-    axis.setUpperBound(upperBound);
+    axis.setLowerBound(-upperBound);
 
     int processorIndex = 0;
     for (ProcessorTaskList taskList : processorMap.values()) {
-      if (taskList.size() == 0) { break; }
+      if (taskList.size() == 0) {
+        break;
+      }
       XYChart.Series<String, Integer> procSeries = new XYChart.Series();
 
       //delayed start
       if (taskList.get(0).getStartTime() != 0) {
         XYChart.Data<String, Integer> bar = new XYChart.Data(
           Integer.toString(processorIndex),
-          taskList.get(0).getStartTime()
+          -taskList.get(0).getStartTime()
         );
         bar
           .nodeProperty()
@@ -137,7 +156,7 @@ public class ScheduleController {
       // then add the first task
       XYChart.Data<String, Integer> firstBar = new XYChart.Data(
         Integer.toString(processorIndex),
-        taskList.get(0).getDuration()
+        -taskList.get(0).getDuration()
       );
       firstBar
         .nodeProperty()
@@ -150,11 +169,11 @@ public class ScheduleController {
       for (int i = 1; i < taskList.size(); i++) {
         // check for delays (if this task starts later than the previous end time)
         if (
-          taskList.get(i - 1).getEndTime() != taskList.get(i).getStartTime()
+          -taskList.get(i - 1).getEndTime() != -taskList.get(i).getStartTime()
         ) {
           XYChart.Data<String, Integer> bar = new XYChart.Data(
             Integer.toString(processorIndex),
-            taskList.get(i).getStartTime() - taskList.get(i - 1).getEndTime()
+            -taskList.get(i).getStartTime() - -taskList.get(i - 1).getEndTime()
           );
           bar
             .nodeProperty()
@@ -164,7 +183,7 @@ public class ScheduleController {
         // now just add the current task
         XYChart.Data<String, Integer> bar = new XYChart.Data(
           Integer.toString(processorIndex),
-          taskList.get(i).getDuration()
+          -taskList.get(i).getDuration()
         );
         bar
           .nodeProperty()
