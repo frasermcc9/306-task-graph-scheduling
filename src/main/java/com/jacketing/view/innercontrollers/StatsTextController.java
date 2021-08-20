@@ -2,11 +2,10 @@ package com.jacketing.view.innercontrollers;
 
 import com.jacketing.algorithm.interfaces.structures.Schedule;
 import com.jacketing.common.analysis.AlgorithmObserver;
-import javafx.scene.text.Text;
-
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Date;
+import javafx.scene.text.Text;
 
 public class StatsTextController {
 
@@ -40,17 +39,19 @@ public class StatsTextController {
     this.algorithm = algorithm;
     this.time = time;
     this.inputFile = inputFile;
-
-    new Thread(() -> {
-      while (true) {
-        pollStats();
-        try {
-          Thread.sleep(1000);
-        } catch (InterruptedException e) {
-          e.printStackTrace();
+    new Thread(
+      () -> {
+        while (!observer.isFinished()) {
+          pollStats();
+          try {
+            Thread.sleep(1000);
+          } catch (InterruptedException e) {
+            e.printStackTrace();
+          }
         }
       }
-    }).start();
+    )
+      .start();
   }
 
   private void pollStats() {
@@ -58,16 +59,24 @@ public class StatsTextController {
     duration.setText("Duration: " + durationObj.getSeconds() + "s");
     time.setText(new Date().toString());
 
-    schedulesChecked.setText("Schedules Checked: " + observer.getCheckedSchedules());
-    improvements.setText("Improvements Made: " + observer.getDuplicateSchedules());
-    schedulesCulled.setText("Schedules Culled: " + observer.getCulledSchedules());
-    duplicatesRemoved.setText("Duplicates Removed: " + observer.getDuplicateSchedules());
+    schedulesChecked.setText(
+      "Schedules Checked: " + observer.getCheckedSchedules()
+    );
+    improvements.setText(
+      "Improvements Made: " + observer.getDuplicateSchedules()
+    );
+    schedulesCulled.setText(
+      "Schedules Culled: " + observer.getCulledSchedules()
+    );
+    duplicatesRemoved.setText(
+      "Duplicates Removed: " + observer.getDuplicateSchedules()
+    );
 
     Schedule current = observer.getCurrentBestSchedule();
     if (current != null) {
-      currentBestTime.setText("Current Best Time: " + observer.getCurrentBestSchedule().getDuration());
+      currentBestTime.setText(
+        "Current Best Time: " + observer.getCurrentBestSchedule().getDuration()
+      );
     }
   }
-
-
 }
