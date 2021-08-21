@@ -63,6 +63,7 @@ Building locally requires Oracle Java 8
 3. Run com.jacketing.Entry
 
 <h3>Wiki</h3>
+[Click Here](https://github.com/SoftEng306-2021/project-1-project-1-team-17/wiki)
 
 
 
