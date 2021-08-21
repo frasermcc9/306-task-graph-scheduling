@@ -13,6 +13,7 @@
 
 package com.jacketing.parsing.impl.structures;
 
+@Deprecated
 public class Dependent {
 
   private final int transferTime;

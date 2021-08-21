@@ -19,8 +19,10 @@ import static org.mockito.Mockito.when;
 
 import com.jacketing.TestUtil;
 import com.jacketing.TestUtil.GraphResult;
-import com.jacketing.algorithm.interfaces.SchedulingAlgorithmStrategy;
-import com.jacketing.algorithm.interfaces.util.ScheduleFactory;
+import com.jacketing.algorithm.algorithms.SchedulingAlgorithmStrategy;
+import com.jacketing.algorithm.algorithms.astar.AStar;
+import com.jacketing.algorithm.algorithms.common.AlgorithmSchedule;
+import com.jacketing.algorithm.structures.ScheduleFactory;
 import com.jacketing.io.cli.ProgramContext;
 import java.io.IOException;
 import java.util.List;

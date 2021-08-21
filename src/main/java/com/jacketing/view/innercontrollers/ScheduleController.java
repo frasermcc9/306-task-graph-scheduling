@@ -1,9 +1,9 @@
 package com.jacketing.view.innercontrollers;
 
-import com.jacketing.algorithm.impl.structures.ProcessorTaskList;
-import com.jacketing.algorithm.impl.structures.ScheduleImpl;
-import com.jacketing.algorithm.impl.structures.Task;
-import com.jacketing.algorithm.interfaces.structures.Schedule;
+import com.jacketing.algorithm.structures.ProcessorTaskList;
+import com.jacketing.algorithm.structures.ScheduleV1;
+import com.jacketing.algorithm.structures.ScheduleV1Impl;
+import com.jacketing.algorithm.structures.Task;
 import com.jacketing.io.cli.AlgorithmContext;
 import com.jacketing.io.cli.ProgramContext;
 import java.util.ArrayList;
@@ -39,7 +39,7 @@ public class ScheduleController {
 
     // create dummy schedule
     Map<Integer, ProcessorTaskList> processorMap = new HashMap();
-    Schedule schedule = new ScheduleImpl(context, processorMap, null);
+    ScheduleV1 schedule = new ScheduleV1Impl(context, processorMap, null);
     ProcessorTaskList core1List = new ProcessorTaskList();
     ProcessorTaskList core2List = new ProcessorTaskList();
     ProcessorTaskList core3List = new ProcessorTaskList();

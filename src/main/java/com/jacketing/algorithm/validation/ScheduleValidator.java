@@ -13,12 +13,12 @@
 
 package com.jacketing.algorithm.validation;
 
-import com.jacketing.algorithm.interfaces.structures.Schedule;
+import com.jacketing.algorithm.structures.ScheduleV1;
 import com.jacketing.parsing.impl.structures.Graph;
 
 public interface ScheduleValidator {
   boolean validateSchedule(
-    Schedule schedule,
+    ScheduleV1 schedule,
     Graph graph,
     int numberOfProcessors
   );

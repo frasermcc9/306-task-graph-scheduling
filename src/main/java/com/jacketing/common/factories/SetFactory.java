@@ -16,6 +16,6 @@ package com.jacketing.common.factories;
 import java.util.Set;
 
 @FunctionalInterface
-public interface SetFactory {
-  <T> Set<T> create();
+public interface SetFactory<T> {
+  Set<T> create();
 }

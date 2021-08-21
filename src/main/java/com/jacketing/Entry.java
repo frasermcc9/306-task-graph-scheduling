@@ -16,12 +16,14 @@ package com.jacketing;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.ParameterException;
 import com.jacketing.algorithm.AlgorithmLoader;
-import com.jacketing.algorithm.impl.X.AlgorithmSchedule;
-import com.jacketing.algorithm.impl.X.IterativeDfs;
-import com.jacketing.algorithm.impl.X.ParallelAStar;
-import com.jacketing.algorithm.impl.X.SmartAlgorithm;
+import com.jacketing.algorithm.algorithms.astar.ParallelAStar;
+import com.jacketing.algorithm.algorithms.common.AlgorithmSchedule;
+import com.jacketing.algorithm.algorithms.dfs.IterativeDfs;
+import com.jacketing.algorithm.algorithms.smart.SmartAlgorithm;
 import com.jacketing.common.Loader;
 import com.jacketing.common.analysis.AlgorithmObserver;
+import com.jacketing.common.log.Log;
+import com.jacketing.common.log.LogLevel;
 import com.jacketing.io.cli.ApplicationContext;
 import com.jacketing.io.cli.ProgramContext;
 import com.jacketing.io.output.OutputLoader;
@@ -50,6 +52,7 @@ public class Entry {
       programContext.validate();
 
       AnsiConsole.systemInstall();
+      Log.loggingLevel(LogLevel.DEBUG);
 
       if (programContext.isVisualized()) {
         observer = new AlgorithmObserver();
@@ -59,18 +62,33 @@ public class Entry {
 
         new Thread(
           () -> {
-            beginSearch(programContext, CommandLineOutput::new);
+            handledSearch(programContext, CommandLineOutput::new);
           }
         )
           .start();
 
         ApplicationEntry.launch(observer, os);
       } else {
-        beginSearch(programContext, CommandLineOutput::new);
+        handledSearch(programContext, CommandLineOutput::new);
       }
     } catch (ParameterException e) {
       System.out.println(e.getMessage());
       System.out.println(programContext.helpText());
+    }
+  }
+
+  public static void handledSearch(
+    ApplicationContext context,
+    CommandOutputFactory commandOutputFactory
+  ) {
+    try {
+      beginSearch(context, commandOutputFactory);
+    } catch (Exception e) {
+      Log.error(
+        "Jacketing Studio Encountered an unrecoverable error. " +
+        "Please check the inputs and try again."
+      );
+      System.out.println(e.getMessage());
     }
   }
 
@@ -109,6 +127,16 @@ public class Entry {
 
     //Start search
     AlgorithmSchedule schedule = scheduleLoader.load();
+
+    int duration = schedule.getDuration();
+    int optimalLength = graph.getOptimalLength();
+
+    if (context.failSuboptimal() && optimalLength != -1) {
+      if (duration != optimalLength) {
+        Log.error("Expected length " + optimalLength + ", got " + duration);
+        System.exit(1);
+      }
+    }
 
     double endTime = System.nanoTime();
     double timeElapsed = endTime - startTime;

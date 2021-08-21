@@ -1,6 +1,6 @@
 package com.jacketing.io.output.commandOut;
 
-import com.jacketing.algorithm.impl.X.AlgorithmSchedule;
+import com.jacketing.algorithm.algorithms.common.AlgorithmSchedule;
 import com.jacketing.io.cli.ApplicationContext;
 
 public class CommandLineOutput implements CommandOutput {

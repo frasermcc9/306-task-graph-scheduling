@@ -16,6 +16,8 @@ package com.jacketing.io.cli;
 import com.jacketing.common.analysis.Observer;
 
 public interface ApplicationContext extends IOContext, AlgorithmContext {
+  boolean failSuboptimal();
+
   void validate() throws IllegalArgumentException;
 
   String helpText();

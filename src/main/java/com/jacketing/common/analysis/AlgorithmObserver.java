@@ -13,7 +13,7 @@
 
 package com.jacketing.common.analysis;
 
-import com.jacketing.algorithm.interfaces.structures.Schedule;
+import com.jacketing.algorithm.structures.ScheduleV1;
 import com.jacketing.parsing.impl.structures.Graph;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,7 +29,7 @@ public class AlgorithmObserver implements Observer {
   private final AtomicInteger culledScheduleCount = new AtomicInteger();
   private final AtomicInteger improvementsFoundCount = new AtomicInteger();
   private final AtomicInteger duplicateSchedules = new AtomicInteger();
-  private Schedule currentBestSchedule;
+  private ScheduleV1 currentBestSchedule;
   private Graph graph;
 
   @Override
@@ -44,7 +44,7 @@ public class AlgorithmObserver implements Observer {
   }
 
   @Override
-  public synchronized void updateBestSchedule(Schedule schedule) {
+  public synchronized void updateBestSchedule(ScheduleV1 schedule) {
     this.currentBestSchedule = schedule;
     improvementsFoundCount.getAndIncrement();
     update(AlgorithmEvent.BEST_UPDATE);
@@ -80,7 +80,7 @@ public class AlgorithmObserver implements Observer {
   }
 
   @Override
-  public Schedule getCurrentBestSchedule() {
+  public ScheduleV1 getCurrentBestSchedule() {
     return currentBestSchedule;
   }
 

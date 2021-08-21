@@ -21,6 +21,7 @@ import com.jacketing.parsing.impl.FileGraphParser;
 import java.io.Reader;
 import org.jetbrains.annotations.NotNull;
 
+@Deprecated
 public interface ParsingStrategy {
   static ParsingStrategy fromBuffer(
     @NotNull Parser parser,

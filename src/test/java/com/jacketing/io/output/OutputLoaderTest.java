@@ -17,7 +17,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.jacketing.TestUtil;
-import com.jacketing.algorithm.impl.X.AlgorithmSchedule;
+import com.jacketing.algorithm.algorithms.common.AlgorithmSchedule;
 import com.jacketing.common.Loader;
 import com.jacketing.io.cli.IOContext;
 import com.jacketing.io.cli.ProgramContext;

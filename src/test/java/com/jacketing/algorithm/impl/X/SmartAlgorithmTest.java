@@ -18,11 +18,15 @@ import static org.mockito.Mockito.*;
 
 import com.jacketing.TestUtil;
 import com.jacketing.TestUtil.GraphResult;
-import com.jacketing.algorithm.impl.algorithms.DepthFirstScheduler;
-import com.jacketing.algorithm.impl.algorithms.suboptimal.IndependentScheduler;
-import com.jacketing.algorithm.impl.algorithms.suboptimal.ListScheduler;
-import com.jacketing.algorithm.interfaces.SchedulingAlgorithmStrategy;
-import com.jacketing.algorithm.interfaces.util.ScheduleFactory;
+import com.jacketing.algorithm.algorithms.DepthFirstScheduler;
+import com.jacketing.algorithm.algorithms.SchedulingAlgorithmStrategy;
+import com.jacketing.algorithm.algorithms.astar.AStar;
+import com.jacketing.algorithm.algorithms.common.AlgorithmSchedule;
+import com.jacketing.algorithm.algorithms.smart.AlgorithmSource;
+import com.jacketing.algorithm.algorithms.smart.SmartAlgorithm;
+import com.jacketing.algorithm.algorithms.suboptimal.IndependentScheduler;
+import com.jacketing.algorithm.algorithms.suboptimal.ListScheduler;
+import com.jacketing.algorithm.structures.ScheduleFactory;
 import com.jacketing.io.cli.ProgramContext;
 import com.jacketing.parsing.impl.structures.Graph;
 import java.io.IOException;
@@ -60,7 +64,7 @@ public class SmartAlgorithmTest {
     );
 
     verify(algorithmSource, times(1)).getIndependent();
-    verify(algorithmSource, times(1)).getDfs();
+    verify(algorithmSource, times(1)).getAStar();
   }
 
   @Test
@@ -99,27 +103,27 @@ public class SmartAlgorithmTest {
       )
     );
 
-    verify(algorithmSource, times(1)).getDfs();
+    verify(algorithmSource, times(1)).getAStar();
     verify(algorithmSource, times(1)).getList();
   }
 
-  @Test
-  public void testIndependentProducesCorrectResult() {
-    Graph graph = TestUtil.graphVariantIndependent();
-
-    ProgramContext programContext = mock(ProgramContext.class);
-    when(programContext.getProcessorsToScheduleOn()).thenReturn(4);
-
-    SchedulingAlgorithmStrategy schedulingAlgorithmStrategy = SchedulingAlgorithmStrategy.create(
-      new SmartAlgorithm(
-        graph,
-        programContext,
-        ScheduleFactory.create(),
-        new AlgorithmSource() {}
-      )
-    );
-    schedulingAlgorithmStrategy.schedule();
-  }
+  //  @Test
+  //  public void testIndependentProducesCorrectResult() {
+  //    Graph graph = TestUtil.graphVariantIndependent();
+  //
+  //    ProgramContext programContext = mock(ProgramContext.class);
+  //    when(programContext.getProcessorsToScheduleOn()).thenReturn(4);
+  //
+  //    SchedulingAlgorithmStrategy schedulingAlgorithmStrategy = SchedulingAlgorithmStrategy.create(
+  //      new SmartAlgorithm(
+  //        graph,
+  //        programContext,
+  //        ScheduleFactory.create(),
+  //        new AlgorithmSource() {}
+  //      )
+  //    );
+  //    schedulingAlgorithmStrategy.schedule();
+  //  }
 
   @Test
   public void testGraphSuiteTwoCores() throws IOException {
@@ -167,5 +171,23 @@ public class SmartAlgorithmTest {
 
       assertEquals(expectedLength, optimalLength);
     }
+  }
+
+  @Test
+  public void testEmptyGraph() {
+    Graph graph = TestUtil.emptyGraph();
+
+    ProgramContext programContext = mock(ProgramContext.class);
+    when(programContext.getProcessorsToScheduleOn()).thenReturn(4);
+
+    SchedulingAlgorithmStrategy schedulingAlgorithmStrategy = SchedulingAlgorithmStrategy.create(
+      new SmartAlgorithm(graph, programContext, ScheduleFactory.create())
+    );
+
+    AlgorithmSchedule schedule = schedulingAlgorithmStrategy.schedule();
+    int optimalLength = schedule.getDuration();
+    int expectedLength = 0;
+
+    assertEquals(expectedLength, optimalLength);
   }
 }

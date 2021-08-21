@@ -13,12 +13,12 @@
 
 package com.jacketing.common.analysis;
 
-import com.jacketing.algorithm.interfaces.structures.Schedule;
+import com.jacketing.algorithm.structures.ScheduleV1;
 
 public interface ObserverData {
   int getDuplicateSchedules();
 
-  Schedule getCurrentBestSchedule();
+  ScheduleV1 getCurrentBestSchedule();
 
   int getCheckedSchedules();
 

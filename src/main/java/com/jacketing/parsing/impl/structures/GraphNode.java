@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
 
+@Deprecated
 public class GraphNode {
 
   private final int processTime;

@@ -34,6 +34,7 @@
     "*.java": "prettier --write"
   },
   "dependencies": {
-    "@frasermcc/overcord": "^0.4.7"
+    "@frasermcc/overcord": "^0.4.7",
+    "colors": "^1.4.0"
   }
 }

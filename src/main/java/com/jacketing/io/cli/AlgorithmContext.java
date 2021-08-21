@@ -18,6 +18,8 @@ import com.jacketing.common.analysis.UpdatesFromAlgorithm;
 public interface AlgorithmContext {
   int getProcessorsToScheduleOn();
 
+  boolean isDisablePog();
+
   int getCoresToCalculateWith();
 
   UpdatesFromAlgorithm getObserver();

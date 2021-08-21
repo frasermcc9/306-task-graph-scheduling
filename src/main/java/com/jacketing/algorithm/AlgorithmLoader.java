@@ -13,9 +13,9 @@
 
 package com.jacketing.algorithm;
 
-import com.jacketing.algorithm.impl.X.AlgorithmSchedule;
-import com.jacketing.algorithm.interfaces.SchedulingAlgorithmStrategy;
-import com.jacketing.algorithm.interfaces.util.ScheduleFactory;
+import com.jacketing.algorithm.algorithms.SchedulingAlgorithmStrategy;
+import com.jacketing.algorithm.algorithms.common.AlgorithmSchedule;
+import com.jacketing.algorithm.structures.ScheduleFactory;
 import com.jacketing.common.Loader;
 import com.jacketing.io.cli.AlgorithmContext;
 import com.jacketing.parsing.impl.structures.Graph;
@@ -45,6 +45,11 @@ public class AlgorithmLoader implements Loader<AlgorithmSchedule> {
     return new AlgorithmLoader(graph, context, algorithmFactory);
   }
 
+  /**
+   * Run the scheduling algorithm
+   *
+   * @return the optimal schedule
+   */
   public AlgorithmSchedule load() {
     SchedulingAlgorithmStrategy schedulingAlgorithmStrategy = algorithmFactory
       .createAlgorithm(graph, context, ScheduleFactory.create())

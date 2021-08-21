@@ -19,6 +19,7 @@ import com.jacketing.parsing.impl.structures.Dependent;
 import com.jacketing.parsing.impl.structures.GraphNode;
 import java.util.List;
 
+@Deprecated
 public interface GraphRepresentation {
   static AdjacencyList withAdjacencyList(Graph g) {
     return new AdjacencyList(g);

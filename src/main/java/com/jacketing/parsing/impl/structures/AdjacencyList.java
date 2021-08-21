@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Deprecated
 public class AdjacencyList implements GraphRepresentation {
 
   private final Map<GraphNode, List<Dependent>> adjacencyList = new HashMap<>();
