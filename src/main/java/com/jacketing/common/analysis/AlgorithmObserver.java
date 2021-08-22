@@ -29,8 +29,13 @@ public class AlgorithmObserver implements Observer {
   private final AtomicInteger culledScheduleCount = new AtomicInteger();
   private final AtomicInteger improvementsFoundCount = new AtomicInteger();
   private final AtomicInteger duplicateSchedules = new AtomicInteger();
+
+  private ScheduleV1 partialSchedule;
   private ScheduleV1 currentBestSchedule;
+
   private Graph graph;
+  private boolean finished = false;
+  private List<Integer> visited;
 
   @Override
   public void on(AlgorithmEvent event, AlgorithmUpdateHandler updateHandler) {
@@ -51,7 +56,8 @@ public class AlgorithmObserver implements Observer {
   }
 
   @Override
-  public void incrementCheckedSchedules() {
+  public void incrementCheckedSchedules(ScheduleV1 partial) {
+    this.partialSchedule = partial;
     totalSchedulesChecked.getAndIncrement();
     update(AlgorithmEvent.SCHEDULE_CHECK);
   }
@@ -72,6 +78,28 @@ public class AlgorithmObserver implements Observer {
   public void incrementDuplicateSchedules() {
     duplicateSchedules.getAndIncrement();
     update(AlgorithmEvent.DUPLICATE_SCHEDULE);
+  }
+
+  @Override
+  public void setFinished() {
+    finished = true;
+  }
+
+  @Override
+  public void updateVisited(List<Integer> list) {
+    visited = list;
+  }
+
+  public List<Integer> getVisited() {
+    return visited;
+  }
+
+  public boolean isFinished() {
+    return finished;
+  }
+
+  public ScheduleV1 getPartialSchedule() {
+    return partialSchedule;
   }
 
   @Override
@@ -104,12 +132,13 @@ public class AlgorithmObserver implements Observer {
     return improvementsFoundCount.get();
   }
 
-  public void setGraph(Graph graph) {
-    this.graph = graph;
-  }
-
   public Graph getGraph() {
     return graph;
+  }
+
+  public void setGraph(Graph graph) {
+    this.graph = graph;
+    update(AlgorithmEvent.GRAPH_LOADED);
   }
 
   public boolean hasGraph() {

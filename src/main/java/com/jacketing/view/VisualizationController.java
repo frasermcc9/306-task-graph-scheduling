@@ -1,6 +1,7 @@
 package com.jacketing.view;
 
 import com.jacketing.common.analysis.AlgorithmObserver;
+import com.jacketing.io.cli.AlgorithmContext;
 import com.jacketing.io.cli.ApplicationContext;
 import com.jacketing.view.innercontrollers.*;
 import java.io.ByteArrayOutputStream;
@@ -28,7 +29,7 @@ public class VisualizationController {
   private LineChart<String, Long> ramGraph;
 
   @FXML
-  private Text duration, schedulesChecked, improvements, peakRam, peakCpu, currentBestTime, numberCores, numberProcessors, algorithm, time, inputFile;
+  private Text duration, schedulesChecked, schedulesCulled, duplicatesRemoved, improvements, currentBestTime, numberCores, numberProcessors, algorithm, time, inputFile;
 
   @FXML
   private Button stop;
@@ -42,16 +43,20 @@ public class VisualizationController {
   @FXML
   private StackPane searchSpaceStackPane;
 
-  private AlgorithmObserver observer;
-
   private PrintStream ps;
   private ApplicationContext context;
-
+  private Thread algorithmThread;
+  private AlgorithmObserver observer;
   private LogsController logsController;
+  private SearchSpaceController searchSpaceController;
+  private StatsTextController statsTextController;
+  private boolean running = true;
 
-  public void setAlgorithmObserver(AlgorithmObserver observer) {
+  public void setAlgorithmFields(AlgorithmObserver observer, Thread thread, ApplicationContext context) {
     this.observer = observer;
-    new SearchSpaceController(observer, searchSpaceStackPane);
+    this.context = context;
+    this.algorithmThread = thread;
+    start();
   }
 
   @FXML
@@ -61,12 +66,18 @@ public class VisualizationController {
     System.setOut(ps);
     new CpuGraphController(threadGraph, threadAxis);
     new RamGraphController(ramGraph);
-    new StatsTextController(
+  }
+
+  private void start() {
+    searchSpaceController = new SearchSpaceController(observer, searchSpaceStackPane);
+    new ScheduleController(observer, bestScheduleGraph, scheduleList, scheduleAxis);
+    statsTextController = new StatsTextController(
+      observer,
       duration,
       schedulesChecked,
       improvements,
-      peakRam,
-      peakCpu,
+      schedulesCulled,
+      duplicatesRemoved,
       currentBestTime,
       numberCores,
       numberProcessors,
@@ -74,6 +85,33 @@ public class VisualizationController {
       time,
       inputFile
     );
-    new ScheduleController(bestScheduleGraph, scheduleList, scheduleAxis);
+
+    inputFile.setText(context.getInputFile());
+    numberCores.setText("Number of Threads: " + context.getCoresToCalculateWith());
+    numberProcessors.setText("Number of Processors: " + context.getProcessorsToScheduleOn());
+    algorithm.setText("Algorithm: DFS");
+
+    String resumeColour = "-fx-background-color: #00aeef;";
+    String stopColour = "-fx-background-color: #e84855;";
+
+    stop.setOnAction((event) -> {
+      if (running) {
+        algorithmThread.suspend();
+        statsTextController.stop();
+        searchSpaceController.stop();
+        stop.setStyle(resumeColour);
+        stop.setText("Resume");
+      } else {
+        algorithmThread.resume();
+        statsTextController.resume();
+        searchSpaceController.resume();
+        stop.setStyle(stopColour);
+        stop.setText("Stop");
+      }
+
+      running = !running;
+    });
+
+    algorithmThread.start();
   }
 }

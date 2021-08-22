@@ -218,4 +218,9 @@ public class ScheduleV1Impl
     taskIdToTaskMap.remove(newTask.getId());
     inverseProcessorMap.remove(newTask);
   }
+
+  @Override
+  public Map<Integer, ProcessorTaskList> getProcessorMap() {
+    return this.processorMap;
+  }
 }

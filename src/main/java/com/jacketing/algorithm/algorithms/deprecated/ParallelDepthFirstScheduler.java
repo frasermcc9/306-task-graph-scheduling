@@ -1,4 +1,4 @@
-/*
+package com.jacketing.algorithm.algorithms.deprecated;/*
  * Copyright 2021 Team Jacketing
  * All Rights Reserved.
  *
@@ -11,16 +11,15 @@
  *
  */
 
-package com.jacketing.algorithm.algorithms.deprecated;
-
-import com.jacketing.algorithm.algorithms.SchedulingAlgorithmStrategy;
 import com.jacketing.algorithm.algorithms.common.AlgorithmSchedule;
 import com.jacketing.algorithm.algorithms.suboptimal.ListScheduler;
 import com.jacketing.algorithm.structures.ScheduleFactory;
 import com.jacketing.algorithm.structures.ScheduleV1;
 import com.jacketing.algorithm.structures.Task;
+import com.jacketing.algorithm.util.SchedulingAlgorithmContextImpl;
 import com.jacketing.algorithm.util.topological.TopologicalSort;
 import com.jacketing.algorithm.util.topological.TopologicalSortContext;
+import com.jacketing.common.log.Log;
 import com.jacketing.io.cli.AlgorithmContext;
 import com.jacketing.parsing.impl.structures.Graph;
 import java.util.ArrayList;
@@ -39,7 +38,7 @@ public class ParallelDepthFirstScheduler
   private final Set<String> equivalents = ConcurrentHashMap.newKeySet();
 
   private final AtomicInteger upperBound = new AtomicInteger();
-  private volatile AlgorithmSchedule bestSchedule;
+  private volatile ScheduleV1 bestSchedule;
 
   public ParallelDepthFirstScheduler(
     Graph graph,
@@ -51,11 +50,13 @@ public class ParallelDepthFirstScheduler
       new TopologicalSortContext<>(TopologicalSort.withLayers(graph));
     numberOfProcessors = context.getProcessorsToScheduleOn();
 
-    SchedulingAlgorithmStrategy algorithm = SchedulingAlgorithmStrategy.create(
-      new ListScheduler(graph, context, scheduleFactory)
+    ListScheduler scheduler = new ListScheduler(
+      graph,
+      context,
+      scheduleFactory
     );
-
-    AlgorithmSchedule estimateSchedule = algorithm.schedule();
+    new SchedulingAlgorithmContextImpl(scheduler);
+    ScheduleV1 estimateSchedule = scheduler.scheduleOld();
     upperBound.set(estimateSchedule.getDuration());
     bestSchedule = estimateSchedule;
   }
@@ -70,6 +71,7 @@ public class ParallelDepthFirstScheduler
 
     List<Integer> freeNodes = new ArrayList<>(topological.get(0));
     List<Integer> visited = new ArrayList<>();
+    updateObserver(o -> o.updateBestSchedule(bestSchedule));
 
     executor.invoke(
       new RecursiveDfs(scheduleFactory.newSchedule(context), freeNodes, visited)
@@ -100,6 +102,7 @@ public class ParallelDepthFirstScheduler
     ) {
       if (compute < upperBound.get()) {
         bestSchedule = schedule.clone();
+        updateObserver(o -> o.updateBestSchedule(bestSchedule));
         upperBound.getAndSet(compute);
       }
     }
@@ -110,6 +113,7 @@ public class ParallelDepthFirstScheduler
         int completeDuration = partialSchedule.getDuration();
         int intUpper = upperBound.get();
         if (bestSchedule == null || completeDuration < intUpper) {
+          Log.info("Found new best schedule of length " + bestSchedule.getDuration());
           updateBestSchedule(partialSchedule, completeDuration);
         }
       }
@@ -139,12 +143,14 @@ public class ParallelDepthFirstScheduler
           // cull this branch if it exceeds best schedule so far
           int intUpper = upperBound.get();
           if (bestSchedule != null && nextState.getDuration() >= intUpper) {
+            updateObserver(o -> o.incrementCulledSchedules());
             nextState.revert();
             continue;
           }
 
           String identifier = nextState.toString();
           if (equivalents.contains(identifier)) {
+            updateObserver(o -> o.incrementDuplicateSchedules());
             nextState.revert();
             continue;
           }
@@ -172,6 +178,8 @@ public class ParallelDepthFirstScheduler
             }
           }
 
+          updateObserver(o -> o.updateVisited(visited));
+          updateObserver(o -> o.incrementCheckedSchedules(partialSchedule));
           invokeAll(new RecursiveDfs(nextState, nextFreeNodes, nextVisited));
           nextState.revert();
         }

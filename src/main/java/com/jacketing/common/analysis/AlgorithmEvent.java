@@ -38,4 +38,8 @@ public enum AlgorithmEvent {
    * already searched.
    */
   DUPLICATE_SCHEDULE,
+  /**
+   * Fired when the graph is first loaded in memory
+   */
+  GRAPH_LOADED
 }

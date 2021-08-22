@@ -16,6 +16,7 @@ package com.jacketing.algorithm.structures;
 import com.jacketing.algorithm.algorithms.common.AlgorithmSchedule;
 import com.jacketing.common.FormattableTask;
 import java.util.List;
+import java.util.Map;
 
 public interface ScheduleV1 extends AlgorithmSchedule {
   void addTask(Task task, int processor);
@@ -45,6 +46,8 @@ public interface ScheduleV1 extends AlgorithmSchedule {
   String stringIdentifier();
 
   void revert();
+
+  Map<Integer, ProcessorTaskList> getProcessorMap();
 
   ScheduleV1 clone();
 }

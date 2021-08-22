@@ -18,6 +18,7 @@ import com.jacketing.algorithm.algorithms.common.cache.StaticCache;
 import com.jacketing.algorithm.algorithms.suboptimal.ListScheduler;
 import com.jacketing.algorithm.structures.ScheduleFactory;
 import com.jacketing.algorithm.structures.ScheduleV1;
+import com.jacketing.common.analysis.ObserverUpdater;
 import com.jacketing.common.analysis.UpdatesFromAlgorithm;
 import com.jacketing.io.cli.AlgorithmContext;
 import com.jacketing.parsing.impl.structures.Graph;
@@ -63,6 +64,12 @@ public abstract class AbstractSchedulingAlgorithm
     int position = staticCache.size();
     staticCache.add(cache);
     return position;
+  }
+
+  public void updateObserver(ObserverUpdater update) {
+    if (observer != null) {
+      update.updateObserver(observer);
+    }
   }
 
   @Override

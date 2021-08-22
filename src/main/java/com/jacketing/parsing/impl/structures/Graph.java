@@ -272,9 +272,7 @@ public class Graph {
         if (children.size() != 0) continue;
 
         this.getAdjacencyList().addEdge(node1, node2);
-        weightService.implementNewEdge(node1, node2, 0);
-
-        System.out.println("Found identical node");
+        weightService.implementNewEdge(node1, node2, Integer.MIN_VALUE);
       }
     }
   }

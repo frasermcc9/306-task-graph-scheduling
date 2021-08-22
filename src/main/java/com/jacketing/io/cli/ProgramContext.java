@@ -29,7 +29,7 @@ public class ProgramContext implements ApplicationContext {
   private List<String> input = new ArrayList<>();
 
   @Parameter(names = { "-p" }, validateWith = PositiveInteger.class)
-  private int coresToCalculateWith;
+  private int coresToCalculateWith = 1;
 
   @Parameter(names = { "-v" })
   private boolean visualize;
@@ -115,7 +115,7 @@ public class ProgramContext implements ApplicationContext {
 
     if (!input.get(0).endsWith(".dot")) {
       throw new ParameterException(
-        ".dot file expected as first parameter, received " + input.get(0)
+        ".dot file expected as first parameter, " + "received " + input.get(0)
       );
     }
 
@@ -123,7 +123,7 @@ public class ProgramContext implements ApplicationContext {
       Integer.parseInt(input.get(1));
     } catch (NumberFormatException e) {
       throw new ParameterException(
-        "Integer expected as second parameter, received " + input.get(1)
+        "Integer expected as second parameter, " + "received " + input.get(1)
       );
     }
   }
@@ -134,13 +134,14 @@ public class ProgramContext implements ApplicationContext {
     output += "java -jar scheduler.jar INPUT.dot P [OPTIONS]\n";
     output += "INPUT.dot  a task graph with integer weights in dot format\n";
     output +=
-      "P          number of processors to schedule the INPUT graph on\n";
+      "P          number of processors to schedule the INPUT graph " + "on\n";
     output += "\n";
     output += "Optional:\n";
     output += "-p N       use N cores for execution (default sequential)\n";
     output += "-v         visualize the search\n";
     output +=
-      "-o OUTPUT  output file is named OUTPUT (default INPUT-output.dot)\n";
+      "-o OUTPUT  output file is named OUTPUT (default INPUT-output" +
+      ".dot)\n";
 
     return output;
   }
@@ -159,9 +160,13 @@ public class ProgramContext implements ApplicationContext {
 
     String vizColor = visualize ? "green " : "red ";
 
-    String outName = outputName == null
-      ? getInputFile() + "-output"
-      : outputName;
+    String outName = outputName;
+    if (outName == null) {
+      String defaultName = getInputFile();
+      String[] split = defaultName.split("\\.");
+      outName = split[0] + "-output.dot";
+    }
+
     String outText = outputIsDisabled()
       ? "@|red Output will not be saved|@"
       : "Output will be saved to: @|yellow " + outName + "|@";
@@ -170,7 +175,8 @@ public class ProgramContext implements ApplicationContext {
       ansi()
         .render(
           "------------------------------------ \n" +
-          "Input file: " +
+          "Input " +
+          "file: " +
           "@|cyan " +
           getInputFile() +
           "|@" +

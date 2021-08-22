@@ -14,15 +14,20 @@
 package com.jacketing.common.analysis;
 
 import com.jacketing.algorithm.structures.ScheduleV1;
+import java.util.List;
 
 public interface UpdatesFromAlgorithm {
   void updateBestSchedule(ScheduleV1 schedule);
 
-  void incrementCheckedSchedules();
+  void incrementCheckedSchedules(ScheduleV1 partial);
 
   void incrementFullSchedulesChecked();
 
   void incrementCulledSchedules();
 
   void incrementDuplicateSchedules();
+
+  void setFinished();
+
+  void updateVisited(List<Integer> list);
 }

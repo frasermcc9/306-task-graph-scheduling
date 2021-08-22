@@ -55,3 +55,42 @@
 .chart-bar {
   -fx-bar-fill: #00aeef;
 }
+
+.history-button {
+  -fx-background-color: transparent;
+  -fx-background-insets: 0,1,2,3;
+  -fx-background-radius: 0,0,0,0;
+  -fx-border-color: black;
+  -fx-padding: 12 30 12 30;
+  -fx-text-fill: white;
+  -fx-font-size: 12px;
+}
+
+.history-button:hover {
+  -fx-background-color: #00aeef;
+  -fx-cursor: hand;
+}
+
+.highlighted {
+  -fx-background-color: #00aeef;
+}
+
+.scroll-bar:vertical .track,
+.scroll-bar:horizontal .track
+{
+  -fx-background-color: #2f2d2e;
+}
+
+.scroll-bar:vertical .thumb,
+.scroll-bar:horizontal .thumb
+{
+  -fx-background-color: #00aeef;
+}
+
+.scroll-bar {
+  -fx-background-color: #2f2d2e;
+}
+
+.scroll-pane > .corner {
+  -fx-background-color: black;
+}

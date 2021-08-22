@@ -16,9 +16,10 @@ package com.jacketing;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.ParameterException;
 import com.jacketing.algorithm.AlgorithmLoader;
+import com.jacketing.algorithm.algorithms.DepthFirstScheduler;
 import com.jacketing.algorithm.algorithms.astar.ParallelAStar;
 import com.jacketing.algorithm.algorithms.common.AlgorithmSchedule;
-import com.jacketing.algorithm.algorithms.dfs.IterativeDfs;
+import com.jacketing.algorithm.algorithms.deprecated.ParallelDepthFirstScheduler;
 import com.jacketing.algorithm.algorithms.smart.SmartAlgorithm;
 import com.jacketing.common.Loader;
 import com.jacketing.common.analysis.AlgorithmObserver;
@@ -60,14 +61,13 @@ public class Entry {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         System.setOut(new PrintStream(os));
 
-        new Thread(
+        Thread algorithmThread = new Thread(
           () -> {
             handledSearch(programContext, CommandLineOutput::new);
           }
-        )
-          .start();
+        );
 
-        ApplicationEntry.launch(observer, os);
+        ApplicationEntry.launch(observer, os, programContext, algorithmThread);
       } else {
         handledSearch(programContext, CommandLineOutput::new);
       }
@@ -88,7 +88,7 @@ public class Entry {
         "Jacketing Studio Encountered an unrecoverable error. " +
         "Please check the inputs and try again."
       );
-      System.out.println(e.getMessage());
+      e.printStackTrace();
     }
   }
 
@@ -113,8 +113,17 @@ public class Entry {
     Loader<AlgorithmSchedule> scheduleLoader;
 
     if (context.isVisualized()) {
-      scheduleLoader =
-        AlgorithmLoader.create(graph, context, IterativeDfs::new);
+      if (context.getCoresToCalculateWith() <= 1) {
+        scheduleLoader =
+          AlgorithmLoader.create(graph, context, DepthFirstScheduler::new);
+      } else {
+        scheduleLoader =
+          AlgorithmLoader.create(
+            graph,
+            context,
+            ParallelDepthFirstScheduler::new
+          );
+      }
     } else if (context.getCoresToCalculateWith() <= 1) {
       scheduleLoader =
         AlgorithmLoader.create(graph, context, SmartAlgorithm::new);
@@ -127,6 +136,9 @@ public class Entry {
 
     //Start search
     AlgorithmSchedule schedule = scheduleLoader.load();
+    if (observer != null) {
+      observer.setFinished();
+    }
 
     int duration = schedule.getDuration();
     int optimalLength = graph.getOptimalLength();

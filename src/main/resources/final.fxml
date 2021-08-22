@@ -92,7 +92,7 @@
                <children>
                   <StackedBarChart fx:id="bestScheduleGraph" categoryGap="0" legendVisible="false">
                     <xAxis>
-                      <CategoryAxis side="BOTTOM" />
+                      <CategoryAxis side="TOP" />
                     </xAxis>
                     <yAxis>
                       <NumberAxis fx:id="scheduleAxis" side="LEFT" />
@@ -108,7 +108,7 @@
          <children>
             <StackPane prefHeight="150.0" prefWidth="200.0" style="-fx-border-color: black; -fx-border-width: 0 5 0 0;" HBox.hgrow="ALWAYS">
                <children>
-                  <TextArea fx:id="logs" editable="false" prefHeight="200.0" prefWidth="200.0" style="-fx-back: black;">
+                  <TextArea fx:id="logs" wrapText="true" editable="false" prefHeight="200.0" prefWidth="200.0" style="-fx-back: black;">
                      <StackPane.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </StackPane.margin>
@@ -173,14 +173,13 @@
                <children>
                   <StackPane prefHeight="50.0" prefWidth="200.0" VBox.vgrow="NEVER">
                      <children>
-                        <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Stats" underline="true">
+                        <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Stats">
                            <font>
-                              <Font size="32.0" />
+                              <Font size="24.0" />
                            </font>
                         </Text>
                      </children>
                   </StackPane>
-                  <StackPane prefHeight="20.0" prefWidth="200.0" />
                   <StackPane alignment="CENTER_LEFT" prefHeight="20.0" prefWidth="200.0">
                      <children>
                         <Text fx:id="duration" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Duration:">
@@ -195,7 +194,7 @@
                   </StackPane>
                   <StackPane alignment="CENTER_LEFT" prefHeight="20.0" prefWidth="200.0">
                      <children>
-                        <Text fx:id="schedulesChecked" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Schedules Checked:">
+                        <Text fx:id="schedulesCulled" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Schedules Culled:">
                            <font>
                               <Font size="14.0" />
                            </font>
@@ -207,7 +206,7 @@
                   </StackPane>
                   <StackPane alignment="CENTER_LEFT" prefHeight="20.0" prefWidth="200.0">
                      <children>
-                        <Text fx:id="improvements" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Imrpovements Made:">
+                        <Text fx:id="improvements" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Improvements Made:">
                            <font>
                               <Font size="14.0" />
                            </font>
@@ -216,7 +215,7 @@
                   </StackPane>
                   <StackPane alignment="CENTER_LEFT" prefHeight="20.0" prefWidth="200.0">
                      <children>
-                        <Text fx:id="peakRam" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Peak RAM Usage:">
+                        <Text fx:id="duplicatesRemoved" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Duplicated Removed:">
                            <font>
                               <Font size="14.0" />
                            </font>
@@ -225,7 +224,7 @@
                   </StackPane>
                   <StackPane alignment="CENTER_LEFT" prefHeight="20.0" prefWidth="200.0">
                      <children>
-                        <Text fx:id="peakCpu" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Peak CPU Usage">
+                        <Text fx:id="schedulesChecked" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Schedules Checked:">
                            <font>
                               <Font size="14.0" />
                            </font>

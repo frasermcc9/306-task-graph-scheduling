@@ -18,8 +18,10 @@ import com.jacketing.algorithm.algorithms.suboptimal.ListScheduler;
 import com.jacketing.algorithm.structures.ScheduleFactory;
 import com.jacketing.algorithm.structures.ScheduleV1;
 import com.jacketing.algorithm.structures.Task;
+import com.jacketing.algorithm.util.SchedulingAlgorithmContextImpl;
 import com.jacketing.algorithm.util.topological.TopologicalSort;
 import com.jacketing.algorithm.util.topological.TopologicalSortContext;
+import com.jacketing.common.log.Log;
 import com.jacketing.io.cli.AlgorithmContext;
 import com.jacketing.parsing.impl.structures.Graph;
 import java.util.ArrayList;
@@ -34,7 +36,7 @@ public class DepthFirstScheduler extends AbstractSchedulingAlgorithm {
 
   private final Set<String> equivalents = new HashSet<>();
 
-  private AlgorithmSchedule bestSchedule;
+  private ScheduleV1 bestSchedule;
   private int upperBound;
 
   public DepthFirstScheduler(
@@ -47,12 +49,17 @@ public class DepthFirstScheduler extends AbstractSchedulingAlgorithm {
       new TopologicalSortContext<>(TopologicalSort.withLayers(graph));
     numberOfProcessors = context.getProcessorsToScheduleOn();
 
-    SchedulingAlgorithmStrategy algorithm = SchedulingAlgorithmStrategy.create(
-      new ListScheduler(graph, context, scheduleFactory)
+    ListScheduler scheduler = new ListScheduler(
+      graph,
+      context,
+      scheduleFactory
     );
-    AlgorithmSchedule estimateSchedule = algorithm.schedule();
+    new SchedulingAlgorithmContextImpl(scheduler);
+
+    ScheduleV1 estimateSchedule = scheduler.scheduleOld();
     upperBound = estimateSchedule.getDuration();
     bestSchedule = estimateSchedule;
+    updateObserver(o -> o.updateBestSchedule(estimateSchedule));
   }
 
   /**
@@ -73,8 +80,9 @@ public class DepthFirstScheduler extends AbstractSchedulingAlgorithm {
 
     List<Integer> freeNodes = new ArrayList<>(topological.get(0));
     List<Integer> visited = new ArrayList<>();
-    recurseDFS(scheduleFactory.newSchedule(context), freeNodes, visited);
 
+    updateObserver(o -> o.updateBestSchedule(bestSchedule));
+    recurseDFS(scheduleFactory.newSchedule(context), freeNodes, visited);
     return bestSchedule;
   }
 
@@ -87,6 +95,8 @@ public class DepthFirstScheduler extends AbstractSchedulingAlgorithm {
       int completeDuration = partialSchedule.getDuration();
       if (bestSchedule == null || completeDuration < upperBound) {
         bestSchedule = partialSchedule.clone();
+        Log.info("Found new best schedule of length " + bestSchedule.getDuration());
+        updateObserver(o -> o.updateBestSchedule(bestSchedule));
         upperBound = completeDuration;
       }
       return;
@@ -114,12 +124,14 @@ public class DepthFirstScheduler extends AbstractSchedulingAlgorithm {
 
         // cull this branch if it exceeds best schedule so far
         if (bestSchedule != null && nextState.getDuration() >= upperBound) {
+          updateObserver(o -> o.incrementCulledSchedules());
           nextState.revert();
           continue;
         }
 
         String identifier = nextState.toString();
         if (equivalents.contains(identifier)) {
+          updateObserver(o -> o.incrementDuplicateSchedules());
           nextState.revert();
           continue;
         }
@@ -147,6 +159,8 @@ public class DepthFirstScheduler extends AbstractSchedulingAlgorithm {
           }
         }
 
+        updateObserver(o -> o.updateVisited(visited));
+        updateObserver(o -> o.incrementCheckedSchedules(partialSchedule));
         recurseDFS(nextState, nextFreeNodes, nextVisited);
 
         nextState.revert();
