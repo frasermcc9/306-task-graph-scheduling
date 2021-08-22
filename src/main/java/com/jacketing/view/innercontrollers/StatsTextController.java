@@ -69,12 +69,14 @@ public class StatsTextController {
     Duration durationObj = Duration.between(then, Instant.now());
     duration.setText("Duration: " + durationObj.getSeconds() + "s");
     time.setText(new Date().toString());
+    int improvementsMade = observer.getImprovementsFound();
+    improvementsMade = improvementsMade == 0 ? 0 : improvementsMade - 1;
 
     schedulesChecked.setText(
       "Schedules Checked: " + observer.getCheckedSchedules()
     );
     improvements.setText(
-      "Improvements Made: " + observer.getImprovementsFound()
+      "Improvements Made: " + improvementsMade
     );
     schedulesCulled.setText(
       "Schedules Culled: " + observer.getCulledSchedules()
