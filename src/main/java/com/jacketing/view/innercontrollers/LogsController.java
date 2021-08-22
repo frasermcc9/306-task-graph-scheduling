@@ -19,9 +19,10 @@ public class LogsController extends OutputStream {
     Platform.runLater(() -> {
       logs.appendText(valueOf);
       String text = logs.getText();
+      logs.clear();
       text = text.replaceAll("\\[\\d\\dm", "");
       text = text.replaceAll("\\[m", "");
-      logs.setText(text);
+      logs.appendText(text);
     });
   }
 
