@@ -1,6 +1,6 @@
 package com.jacketing.view.innercontrollers;
 
-import com.jacketing.algorithm.interfaces.structures.Schedule;
+import com.jacketing.algorithm.structures.ScheduleV1;
 import com.jacketing.common.analysis.AlgorithmObserver;
 import java.time.Duration;
 import java.time.Instant;
@@ -73,7 +73,7 @@ public class StatsTextController {
       "Duplicates Removed: " + observer.getDuplicateSchedules()
     );
 
-    Schedule current = observer.getCurrentBestSchedule();
+    ScheduleV1 current = observer.getCurrentBestSchedule();
     if (current != null) {
       currentBestTime.setText(
         "Current Best Time: " + observer.getCurrentBestSchedule().getDuration()

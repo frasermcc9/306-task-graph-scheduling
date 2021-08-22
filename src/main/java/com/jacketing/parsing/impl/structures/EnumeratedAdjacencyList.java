@@ -42,6 +42,11 @@ public class EnumeratedAdjacencyList {
     this.enumeratedNodeMap = enumeratedNodeMap;
   }
 
+  public void addEdge(int from, int to) {
+    inAdjacencyList.get(to).add(from);
+    outAdjacencyList.get(from).add(to);
+  }
+
   public void createRepresentation() {
     introduceNodes();
     introduceEdges();

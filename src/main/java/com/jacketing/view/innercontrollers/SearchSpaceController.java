@@ -1,11 +1,8 @@
 package com.jacketing.view.innercontrollers;
 
-import com.jacketing.algorithm.impl.structures.ProcessorTaskList;
-import com.jacketing.algorithm.impl.structures.Task;
-import com.jacketing.algorithm.interfaces.structures.Schedule;
+import com.jacketing.algorithm.structures.ScheduleV1;
 import com.jacketing.common.analysis.AlgorithmObserver;
 import com.jacketing.parsing.impl.structures.EnumeratedAdjacencyList;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +18,7 @@ public class SearchSpaceController {
 
   private AlgorithmObserver observer;
   private Graph graphData;
-  private Schedule schedule;
+  private ScheduleV1 schedule;
   private List<String> nodes = new ArrayList<>();
   private List<String> edges = new ArrayList<>();
 
@@ -30,7 +27,9 @@ public class SearchSpaceController {
     Graph graph = new SingleGraph("Input Display");
     this.graphData = graph;
 
-    EnumeratedAdjacencyList adjacencyList = observer.getGraph().getAdjacencyList();
+    EnumeratedAdjacencyList adjacencyList = observer
+      .getGraph()
+      .getAdjacencyList();
 
     for (int nodeId : adjacencyList.getNodeIds()) {
       String id = nodeId + "";
@@ -88,32 +87,36 @@ public class SearchSpaceController {
   }
 
   private void pollGraph() {
-    Schedule partial = observer.getPartialSchedule();
+    ScheduleV1 partial = observer.getPartialSchedule();
     if (partial != null && !observer.isFinished()) {
-        List<Integer> visited = observer.getVisited();
+      List<Integer> visited = observer.getVisited();
 
-        for (String node : nodes) {
-          graphData.getNode(node).removeAttribute("ui.class");
-        }
+      for (String node : nodes) {
+        graphData.getNode(node).removeAttribute("ui.class");
+      }
 
-        for (String edge : edges) {
-          graphData.getEdge(edge).removeAttribute("ui.class");
-        }
+      for (String edge : edges) {
+        graphData.getEdge(edge).removeAttribute("ui.class");
+      }
 
-        EnumeratedAdjacencyList adjacencyList = observer.getGraph().getAdjacencyList();
+      EnumeratedAdjacencyList adjacencyList = observer
+        .getGraph()
+        .getAdjacencyList();
 
-        for (int node1 : visited) {
-          List<Integer> entry = adjacencyList.getInAdjacencyList().get(node1);
-          if (entry != null) {
-            for (int node2: visited) {
-              if (entry.contains(node2)) {
-                graphData.getEdge(node1 + "" + node2).setAttribute("ui.class", "done");
-              }
+      for (int node1 : visited) {
+        List<Integer> entry = adjacencyList.getInAdjacencyList().get(node1);
+        if (entry != null) {
+          for (int node2 : visited) {
+            if (entry.contains(node2)) {
+              graphData
+                .getEdge(node1 + "" + node2)
+                .setAttribute("ui.class", "done");
             }
           }
-
-          graphData.getNode(node1 + "").setAttribute("ui.class", "visited");
         }
+
+        graphData.getNode(node1 + "").setAttribute("ui.class", "visited");
+      }
     }
 
     if (observer.isFinished()) {
@@ -124,6 +127,6 @@ public class SearchSpaceController {
       for (String node : nodes) {
         graphData.getNode(node).setAttribute("ui.class", "visited");
       }
-    };
+    }
   }
 }

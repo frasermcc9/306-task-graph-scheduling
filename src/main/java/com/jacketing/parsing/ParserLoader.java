@@ -29,6 +29,7 @@ public class ParserLoader implements Loader<Graph> {
 
   private final MapFactory mapFactory;
   private final String graphPath;
+  private int optimalLength;
 
   private ParserLoader(String graphPath, MapFactory factory) {
     this.mapFactory = factory;
@@ -43,8 +44,10 @@ public class ParserLoader implements Loader<Graph> {
     try {
       Parser parser = Parser.fromFile(graphPath);
       GraphParser graph = parser.parse();
+      optimalLength = parser.getOptimalLength();
       return preprocess(graph);
     } catch (Exception e) {
+      e.printStackTrace();
       return null;
     }
   }
@@ -56,6 +59,7 @@ public class ParserLoader implements Loader<Graph> {
     EnumeratedNodeMap enumeratedNodeMap = enumerationService.enumerateFromGraph(
       graph
     );
+
     return new Graph(
       new EnumeratedAdjacencyList(
         graph,
@@ -63,13 +67,9 @@ public class ParserLoader implements Loader<Graph> {
         mapFactory.createMap(),
         mapFactory.createMap()
       ),
-      new WeightService(
-        graph,
-        enumeratedNodeMap,
-        mapFactory.createMap(),
-        mapFactory.createMap()
-      ),
-      graph.getGraphId()
+      new WeightService(graph, enumeratedNodeMap),
+      graph.getGraphId(),
+      optimalLength
     );
   }
 }

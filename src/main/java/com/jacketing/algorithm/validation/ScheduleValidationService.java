@@ -13,8 +13,8 @@
 
 package com.jacketing.algorithm.validation;
 
-import com.jacketing.algorithm.impl.structures.Task;
-import com.jacketing.algorithm.interfaces.structures.Schedule;
+import com.jacketing.algorithm.structures.ScheduleV1;
+import com.jacketing.algorithm.structures.Task;
 import com.jacketing.common.FormattableTask;
 import com.jacketing.parsing.impl.structures.EnumeratedAdjacencyList;
 import com.jacketing.parsing.impl.structures.Graph;
@@ -24,11 +24,11 @@ import java.util.Map;
 
 public class ScheduleValidationService implements ScheduleValidator {
 
-  private boolean validateTaskDuration(Schedule schedule, Graph graph) {
+  private boolean validateTaskDuration(ScheduleV1 schedule, Graph graph) {
     return true;
   }
 
-  private boolean validateTasksInOrder(Schedule schedule, Graph graph) {
+  private boolean validateTasksInOrder(ScheduleV1 schedule, Graph graph) {
     EnumeratedAdjacencyList enumeratedAdjacencyList = graph.getAdjacencyList();
     Map<Integer, List<Integer>> childToParentsMap = enumeratedAdjacencyList.getInAdjacencyList();
 
@@ -66,7 +66,7 @@ public class ScheduleValidationService implements ScheduleValidator {
     return true;
   }
 
-  public boolean validateTasksUnique(Schedule schedule) {
+  public boolean validateTasksUnique(ScheduleV1 schedule) {
     ArrayList<Integer> seenTasks = new ArrayList<>();
     for (FormattableTask task : schedule.getAllTasks()) {
       if (seenTasks.contains(task.getId())) {
@@ -80,7 +80,7 @@ public class ScheduleValidationService implements ScheduleValidator {
 
   @Override
   public boolean validateSchedule(
-    Schedule schedule,
+    ScheduleV1 schedule,
     Graph graph,
     int numberOfProcessors
   ) {

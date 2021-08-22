@@ -16,7 +16,7 @@ package com.jacketing.algorithm;
 import static org.mockito.Mockito.*;
 
 import com.jacketing.TestUtil;
-import com.jacketing.algorithm.interfaces.SchedulingAlgorithmStrategy;
+import com.jacketing.algorithm.algorithms.SchedulingAlgorithmStrategy;
 import com.jacketing.io.cli.ProgramContext;
 import com.jacketing.parsing.impl.structures.Graph;
 import org.junit.Test;

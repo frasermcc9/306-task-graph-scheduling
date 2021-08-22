@@ -40,6 +40,12 @@ public class ProgramContext implements ApplicationContext {
   @Parameter(names = { "--no-output" })
   private boolean noOutput;
 
+  @Parameter(names = { "--fail-suboptimal" })
+  private boolean failSuboptimal;
+
+  @Parameter(names = { "--Ofast-off" })
+  private boolean disablePog;
+
   private Observer algorithmObserver;
 
   public ProgramContext(List<String> input) {
@@ -49,6 +55,11 @@ public class ProgramContext implements ApplicationContext {
   public ProgramContext() {}
 
   @Override
+  public boolean failSuboptimal() {
+    return failSuboptimal;
+  }
+
+  @Override
   public String getInputFile() {
     return input.get(0);
   }
@@ -56,6 +67,11 @@ public class ProgramContext implements ApplicationContext {
   @Override
   public int getProcessorsToScheduleOn() {
     return Integer.parseInt(input.get(1));
+  }
+
+  @Override
+  public boolean isDisablePog() {
+    return disablePog;
   }
 
   @Override

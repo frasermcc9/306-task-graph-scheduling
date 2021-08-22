@@ -6,9 +6,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.jacketing.TestUtil;
-import com.jacketing.algorithm.impl.structures.Task;
-import com.jacketing.algorithm.interfaces.structures.Schedule;
-import com.jacketing.algorithm.interfaces.util.ScheduleFactory;
+import com.jacketing.algorithm.structures.ScheduleFactory;
+import com.jacketing.algorithm.structures.ScheduleV1;
+import com.jacketing.algorithm.structures.Task;
 import com.jacketing.io.cli.ProgramContext;
 import com.jacketing.io.output.saver.StandardFileSaver;
 import java.io.File;
@@ -41,10 +41,10 @@ public class DotFileOutputTest {
     }
   }
 
-  public Schedule getScheduleG1() {
+  public ScheduleV1 getScheduleG1() {
     ProgramContext programContext = mock(ProgramContext.class);
     when(programContext.getProcessorsToScheduleOn()).thenReturn(2);
-    Schedule schedule = ScheduleFactory.create().newSchedule(programContext);
+    ScheduleV1 schedule = ScheduleFactory.create().newSchedule(programContext);
 
     schedule.addTask(new Task(0, 2, 0), 0);
     schedule.addTask(new Task(2, 3, 1), 0);

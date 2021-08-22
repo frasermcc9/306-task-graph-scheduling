@@ -1,29 +1,23 @@
 package com.jacketing.view.innercontrollers;
 
-import com.jacketing.algorithm.impl.structures.ProcessorTaskList;
-import com.jacketing.algorithm.impl.structures.ScheduleImpl;
-import com.jacketing.algorithm.impl.structures.Task;
-import com.jacketing.algorithm.interfaces.structures.Schedule;
+import com.jacketing.algorithm.structures.ProcessorTaskList;
+import com.jacketing.algorithm.structures.ScheduleV1;
+import com.jacketing.algorithm.structures.Task;
 import com.jacketing.common.analysis.AlgorithmObserver;
-import com.jacketing.io.cli.AlgorithmContext;
-import com.jacketing.io.cli.ProgramContext;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
-import javafx.geometry.Insets;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.StackedBarChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 public class ScheduleController {
 
-  private List<Schedule> scheduleList;
+  private List<ScheduleV1> scheduleList;
   private StackedBarChart<String, Integer> bestScheduleGraph;
   private VBox scheduleListView;
   private AlgorithmObserver observer;
@@ -40,8 +34,8 @@ public class ScheduleController {
     this.scheduleListView = scheduleListView;
     this.axis = axis;
     this.observer = observer;
-    this.scheduleList = new ArrayList<Schedule>();
-    this.buttons = new ArrayList<Button>();
+    this.scheduleList = new ArrayList<>();
+    this.buttons = new ArrayList<>();
 
     bestScheduleGraph.setTitle("Current Best Schedule");
     bestScheduleGraph.setAnimated(false);
@@ -73,7 +67,7 @@ public class ScheduleController {
   }
 
   private void pollSchedule() {
-    Schedule schedule = observer.getCurrentBestSchedule();
+    ScheduleV1 schedule = observer.getCurrentBestSchedule();
     if (schedule != null) {
       if (!scheduleList.contains(schedule)) {
         Platform.runLater(
@@ -86,7 +80,7 @@ public class ScheduleController {
     }
   }
 
-  private void addNewSchedule(Schedule schedule) {
+  private void addNewSchedule(ScheduleV1 schedule) {
     scheduleList.add(schedule);
 
     String id = (scheduleList.size() - 1) + "";

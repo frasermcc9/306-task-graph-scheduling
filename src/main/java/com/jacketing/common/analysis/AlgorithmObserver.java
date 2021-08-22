@@ -13,7 +13,7 @@
 
 package com.jacketing.common.analysis;
 
-import com.jacketing.algorithm.interfaces.structures.Schedule;
+import com.jacketing.algorithm.structures.ScheduleV1;
 import com.jacketing.parsing.impl.structures.Graph;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,8 +29,10 @@ public class AlgorithmObserver implements Observer {
   private final AtomicInteger culledScheduleCount = new AtomicInteger();
   private final AtomicInteger improvementsFoundCount = new AtomicInteger();
   private final AtomicInteger duplicateSchedules = new AtomicInteger();
-  private Schedule partialSchedule;
-  private Schedule currentBestSchedule;
+
+  private ScheduleV1 partialSchedule;
+  private ScheduleV1 currentBestSchedule;
+
   private Graph graph;
   private boolean finished = false;
   private List<Integer> visited;
@@ -47,14 +49,14 @@ public class AlgorithmObserver implements Observer {
   }
 
   @Override
-  public synchronized void updateBestSchedule(Schedule schedule) {
+  public synchronized void updateBestSchedule(ScheduleV1 schedule) {
     this.currentBestSchedule = schedule;
     improvementsFoundCount.getAndIncrement();
     update(AlgorithmEvent.BEST_UPDATE);
   }
 
   @Override
-  public void incrementCheckedSchedules(Schedule partial) {
+  public void incrementCheckedSchedules(ScheduleV1 partial) {
     this.partialSchedule = partial;
     totalSchedulesChecked.getAndIncrement();
     update(AlgorithmEvent.SCHEDULE_CHECK);
@@ -96,7 +98,7 @@ public class AlgorithmObserver implements Observer {
     return finished;
   }
 
-  public Schedule getPartialSchedule() {
+  public ScheduleV1 getPartialSchedule() {
     return partialSchedule;
   }
 
@@ -106,7 +108,7 @@ public class AlgorithmObserver implements Observer {
   }
 
   @Override
-  public Schedule getCurrentBestSchedule() {
+  public ScheduleV1 getCurrentBestSchedule() {
     return currentBestSchedule;
   }
 
@@ -130,12 +132,12 @@ public class AlgorithmObserver implements Observer {
     return improvementsFoundCount.get();
   }
 
-  public void setGraph(Graph graph) {
-    this.graph = graph;
-  }
-
   public Graph getGraph() {
     return graph;
+  }
+
+  public void setGraph(Graph graph) {
+    this.graph = graph;
   }
 
   public boolean hasGraph() {

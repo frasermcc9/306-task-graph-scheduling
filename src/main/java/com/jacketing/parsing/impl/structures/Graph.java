@@ -15,7 +15,9 @@ package com.jacketing.parsing.impl.structures;
 
 import com.jacketing.parsing.impl.services.WeightService;
 import com.jacketing.parsing.interfaces.structures.services.GraphWeightService;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
+import javafx.util.Pair;
 
 public class Graph {
 
@@ -39,7 +41,7 @@ public class Graph {
 
   private final String name;
   private final int[] bLevels;
-
+  private final int optimalLength;
   private int criticalTime;
 
   /**
@@ -57,7 +59,7 @@ public class Graph {
     EnumeratedAdjacencyList adjacencyList,
     GraphWeightService weightService
   ) {
-    this(adjacencyList, weightService, "Default");
+    this(adjacencyList, weightService, "Default", -1);
   }
 
   /**
@@ -71,11 +73,13 @@ public class Graph {
    * @param weightService a new weight service. Should not have called {@link
    *                      WeightService#formWeights()} on the weight service.
    * @param name          the name of this graph
+   * @param optimalLength the optimal length of the read graph, if available.
    */
   public Graph(
     EnumeratedAdjacencyList adjacencyList,
     GraphWeightService weightService,
-    String name
+    String name,
+    int optimalLength
   ) {
     this.adjacencyList = adjacencyList;
     this.weightService = weightService;
@@ -85,6 +89,8 @@ public class Graph {
     weightService.formWeights();
 
     bLevels = new int[adjacencyList.getNodeCount()];
+
+    this.optimalLength = optimalLength;
   }
 
   /**
@@ -129,8 +135,11 @@ public class Graph {
    * @return the weight of that node
    */
   public int getNodeWeight(int enumeratedNode) {
-    getEdgeWeight();
     return weightService.nodeWeight(enumeratedNode);
+  }
+
+  public int getEdgeWeight(int source, int target) {
+    return weightService.edgeWeight(source, target);
   }
 
   public int getGraphWeight() {
@@ -210,5 +219,99 @@ public class Graph {
     criticalTime = Math.max(criticalTime, bLevels[node]);
 
     return bLevels[node];
+  }
+
+  public int getOptimalLength() {
+    return optimalLength;
+  }
+
+  public void introduceVirtualForIdenticalNodes() {
+    List<Integer> nodeIds = this.adjacencyList.getNodeIds();
+    for (int node1 : nodeIds) {
+      goNext:for (int node2 : nodeIds) {
+        if (node1 == node2) continue;
+
+        if (getNodeWeight(node1) != getNodeWeight(node2)) continue;
+
+        Set<Pair<Integer, Integer>> parents = new HashSet<>();
+        for (int parent : adjacencyList.getParentNodes(node1)) {
+          Pair<Integer, Integer> pair = new Pair<>(
+            parent,
+            getEdgeWeight(parent, node1)
+          );
+          parents.add(pair);
+        }
+        for (int parent : adjacencyList.getParentNodes(node2)) {
+          Pair<Integer, Integer> pair = new Pair<>(
+            parent,
+            getEdgeWeight(parent, node2)
+          );
+          if (!parents.remove(pair)) {
+            continue goNext;
+          }
+        }
+        if (parents.size() != 0) continue;
+
+        Set<Pair<Integer, Integer>> children = new HashSet<>();
+        for (int child : adjacencyList.getChildNodes(node1)) {
+          Pair<Integer, Integer> pair = new Pair<>(
+            child,
+            getEdgeWeight(node1, child)
+          );
+          children.add(pair);
+        }
+        for (int child : adjacencyList.getChildNodes(node2)) {
+          Pair<Integer, Integer> pair = new Pair<>(
+            child,
+            getEdgeWeight(node2, child)
+          );
+          if (!children.remove(pair)) {
+            continue goNext;
+          }
+        }
+        if (children.size() != 0) continue;
+
+        this.getAdjacencyList().addEdge(node1, node2);
+        weightService.implementNewEdge(node1, node2, 0);
+
+        System.out.println("Found identical node");
+      }
+    }
+  }
+
+  public void prepareIndependentFixedOrder() {
+    List<List<Integer>> nodeOrder = new ArrayList<>();
+
+    List<Integer> nodeInWeightOrder =
+      this.getAdjacencyList()
+        .getNodeIds()
+        .stream()
+        .sorted(Comparator.comparingInt(this::getNodeWeight).reversed())
+        .collect(Collectors.toList());
+
+    int previousNodeWeight = -1;
+    for (int node : nodeInWeightOrder) {
+      int nodeWeight = getNodeWeight(node);
+      if (nodeWeight == previousNodeWeight) {
+        List<Integer> lastList = nodeOrder.get(nodeOrder.size() - 1);
+        lastList.add(node);
+      } else {
+        List<Integer> nextList = new ArrayList<>();
+        nextList.add(node);
+        nodeOrder.add(nextList);
+      }
+    }
+
+    for (int i = 0; i < nodeOrder.size() - 1; i++) {
+      List<Integer> first = nodeOrder.get(0);
+      List<Integer> second = nodeOrder.get(1);
+
+      for (int parentNode : first) {
+        for (int childNode : second) {
+          this.getAdjacencyList().addEdge(parentNode, childNode);
+          weightService.implementNewEdge(parentNode, childNode, 0);
+        }
+      }
+    }
   }
 }

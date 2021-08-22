@@ -18,9 +18,13 @@ public interface GraphWeightService {
 
   int nodeWeight(int enumeratedNode);
 
+  int edgeWeight(int source, int target);
+
   EdgeWeightFrom edgeWeight();
 
   int getGraphWeight();
+
+  void implementNewEdge(int from, int to, int weight);
 
   interface EdgeWeightFrom {
     EdgeWeightTo from(int source);

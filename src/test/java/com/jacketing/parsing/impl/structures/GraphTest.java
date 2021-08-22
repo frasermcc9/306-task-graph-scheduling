@@ -1,8 +1,10 @@
 package com.jacketing.parsing.impl.structures;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import com.jacketing.TestUtil;
+import java.util.List;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -56,5 +58,14 @@ public class GraphTest {
   public void testBLevelGraphComplex() {
     graph = TestUtil.graphVariantSix();
     assertEquals(94, graph.getBLevel(7));
+  }
+
+  @Test
+  public void testDuplicateNodesAddsVirtualEdge() {
+    graph = TestUtil.graphVariantIdenticalNodes();
+    graph.introduceVirtualForIdenticalNodes();
+
+    List<Integer> childNodes = graph.getAdjacencyList().getChildNodes(1);
+    assertTrue(childNodes.contains(2));
   }
 }

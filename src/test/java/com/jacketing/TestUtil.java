@@ -6,10 +6,10 @@ import static org.mockito.Mockito.when;
 import com.google.common.base.Charsets;
 import com.google.common.collect.HashBiMap;
 import com.google.common.io.Resources;
-import com.jacketing.algorithm.impl.X.AlgorithmSchedule;
-import com.jacketing.algorithm.impl.algorithms.DepthFirstScheduler;
-import com.jacketing.algorithm.interfaces.SchedulingAlgorithmStrategy;
-import com.jacketing.algorithm.interfaces.util.ScheduleFactory;
+import com.jacketing.algorithm.algorithms.DepthFirstScheduler;
+import com.jacketing.algorithm.algorithms.SchedulingAlgorithmStrategy;
+import com.jacketing.algorithm.algorithms.common.AlgorithmSchedule;
+import com.jacketing.algorithm.structures.ScheduleFactory;
 import com.jacketing.io.cli.ProgramContext;
 import com.jacketing.parsing.impl.Parser;
 import com.jacketing.parsing.impl.services.EnumerationService;
@@ -102,6 +102,10 @@ public class TestUtil {
     return createGraphFromFile("examples/hard/hard.dot");
   }
 
+  public static Graph graphVariantIdenticalNodes() {
+    return createGraphFromFile("examples/identicalnodes/identicalnodes.dot");
+  }
+
   public static Graph emptyGraph() {
     StringBuffer graphString = new StringBuffer(
       "digraph \"empty\" {\n" + "}\n"
@@ -183,6 +187,7 @@ public class TestUtil {
       GraphParser graph = parser.parse();
       return createGraph(graph);
     } catch (Exception e) {
+      e.printStackTrace();
       return null;
     }
   }
@@ -201,12 +206,7 @@ public class TestUtil {
         new HashMap<>(),
         new HashMap<>()
       ),
-      new WeightService(
-        graph,
-        enumeratedNodeMap,
-        new HashMap<>(),
-        new HashMap<>()
-      )
+      new WeightService(graph, enumeratedNodeMap)
     );
   }
 

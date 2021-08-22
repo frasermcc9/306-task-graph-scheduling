@@ -23,22 +23,28 @@ import java.io.InputStream;
 public class Parser {
 
   GraphParser parser;
+  GraphOptimalSolutionReader optimalSolutionReader;
 
-  private Parser(InputStream stream) {
-    this.parser = new GraphParser(stream);
+  private Parser(InputStream stream1, InputStream stream2) throws IOException {
+    optimalSolutionReader = new GraphOptimalSolutionReader(stream1);
+    this.parser = new GraphParser(stream2);
   }
 
   public static Parser fromFile(String path) throws IOException {
-    try (InputStream inputStream = new FileInputStream(path)) {
-      return new Parser(inputStream);
+    try (
+      InputStream inputStream1 = new FileInputStream(path);
+      InputStream inputStream2 = new FileInputStream(path)
+    ) {
+      return new Parser(inputStream1, inputStream2);
     }
   }
 
   public static Parser fromString(String string) throws IOException {
     try (
-      InputStream inputStream = new ByteArrayInputStream(string.getBytes())
+      InputStream inputStream1 = new ByteArrayInputStream(string.getBytes());
+      InputStream inputStream2 = new ByteArrayInputStream(string.getBytes())
     ) {
-      return new Parser(inputStream);
+      return new Parser(inputStream1, inputStream2);
     }
   }
 
@@ -49,5 +55,9 @@ public class Parser {
 
   public GraphParser parse() throws GraphParserException {
     return parser;
+  }
+
+  public int getOptimalLength() {
+    return optimalSolutionReader.getOptimalLength();
   }
 }
