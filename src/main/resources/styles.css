@@ -74,3 +74,23 @@
 .highlighted {
   -fx-background-color: #00aeef;
 }
+
+.scroll-bar:vertical .track,
+.scroll-bar:horizontal .track
+{
+  -fx-background-color: #2f2d2e;
+}
+
+.scroll-bar:vertical .thumb,
+.scroll-bar:horizontal .thumb
+{
+  -fx-background-color: #00aeef;
+}
+
+.scroll-bar {
+  -fx-background-color: #2f2d2e;
+}
+
+.scroll-pane > .corner {
+  -fx-background-color: black;
+}
