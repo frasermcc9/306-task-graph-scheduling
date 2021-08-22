@@ -58,7 +58,6 @@ public class DepthFirstScheduler extends AbstractSchedulingAlgorithm {
     ScheduleV1 estimateSchedule = scheduler.scheduleOld();
     upperBound = estimateSchedule.getDuration();
     bestSchedule = estimateSchedule;
-
     updateObserver(o -> o.updateBestSchedule(estimateSchedule));
   }
 
@@ -80,8 +79,9 @@ public class DepthFirstScheduler extends AbstractSchedulingAlgorithm {
 
     List<Integer> freeNodes = new ArrayList<>(topological.get(0));
     List<Integer> visited = new ArrayList<>();
-    recurseDFS(scheduleFactory.newSchedule(context), freeNodes, visited);
 
+    updateObserver(o -> o.updateBestSchedule(bestSchedule));
+    recurseDFS(scheduleFactory.newSchedule(context), freeNodes, visited);
     return bestSchedule;
   }
 

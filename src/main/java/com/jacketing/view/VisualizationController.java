@@ -43,17 +43,32 @@ public class VisualizationController {
   @FXML
   private StackPane searchSpaceStackPane;
 
-  private AlgorithmObserver observer;
-
   private PrintStream ps;
   private ApplicationContext context;
-
+  private Thread algorithmThread;
+  private AlgorithmObserver observer;
   private LogsController logsController;
   private SearchSpaceController searchSpaceController;
   private StatsTextController statsTextController;
+  private boolean running = true;
 
-  public void setAlgorithmObserver(AlgorithmObserver observer) {
+  public void setAlgorithmFields(AlgorithmObserver observer, Thread thread, ApplicationContext context) {
     this.observer = observer;
+    this.context = context;
+    this.algorithmThread = thread;
+    start();
+  }
+
+  @FXML
+  public void initialize() {
+    logsController = new LogsController(logs);
+    ps = new PrintStream(logsController);
+    System.setOut(ps);
+    new CpuGraphController(threadGraph, threadAxis);
+    new RamGraphController(ramGraph);
+  }
+
+  private void start() {
     searchSpaceController = new SearchSpaceController(observer, searchSpaceStackPane);
     new ScheduleController(observer, bestScheduleGraph, scheduleList, scheduleAxis);
     statsTextController = new StatsTextController(
@@ -70,42 +85,33 @@ public class VisualizationController {
       time,
       inputFile
     );
-  }
 
-  private boolean running = true;
-  public void setAlgorithmThread(Thread thread) {
-    stop.setOnAction((event) -> {
-      if (running) {
-        thread.suspend();
-        statsTextController.stop();
-        searchSpaceController.stop();
-        stop.setStyle("-fx-background-color: #00aeef;");
-        stop.setText("Resume");
-      } else {
-        statsTextController.resume();
-        searchSpaceController.resume();
-        thread.resume();
-        stop.setText("Stop");
-        stop.setStyle("-fx-background-color: #e84855;");
-      }
-
-      running = !running;
-    });
-  }
-
-  public void setAlgorithmContext(ApplicationContext context) {
     inputFile.setText(context.getInputFile());
     numberCores.setText("Number of Cores: " + context.getCoresToCalculateWith());
     numberProcessors.setText("Number of Processors: " + context.getProcessorsToScheduleOn());
     algorithm.setText("Algorithm: DFS");
-  }
 
-  @FXML
-  public void initialize() {
-    logsController = new LogsController(logs);
-    ps = new PrintStream(logsController);
-    System.setOut(ps);
-    new CpuGraphController(threadGraph, threadAxis);
-    new RamGraphController(ramGraph);
+    String resumeColour = "-fx-background-color: #00aeef;";
+    String stopColour = "-fx-background-color: #e84855;";
+
+    stop.setOnAction((event) -> {
+      if (running) {
+        algorithmThread.suspend();
+        statsTextController.stop();
+        searchSpaceController.stop();
+        stop.setStyle(resumeColour);
+        stop.setText("Resume");
+      } else {
+        algorithmThread.resume();
+        statsTextController.resume();
+        searchSpaceController.resume();
+        stop.setStyle(stopColour);
+        stop.setText("Stop");
+      }
+
+      running = !running;
+    });
+
+    algorithmThread.start();
   }
 }

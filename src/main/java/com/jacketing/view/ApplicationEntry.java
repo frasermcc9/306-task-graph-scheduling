@@ -53,13 +53,11 @@ public class ApplicationEntry extends Application {
     root = loader.load();
 
     VisualizationController controller = loader.getController();
-    controller.setAlgorithmObserver(observer);
-    controller.setAlgorithmContext(context);
-    controller.setAlgorithmThread(algorithmThread);
     System.out.println(outputStream);
     Scene scene = new Scene(root);
     primaryStage.setTitle("Jacketing Studio");
     primaryStage.setScene(scene);
     primaryStage.show();
+    controller.setAlgorithmFields(observer, algorithmThread, context);
   }
 }

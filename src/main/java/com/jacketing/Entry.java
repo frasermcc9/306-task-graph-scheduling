@@ -66,7 +66,6 @@ public class Entry {
             handledSearch(programContext, CommandLineOutput::new);
           }
         );
-        algorithmThread.start();
 
         ApplicationEntry.launch(observer, os, programContext, algorithmThread);
       } else {
