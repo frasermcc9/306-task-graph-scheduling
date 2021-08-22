@@ -62,7 +62,7 @@ public class SearchSpaceController {
 
         graph.setAttribute(
           "ui.stylesheet",
-          "graph { fill-color: #2f2d2e; } node { fill-color: #00aeef; size: 30px; } node.visited { fill-color: #8b5fbf; } edge { size: 2px; } edge.done { fill-color: green; }"
+          "graph { fill-color: #2f2d2e; } node { fill-color: #8b5fbf; size: 30px; stroke-mode: plain; } node.visited { fill-color: #00aeef; } edge { size: 2px; } edge.done { fill-color: green; }"
         );
         FxViewer view = new FxViewer(
           graph,
