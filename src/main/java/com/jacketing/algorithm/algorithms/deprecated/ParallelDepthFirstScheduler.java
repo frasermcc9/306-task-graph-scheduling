@@ -70,6 +70,7 @@ public class ParallelDepthFirstScheduler
 
     List<Integer> freeNodes = new ArrayList<>(topological.get(0));
     List<Integer> visited = new ArrayList<>();
+    updateObserver(o -> o.updateBestSchedule(bestSchedule));
 
     executor.invoke(
       new RecursiveDfs(scheduleFactory.newSchedule(context), freeNodes, visited)
@@ -175,6 +176,7 @@ public class ParallelDepthFirstScheduler
             }
           }
 
+          updateObserver(o -> o.updateVisited(visited));
           updateObserver(o -> o.incrementCheckedSchedules(partialSchedule));
           invokeAll(new RecursiveDfs(nextState, nextFreeNodes, nextVisited));
           nextState.revert();
