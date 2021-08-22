@@ -21,6 +21,7 @@ import com.jacketing.algorithm.structures.Task;
 import com.jacketing.algorithm.util.SchedulingAlgorithmContextImpl;
 import com.jacketing.algorithm.util.topological.TopologicalSort;
 import com.jacketing.algorithm.util.topological.TopologicalSortContext;
+import com.jacketing.common.log.Log;
 import com.jacketing.io.cli.AlgorithmContext;
 import com.jacketing.parsing.impl.structures.Graph;
 import java.util.ArrayList;
@@ -94,6 +95,7 @@ public class DepthFirstScheduler extends AbstractSchedulingAlgorithm {
       int completeDuration = partialSchedule.getDuration();
       if (bestSchedule == null || completeDuration < upperBound) {
         bestSchedule = partialSchedule.clone();
+        Log.info("Found new best schedule of length " + bestSchedule.getDuration());
         updateObserver(o -> o.updateBestSchedule(bestSchedule));
         upperBound = completeDuration;
       }

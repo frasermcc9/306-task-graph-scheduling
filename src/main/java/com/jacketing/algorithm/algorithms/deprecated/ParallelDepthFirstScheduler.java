@@ -19,6 +19,7 @@ import com.jacketing.algorithm.structures.Task;
 import com.jacketing.algorithm.util.SchedulingAlgorithmContextImpl;
 import com.jacketing.algorithm.util.topological.TopologicalSort;
 import com.jacketing.algorithm.util.topological.TopologicalSortContext;
+import com.jacketing.common.log.Log;
 import com.jacketing.io.cli.AlgorithmContext;
 import com.jacketing.parsing.impl.structures.Graph;
 import java.util.ArrayList;
@@ -112,6 +113,7 @@ public class ParallelDepthFirstScheduler
         int completeDuration = partialSchedule.getDuration();
         int intUpper = upperBound.get();
         if (bestSchedule == null || completeDuration < intUpper) {
+          Log.info("Found new best schedule of length " + bestSchedule.getDuration());
           updateBestSchedule(partialSchedule, completeDuration);
         }
       }
