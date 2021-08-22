@@ -68,8 +68,6 @@ public class SmartAlgorithm extends AbstractSchedulingAlgorithm {
     super(graph, context, scheduleFactory);
     AlgorithmFactory algorithmFactory;
 
-    //    graph.introduceVirtualForIdenticalNodes();
-
     // List schedule when scheduling on a single processor, or there are no
     // nodes.
     if (
@@ -90,6 +88,10 @@ public class SmartAlgorithm extends AbstractSchedulingAlgorithm {
         "Solving input graph with iterative DFS, using independent " +
         "estimate scheduler."
       );
+      // only works on 2 processors for some reason
+      if (context.getProcessorsToScheduleOn() == 2) {
+        graph.introduceVirtualForIdenticalNodes();
+      }
       algorithmFactory = algorithmSource.getAStar();
       algorithm =
         algorithmFactory
