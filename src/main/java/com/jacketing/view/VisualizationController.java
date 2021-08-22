@@ -49,12 +49,14 @@ public class VisualizationController {
   private ApplicationContext context;
 
   private LogsController logsController;
+  private SearchSpaceController searchSpaceController;
+  private StatsTextController statsTextController;
 
   public void setAlgorithmObserver(AlgorithmObserver observer) {
     this.observer = observer;
-    new SearchSpaceController(observer, searchSpaceStackPane);
+    searchSpaceController = new SearchSpaceController(observer, searchSpaceStackPane);
     new ScheduleController(observer, bestScheduleGraph, scheduleList, scheduleAxis);
-    new StatsTextController(
+    statsTextController = new StatsTextController(
       observer,
       duration,
       schedulesChecked,
@@ -68,6 +70,27 @@ public class VisualizationController {
       time,
       inputFile
     );
+  }
+
+  private boolean running = true;
+  public void setAlgorithmThread(Thread thread) {
+    stop.setOnAction((event) -> {
+      if (running) {
+        thread.suspend();
+        statsTextController.stop();
+        searchSpaceController.stop();
+        stop.setStyle("-fx-background-color: #00aeef;");
+        stop.setText("Resume");
+      } else {
+        statsTextController.resume();
+        searchSpaceController.resume();
+        thread.resume();
+        stop.setText("Stop");
+        stop.setStyle("-fx-background-color: #e84855;");
+      }
+
+      running = !running;
+    });
   }
 
   public void setAlgorithmContext(ApplicationContext context) {

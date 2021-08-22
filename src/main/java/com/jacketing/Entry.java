@@ -61,14 +61,14 @@ public class Entry {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         System.setOut(new PrintStream(os));
 
-        new Thread(
+        Thread algorithmThread = new Thread(
           () -> {
             handledSearch(programContext, CommandLineOutput::new);
           }
-        )
-          .start();
+        );
+        algorithmThread.start();
 
-        ApplicationEntry.launch(observer, os, programContext);
+        ApplicationEntry.launch(observer, os, programContext, algorithmThread);
       } else {
         handledSearch(programContext, CommandLineOutput::new);
       }

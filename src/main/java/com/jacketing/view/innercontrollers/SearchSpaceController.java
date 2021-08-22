@@ -21,6 +21,7 @@ public class SearchSpaceController {
   private ScheduleV1 schedule;
   private List<String> nodes = new ArrayList<>();
   private List<String> edges = new ArrayList<>();
+  private Thread pollingThread;
 
   public SearchSpaceController(AlgorithmObserver observer, StackPane pane) {
     System.setProperty("org.graphstream.ui", "javafx");
@@ -71,7 +72,7 @@ public class SearchSpaceController {
     pane.getChildren().addAll(panel); // prevent UI shift issues
     this.observer = observer;
 
-    new Thread(
+    Thread pollingThread = new Thread(
       () -> {
         while (true) {
           pollGraph();
@@ -82,8 +83,18 @@ public class SearchSpaceController {
           }
         }
       }
-    )
-      .start();
+    );
+    this.pollingThread = pollingThread;
+    pollingThread.start();
+
+  }
+
+  public void stop() {
+    pollingThread.suspend();
+  }
+
+  public void resume() {
+    pollingThread.resume();
   }
 
   private void pollGraph() {

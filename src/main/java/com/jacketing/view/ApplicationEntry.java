@@ -28,15 +28,18 @@ public class ApplicationEntry extends Application {
   private static AlgorithmObserver observer;
   private static ByteArrayOutputStream outputStream;
   private static ApplicationContext context;
+  private static Thread algorithmThread;
 
   public static void launch(
     AlgorithmObserver algorithmObserver,
     ByteArrayOutputStream os,
-    ApplicationContext programContext
+    ApplicationContext programContext,
+    Thread thread
   ) {
     observer = algorithmObserver;
     outputStream = os;
     context = programContext;
+    algorithmThread = thread;
     ApplicationEntry.launch(ApplicationEntry.class);
   }
 
@@ -52,6 +55,7 @@ public class ApplicationEntry extends Application {
     VisualizationController controller = loader.getController();
     controller.setAlgorithmObserver(observer);
     controller.setAlgorithmContext(context);
+    controller.setAlgorithmThread(algorithmThread);
     System.out.println(outputStream);
     Scene scene = new Scene(root);
     primaryStage.setTitle("Jacketing Studio");
