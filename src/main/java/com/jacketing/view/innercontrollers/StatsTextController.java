@@ -12,6 +12,7 @@ public class StatsTextController {
   private Text duration, schedulesChecked, improvements, schedulesCulled, duplicatesRemoved, currentBestTime, numberCores, numberProcessors, algorithm, time, inputFile;
   private AlgorithmObserver observer;
   private Instant then = Instant.now();
+  private Thread pollingThread;
 
   public StatsTextController(
     AlgorithmObserver observer,
@@ -39,7 +40,7 @@ public class StatsTextController {
     this.algorithm = algorithm;
     this.time = time;
     this.inputFile = inputFile;
-    new Thread(
+    Thread pollingThread = new Thread(
       () -> {
         while (!observer.isFinished()) {
           pollStats();
@@ -51,8 +52,17 @@ public class StatsTextController {
         }
         pollStats();
       }
-    )
-      .start();
+    );
+    pollingThread.start();
+    this.pollingThread = pollingThread;
+  }
+
+  public void stop() {
+    pollingThread.suspend();
+  }
+
+  public void resume() {
+    pollingThread.resume();
   }
 
   private void pollStats() {
@@ -64,7 +74,7 @@ public class StatsTextController {
       "Schedules Checked: " + observer.getCheckedSchedules()
     );
     improvements.setText(
-      "Improvements Made: " + observer.getDuplicateSchedules()
+      "Improvements Made: " + observer.getImprovementsFound()
     );
     schedulesCulled.setText(
       "Schedules Culled: " + observer.getCulledSchedules()

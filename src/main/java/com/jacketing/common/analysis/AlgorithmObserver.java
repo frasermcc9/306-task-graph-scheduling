@@ -138,6 +138,7 @@ public class AlgorithmObserver implements Observer {
 
   public void setGraph(Graph graph) {
     this.graph = graph;
+    update(AlgorithmEvent.GRAPH_LOADED);
   }
 
   public boolean hasGraph() {
