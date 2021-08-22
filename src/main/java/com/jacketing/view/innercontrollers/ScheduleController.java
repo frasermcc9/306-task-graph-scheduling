@@ -3,6 +3,7 @@ package com.jacketing.view.innercontrollers;
 import com.jacketing.algorithm.structures.ProcessorTaskList;
 import com.jacketing.algorithm.structures.ScheduleV1;
 import com.jacketing.algorithm.structures.Task;
+import com.jacketing.common.analysis.AlgorithmEvent;
 import com.jacketing.common.analysis.AlgorithmObserver;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,33 +52,19 @@ public class ScheduleController {
     );
     scheduleListView.setSpacing(1);
 
-    new Thread(
-      () -> {
-        while (true) {
-          pollSchedule();
-          try {
-            Thread.sleep(1000);
-          } catch (InterruptedException e) {
-            e.printStackTrace();
-          }
+    observer.on(AlgorithmEvent.BEST_UPDATE, (data) -> {
+      ScheduleV1 schedule = observer.getCurrentBestSchedule();
+      if (schedule != null) {
+        if (!scheduleList.contains(schedule)) {
+          Platform.runLater(
+            () -> {
+              addNewSchedule(schedule);
+              plotSchedule(schedule.getProcessorMap());
+            }
+          );
         }
       }
-    )
-      .start();
-  }
-
-  private void pollSchedule() {
-    ScheduleV1 schedule = observer.getCurrentBestSchedule();
-    if (schedule != null) {
-      if (!scheduleList.contains(schedule)) {
-        Platform.runLater(
-          () -> {
-            addNewSchedule(schedule);
-            plotSchedule(schedule.getProcessorMap());
-          }
-        );
-      }
-    }
+    });
   }
 
   private void addNewSchedule(ScheduleV1 schedule) {
