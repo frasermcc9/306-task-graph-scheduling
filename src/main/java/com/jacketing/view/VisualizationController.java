@@ -87,7 +87,7 @@ public class VisualizationController {
     );
 
     inputFile.setText(context.getInputFile());
-    numberCores.setText("Number of Cores: " + context.getCoresToCalculateWith());
+    numberCores.setText("Number of Threads: " + context.getCoresToCalculateWith());
     numberProcessors.setText("Number of Processors: " + context.getProcessorsToScheduleOn());
     algorithm.setText("Algorithm: DFS");
 
