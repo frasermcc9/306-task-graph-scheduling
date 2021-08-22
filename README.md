@@ -20,9 +20,8 @@ Jacketing Studio Scheduler is a multi-platform, parallelized task scheduler with
  
 <h4>Features:</h4>
 
-- Multi-threaded task scheduler
-- Single-threaded option
-- Visualization of search with diagnostic graphs (RAM, CPU)
+- Single or Multi-threaded task scheduler
+- Visualization of search with diagnostic graphs (RAM, CPU, Search Space, Best Schedules)
 
 <h3>Team</h3>
 
@@ -36,7 +35,11 @@ Jacketing Studio Scheduler is a multi-platform, parallelized task scheduler with
 
 <h3>Screenshots</h3>
 
+![image](https://user-images.githubusercontent.com/54062686/130344784-80f0228f-0160-43ab-ba3a-5dc9250ab622.png)
+
 <h3>Usage</h3>
+
+The visualization requires Oracle Java 8 to run! If you aren't using the visualization, you can use OpenJDK.
 
 To run the program, type `java -jar scheduler.jar <Input File.dot> <Number of Processors> [OPTIONS]`
 
