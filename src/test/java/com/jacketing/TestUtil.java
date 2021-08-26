@@ -44,6 +44,18 @@ public class TestUtil {
     return createGraphFromBuffer(graphString);
   }
 
+  public static Graph graphVariantThreeNode() {
+    StringBuffer graphString = new StringBuffer(
+      "digraph \"g1\" {\n" +
+      "  a [Weight = 2];\n" +
+      "  b [Weight = 3];\n" +
+      "  c [Weight = 3];\n" +
+      "}"
+    );
+
+    return createGraphFromBuffer(graphString);
+  }
+
   public static AlgorithmSchedule graphVariantOneSchedule2C() {
     Graph graph = graphVariantOne();
     ProgramContext programContext = mock(ProgramContext.class);
