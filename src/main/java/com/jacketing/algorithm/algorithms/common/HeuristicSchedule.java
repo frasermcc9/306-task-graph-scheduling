@@ -18,5 +18,5 @@ public interface HeuristicSchedule {
 
   int getIdleTime();
 
-  int calculateHeuristic(HeuristicSchedule schedule);
+  int calculateHeuristic();
 }

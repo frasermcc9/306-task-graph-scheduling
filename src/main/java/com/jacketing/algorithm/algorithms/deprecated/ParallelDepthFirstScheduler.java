@@ -113,7 +113,9 @@ public class ParallelDepthFirstScheduler
         int completeDuration = partialSchedule.getDuration();
         int intUpper = upperBound.get();
         if (bestSchedule == null || completeDuration < intUpper) {
-          Log.info("Found new best schedule of length " + bestSchedule.getDuration());
+          Log.info(
+            "Found new best schedule of length " + bestSchedule.getDuration()
+          );
           updateBestSchedule(partialSchedule, completeDuration);
         }
       }

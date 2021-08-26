@@ -52,19 +52,22 @@ public class ScheduleController {
     );
     scheduleListView.setSpacing(1);
 
-    observer.on(AlgorithmEvent.BEST_UPDATE, (data) -> {
-      ScheduleV1 schedule = observer.getCurrentBestSchedule();
-      if (schedule != null) {
-        if (!scheduleList.contains(schedule)) {
-          Platform.runLater(
-            () -> {
-              addNewSchedule(schedule);
-              plotSchedule(schedule.getProcessorMap());
-            }
-          );
+    observer.on(
+      AlgorithmEvent.BEST_UPDATE,
+      data -> {
+        ScheduleV1 schedule = observer.getCurrentBestSchedule();
+        if (schedule != null) {
+          if (!scheduleList.contains(schedule)) {
+            Platform.runLater(
+              () -> {
+                addNewSchedule(schedule);
+                plotSchedule(schedule.getProcessorMap());
+              }
+            );
+          }
         }
       }
-    });
+    );
   }
 
   private void addNewSchedule(ScheduleV1 schedule) {

@@ -22,7 +22,6 @@ import com.jacketing.algorithm.algorithms.common.cache.StaticCacheFactory;
 import com.jacketing.algorithm.structures.ScheduleFactory;
 import com.jacketing.algorithm.util.topological.TopologicalSort;
 import com.jacketing.algorithm.util.topological.TopologicalSortContext;
-import com.jacketing.common.log.Log;
 import com.jacketing.io.cli.AlgorithmContext;
 import com.jacketing.parsing.impl.structures.Graph;
 import java.util.AbstractQueue;
@@ -71,7 +70,6 @@ public class AStar extends AbstractSchedulingAlgorithm {
     if (topological.size() == 0) {
       return scheduleFactory.newSchedule(context);
     }
-
     int orphans = listToBitfield(topological.get(0));
 
     final AbstractQueue<AbstractIterativeSchedule> queue = new PriorityQueue<>();

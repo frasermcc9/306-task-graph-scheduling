@@ -41,5 +41,5 @@ public enum AlgorithmEvent {
   /**
    * Fired when the graph is first loaded in memory
    */
-  GRAPH_LOADED
+  GRAPH_LOADED,
 }

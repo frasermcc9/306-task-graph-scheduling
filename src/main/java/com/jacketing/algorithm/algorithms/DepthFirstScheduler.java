@@ -95,7 +95,9 @@ public class DepthFirstScheduler extends AbstractSchedulingAlgorithm {
       int completeDuration = partialSchedule.getDuration();
       if (bestSchedule == null || completeDuration < upperBound) {
         bestSchedule = partialSchedule.clone();
-        Log.info("Found new best schedule of length " + bestSchedule.getDuration());
+        Log.info(
+          "Found new best schedule of length " + bestSchedule.getDuration()
+        );
         updateObserver(o -> o.updateBestSchedule(bestSchedule));
         upperBound = completeDuration;
       }

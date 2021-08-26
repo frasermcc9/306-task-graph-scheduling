@@ -94,7 +94,7 @@ public abstract class AbstractIterativeSchedule
       Math.max(this.maxBottomLevel, startTime + bLevelOfNext);
     this.idleTime = this.idleTime + startTime - findProcEnd(processor);
 
-    this.heuristic = calculateHeuristic(this);
+    this.heuristic = this.calculateHeuristic();
   }
 
   public int getTotalTime() {
@@ -120,6 +120,7 @@ public abstract class AbstractIterativeSchedule
     return orphans == 0;
   }
 
+  @Override
   public void propagate() {
     int processors = getCache().getContext().getProcessorsToScheduleOn();
     Graph graph = getCache().getGraph();
@@ -226,18 +227,16 @@ public abstract class AbstractIterativeSchedule
     }
   }
 
-  @Override
   public int getMaxBottomLevel() {
     return this.maxBottomLevel;
   }
 
-  @Override
   public int getIdleTime() {
     return 0;
   }
 
   @Override
-  public int calculateHeuristic(HeuristicSchedule schedule) {
+  public int calculateHeuristic() {
     return Integer.MIN_VALUE;
   }
 

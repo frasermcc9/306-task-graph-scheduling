@@ -14,7 +14,6 @@
 package com.jacketing.algorithm.algorithms.astar;
 
 import com.jacketing.algorithm.algorithms.common.AbstractIterativeSchedule;
-import com.jacketing.algorithm.algorithms.common.HeuristicSchedule;
 import com.jacketing.algorithm.algorithms.common.cache.PermutationId;
 import com.jacketing.algorithm.algorithms.common.cache.StaticCache;
 import java.util.AbstractQueue;
@@ -75,12 +74,12 @@ public class AStarSchedule
   }
 
   @Override
-  public int calculateHeuristic(HeuristicSchedule schedule) {
+  public int calculateHeuristic() {
     StaticCache cache = getCache();
     int graphWeight = cache.getGraph().getGraphWeight();
     int processorCount = cache.getContext().getProcessorsToScheduleOn();
-    int idleHeuristic = (schedule.getIdleTime() + graphWeight) / processorCount;
-    return Math.max(schedule.getMaxBottomLevel(), idleHeuristic);
+    int idleHeuristic = (this.getIdleTime() + graphWeight) / processorCount;
+    return Math.max(this.getMaxBottomLevel(), idleHeuristic);
   }
 
   @Override

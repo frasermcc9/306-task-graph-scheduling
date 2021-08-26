@@ -35,9 +35,9 @@ public class DotFileFormatter implements Formatter {
 
     for (FormattableTask task : allTasks) {
       int id = task.getId();
-
       int start = task.getStartTime();
       int processor = schedule.getProcessor(id);
+
       int weight = graph.getNodeWeight(id);
       String original = graph.translate(id);
 

@@ -15,5 +15,8 @@ package com.jacketing.common;
 
 public interface FormattableTask {
   int getId();
+
   int getStartTime();
+
+  int getDuration();
 }
