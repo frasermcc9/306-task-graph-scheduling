@@ -11,12 +11,10 @@
  *
  */
 
-package com.jacketing.algorithm.algorithms.common;
+package com.jacketing.parsing.interfaces.structures.services;
 
-import com.jacketing.common.FormattableSchedule;
+import java.util.List;
 
-public interface AlgorithmSchedule extends FormattableSchedule {
-  int getDuration();
-
-  void propagate();
+public interface CriticalPathService {
+  List<Integer> getCriticalPath();
 }

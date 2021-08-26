@@ -13,7 +13,9 @@
 
 package com.jacketing.parsing.impl.structures;
 
+import com.jacketing.parsing.impl.services.GraphCriticalPathService;
 import com.jacketing.parsing.impl.services.WeightService;
+import com.jacketing.parsing.interfaces.structures.services.CriticalPathService;
 import com.jacketing.parsing.interfaces.structures.services.GraphWeightService;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -39,8 +41,11 @@ public class Graph {
    */
   private final GraphWeightService weightService;
 
+  private final CriticalPathService criticalPathService;
+
   private final String name;
   private final int[] bLevels;
+  private final int[] tLevels;
   private final int optimalLength;
   private int criticalTime;
 
@@ -88,9 +93,15 @@ public class Graph {
     adjacencyList.createRepresentation();
     weightService.formWeights();
 
-    bLevels = new int[adjacencyList.getNodeCount()];
+    this.bLevels = new int[adjacencyList.getNodeCount()];
+    this.tLevels = new int[adjacencyList.getNodeCount()];
+
+    Arrays.fill(bLevels, -1);
+    Arrays.fill(tLevels, -1);
 
     this.optimalLength = optimalLength;
+
+    this.criticalPathService = new GraphCriticalPathService(this);
   }
 
   /**
@@ -199,7 +210,7 @@ public class Graph {
    */
   public int getBLevel(int node) {
     // bl(node) has already been calculated
-    if (bLevels[node] != 0) {
+    if (bLevels[node] != -1) {
       return bLevels[node];
     }
 
@@ -221,8 +232,43 @@ public class Graph {
     return bLevels[node];
   }
 
+  public int getTLevel(int node) {
+    if (tLevels[node] != -1) {
+      return bLevels[node];
+    }
+
+    List<Integer> parentNodes = adjacencyList.getParentNodes(node);
+    // if the node is at 0th level, bl(node) = w_node
+    if (parentNodes.isEmpty()) {
+      tLevels[node] = 0;
+      return tLevels[node];
+    }
+
+    int maxTl = 0;
+    for (int parentNode : parentNodes) {
+      maxTl = Math.max(maxTl, getTLevel(parentNode));
+    }
+
+    tLevels[node] = maxTl;
+    criticalTime = Math.max(criticalTime, tLevels[node]);
+
+    return tLevels[node];
+  }
+
   public int getOptimalLength() {
     return optimalLength;
+  }
+
+  public void preparePredecessorMap() {
+    adjacencyList.preparePredecessorMap();
+  }
+
+  public int getDependenciesForNode(int node) {
+    return adjacencyList.getDependenciesForNode(node);
+  }
+
+  public List<Integer> getCriticalPath() {
+    return criticalPathService.getCriticalPath();
   }
 
   public void introduceVirtualForIdenticalNodes() {

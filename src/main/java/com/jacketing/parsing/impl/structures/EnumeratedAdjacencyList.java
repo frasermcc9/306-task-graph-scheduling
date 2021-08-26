@@ -27,6 +27,8 @@ public class EnumeratedAdjacencyList {
   private final Map<Integer, List<Integer>> outAdjacencyList;
   private final EnumeratedNodeMap enumeratedNodeMap;
 
+  private Map<Integer, Integer> predecessorMap;
+
   private int nodeCount;
   private int edgeCount;
 
@@ -50,6 +52,36 @@ public class EnumeratedAdjacencyList {
   public void createRepresentation() {
     introduceNodes();
     introduceEdges();
+  }
+
+  public void preparePredecessorMap() {
+    predecessorMap = new HashMap<>();
+    for (Integer nodeId : getNodeIds()) {
+      getDependenciesForNode(nodeId);
+    }
+  }
+
+  public int getDependenciesForNode(int node) {
+    Integer candidate = predecessorMap.get(node);
+    if (candidate != null) {
+      return candidate;
+    }
+    List<Integer> directList = getParentNodes(node);
+    int allDeps = 0;
+    for (Integer parentNode : directList) {
+      int asBitfield = 1 << parentNode;
+      allDeps |= asBitfield;
+
+      int nodeDeps = getDependenciesForNode(parentNode);
+      predecessorMap.putIfAbsent(parentNode, nodeDeps);
+      allDeps |= nodeDeps;
+    }
+    predecessorMap.put(node, allDeps);
+    return allDeps;
+  }
+
+  public Map<Integer, Integer> getPredecessorMap() {
+    return predecessorMap;
   }
 
   @Contract(pure = true)

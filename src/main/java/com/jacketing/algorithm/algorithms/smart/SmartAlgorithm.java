@@ -117,7 +117,7 @@ public class SmartAlgorithm extends AbstractSchedulingAlgorithm {
 
     // Otherwise, use A* with list scheduler.
     Log.info("Solving input graph with A*, using list estimate scheduler.");
-    algorithmFactory = algorithmSource.getAStar();
+    algorithmFactory = algorithmSource.getAOAStar();
     algorithm =
       algorithmFactory
         .createAlgorithm(graph, context, scheduleFactory)
