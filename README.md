@@ -39,7 +39,7 @@ Jacketing Studio Scheduler is a multi-platform, parallelized task scheduler with
 
 <h3>Usage</h3>
 
-The visualization requires Oracle Java 8 to run! If you aren't using the visualization, you can use OpenJDK.
+Must be run using Java 11 (OpenJDK is fine)
 
 To run the program, type `java -jar scheduler.jar <Input File.dot> <Number of Processors> [OPTIONS]`
 
@@ -56,14 +56,10 @@ Optional:
 
 <h3>Project Setup</h3>
 
-Building locally requires Oracle Java 8
+Building locally requires Java 11
 
 1. Clone Repo
-2. In IntelliJ:
-   - Set Project SDK to Java 8 (if you have multiple Java installations)
-   - Set Gradle SDK to Java 8 (if you have multiple Java installations)
-   - Sync Gradle
-3. Run com.jacketing.Entry
+2. In IntelliJ: Run com.jacketing.Entry (make sure to configure entry to use the correct args as above)
 
 <h3>Wiki</h3>
 
