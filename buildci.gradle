@@ -11,7 +11,7 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 javafx {
-  modules = [ 'javafx.controls', 'javafx.fxml' ]
+  modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.media', 'javafx.graphics', 'javafx.base' ]
 }
 
 jar {

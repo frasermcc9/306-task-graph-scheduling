@@ -92,7 +92,7 @@
                <children>
                   <StackedBarChart fx:id="bestScheduleGraph" categoryGap="0" legendVisible="false">
                     <xAxis>
-                      <CategoryAxis side="TOP" />
+                      <CategoryAxis side="BOTTOM" />
                     </xAxis>
                     <yAxis>
                       <NumberAxis fx:id="scheduleAxis" side="LEFT" />

@@ -59,6 +59,7 @@ public class Entry {
         observer = new AlgorithmObserver();
         programContext.giveObserver(observer);
         ByteArrayOutputStream os = new ByteArrayOutputStream();
+        PrintStream originalOut = System.out;
         System.setOut(new PrintStream(os));
 
         Thread algorithmThread = new Thread(
@@ -67,7 +68,15 @@ public class Entry {
           }
         );
 
-        ApplicationEntry.launch(observer, os, programContext, algorithmThread);
+        try {
+          ApplicationEntry.launch(observer, os, programContext, algorithmThread);
+        } catch (Error e) {
+          System.setOut(originalOut);
+          Log.error(
+            "JavaFX Not found, please use Oracle JDK 1.8 when using the visualization."
+          );
+        }
+
       } else {
         handledSearch(programContext, CommandLineOutput::new);
       }

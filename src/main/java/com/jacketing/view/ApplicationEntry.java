@@ -49,7 +49,7 @@ public class ApplicationEntry extends Application {
     FXMLLoader loader = new FXMLLoader(
       getClass().getClassLoader().getResource("final.fxml")
     );
-    Image icon = new Image(getClass().getClassLoader().getResourceAsStream("./img/logo/jacketing-no-text@4x.png"));
+    //Image icon = new Image(getClass().getClassLoader().getResourceAsStream("/img/logo/jacketing-no-text@4x.png"));
 
     Parent root;
     root = loader.load();
@@ -58,7 +58,7 @@ public class ApplicationEntry extends Application {
     System.out.println(outputStream);
     Scene scene = new Scene(root);
     primaryStage.setTitle("Jacketing Studio");
-    primaryStage.getIcons().add(icon);
+    //primaryStage.getIcons().add(icon);
     primaryStage.setScene(scene);
     primaryStage.show();
     controller.setAlgorithmFields(observer, algorithmThread, context);
