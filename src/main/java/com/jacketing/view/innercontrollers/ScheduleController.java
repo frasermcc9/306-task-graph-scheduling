@@ -41,30 +41,25 @@ public class ScheduleController {
     bestScheduleGraph.setTitle("Current Best Schedule");
     bestScheduleGraph.setAnimated(false);
     axis.setAutoRanging(false);
-    axis.setUpperBound(0);
-    axis.setTickLabelFormatter(
-      new NumberAxis.DefaultFormatter(axis) {
-        @Override
-        public String toString(Number value) {
-          return String.format("%d", -value.intValue());
+    axis.setLowerBound(0);
+    scheduleListView.setSpacing(1);
+
+    observer.on(
+      AlgorithmEvent.BEST_UPDATE,
+      data -> {
+        ScheduleV1 schedule = observer.getCurrentBestSchedule();
+        if (schedule != null) {
+          if (!scheduleList.contains(schedule)) {
+            Platform.runLater(
+              () -> {
+                addNewSchedule(schedule);
+                plotSchedule(schedule.getProcessorMap());
+              }
+            );
+          }
         }
       }
     );
-    scheduleListView.setSpacing(1);
-
-    observer.on(AlgorithmEvent.BEST_UPDATE, (data) -> {
-      ScheduleV1 schedule = observer.getCurrentBestSchedule();
-      if (schedule != null) {
-        if (!scheduleList.contains(schedule)) {
-          Platform.runLater(
-            () -> {
-              addNewSchedule(schedule);
-              plotSchedule(schedule.getProcessorMap());
-            }
-          );
-        }
-      }
-    });
   }
 
   private void addNewSchedule(ScheduleV1 schedule) {
@@ -114,7 +109,7 @@ public class ScheduleController {
       }
     }
 
-    axis.setLowerBound(-upperBound);
+    axis.setUpperBound(upperBound);
 
     int processorIndex = 0;
     for (ProcessorTaskList taskList : processorMap.values()) {
@@ -127,7 +122,7 @@ public class ScheduleController {
       if (taskList.get(0).getStartTime() != 0) {
         XYChart.Data<String, Integer> bar = new XYChart.Data(
           Integer.toString(processorIndex),
-          -taskList.get(0).getStartTime()
+          taskList.get(0).getStartTime()
         );
         bar
           .nodeProperty()
@@ -137,7 +132,7 @@ public class ScheduleController {
       // then add the first task
       XYChart.Data<String, Integer> firstBar = new XYChart.Data(
         Integer.toString(processorIndex),
-        -taskList.get(0).getDuration()
+        taskList.get(0).getDuration()
       );
       firstBar
         .nodeProperty()
@@ -150,11 +145,11 @@ public class ScheduleController {
       for (int i = 1; i < taskList.size(); i++) {
         // check for delays (if this task starts later than the previous end time)
         if (
-          -taskList.get(i - 1).getEndTime() != -taskList.get(i).getStartTime()
+          taskList.get(i - 1).getEndTime() != taskList.get(i).getStartTime()
         ) {
           XYChart.Data<String, Integer> bar = new XYChart.Data(
             Integer.toString(processorIndex),
-            -taskList.get(i).getStartTime() - -taskList.get(i - 1).getEndTime()
+            taskList.get(i).getStartTime() - taskList.get(i - 1).getEndTime()
           );
           bar
             .nodeProperty()
@@ -164,7 +159,7 @@ public class ScheduleController {
         // now just add the current task
         XYChart.Data<String, Integer> bar = new XYChart.Data(
           Integer.toString(processorIndex),
-          -taskList.get(i).getDuration()
+          taskList.get(i).getDuration()
         );
         bar
           .nodeProperty()
