@@ -26,7 +26,7 @@ public abstract class AllocationSchedule
   protected final int maxNode;
 
   private final AllocationSchedule parent;
-  private final int processorIndex;
+  private final int highestProcessor;
   private final int task;
   private int[] bitfieldRepresentation;
   private int processor;
@@ -49,7 +49,7 @@ public abstract class AllocationSchedule
     this.parent = parent;
     this.task = task;
     this.maxNode = maxNode;
-    this.processorIndex = processorIndex;
+    this.highestProcessor = processorIndex;
 
     this.loadHeuristic = new int[getNumberOfProcessors()];
     this.acpHeuristic = 0;
@@ -73,14 +73,20 @@ public abstract class AllocationSchedule
       //System.out.println(toString());
       return;
     }
-
     Graph graph = getCache().getGraph();
 
     int maxProcessorCount = getNumberOfProcessors();
-    int processorsToSchedule = Math.min(maxProcessorCount, processorIndex + 1);
+    int processorsToSchedule = Math.min(
+      maxProcessorCount,
+      highestProcessor + 1
+    );
     int nextTask = task + 1;
     for (int i = 0; i < processorsToSchedule; i++) {
-      AllocationSchedule next = build(this, nextTask, i + 1);
+      int nextHighestProcessor = i == processorsToSchedule - 1
+        ? highestProcessor + 1
+        : highestProcessor;
+
+      AllocationSchedule next = build(this, nextTask, nextHighestProcessor);
       next.processor = i;
 
       int[] nextLoads = new int[maxProcessorCount];
@@ -118,7 +124,7 @@ public abstract class AllocationSchedule
       next.setHeuristics(nextLoads, Math.max(this.acpHeuristic, nextAcp));
 
       if (next.heuristic > getCache().getBestSchedule().getDuration()) {
-        continue;
+        //continue;
       }
 
       addSchedule(next);
@@ -209,7 +215,9 @@ public abstract class AllocationSchedule
     this.loadHeuristic = loads;
     this.acpHeuristic = acp;
 
-    this.heuristic = Math.max(acpHeuristic, highestInArray(loadHeuristic));
+    int loadMax = highestInArray(loadHeuristic);
+
+    this.heuristic = Math.max(acpHeuristic, loadMax);
   }
 
   private int highestInArray(int[] array) {
@@ -229,6 +237,11 @@ public abstract class AllocationSchedule
       iterator = iterator.parent;
     }
     return Arrays.toString(format);
+  }
+
+  @Override
+  public AOSchedule predecessor() {
+    return null;
   }
 
   @Override

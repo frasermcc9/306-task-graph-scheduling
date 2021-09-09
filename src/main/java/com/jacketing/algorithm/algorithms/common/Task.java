@@ -18,9 +18,9 @@ import com.jacketing.common.FormattableTask;
 public class Task implements FormattableTask {
 
   private final int processor;
-  private final int time;
   private final int duration;
   private final int id;
+  private int time;
 
   public Task(int processor, int startTime, int duration, int id) {
     this.processor = processor;
@@ -37,6 +37,11 @@ public class Task implements FormattableTask {
   @Override
   public int getStartTime() {
     return getTime();
+  }
+
+  @Override
+  public void setStartTime(int startTime) {
+    this.time = startTime;
   }
 
   public int getProcessor() {

@@ -13,6 +13,8 @@
 
 package com.jacketing.algorithm.AO;
 
+import com.jacketing.algorithm.AO.Collections.AlgorithmCollection;
+import com.jacketing.algorithm.AO.Collections.PriorityQueueCollection;
 import com.jacketing.algorithm.algorithms.AbstractSchedulingAlgorithm;
 import com.jacketing.algorithm.algorithms.SchedulingAlgorithmStrategy;
 import com.jacketing.algorithm.algorithms.common.AlgorithmSchedule;
@@ -21,9 +23,7 @@ import com.jacketing.algorithm.algorithms.common.cache.ValidDuplicationStaticCac
 import com.jacketing.algorithm.structures.ScheduleFactory;
 import com.jacketing.io.cli.AlgorithmContext;
 import com.jacketing.parsing.impl.structures.Graph;
-import java.util.AbstractQueue;
 import java.util.HashSet;
-import java.util.PriorityQueue;
 
 public class AllocationOrderingAStar extends AbstractSchedulingAlgorithm {
 
@@ -61,20 +61,17 @@ public class AllocationOrderingAStar extends AbstractSchedulingAlgorithm {
   public AlgorithmSchedule schedule() {
     final int nodeCount = graph.getAdjacencyList().getNodeCount();
 
-    final AbstractQueue<AOSchedule> queue = new PriorityQueue<>();
+    final AlgorithmCollection<AOSchedule> queue = new PriorityQueueCollection<>();
+
     queue.offer(QueuedAllocationSchedule.empty(queue, -1, nodeCount, cacheKey));
 
     while (!queue.isEmpty()) {
       AOSchedule next = queue.poll();
       if (next.saturated()) {
-        AOSchedule upgrade = next.upgrade();
-        //int duration = upgrade.getDuration();
-        //continue;
         return next.upgrade();
       }
       next.propagate();
     }
-
     return getCache(cacheKey).getBestSchedule();
   }
 }

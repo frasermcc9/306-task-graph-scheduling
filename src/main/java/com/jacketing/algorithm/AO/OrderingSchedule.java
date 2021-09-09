@@ -28,9 +28,10 @@ public abstract class OrderingSchedule extends AOSchedule {
 
   private final int currentlyScheduled;
   private final int globalScheduled;
+  private final int processorToInvestigate;
 
   private int newestTask;
-  private final int processorToInvestigate;
+  private int newestProcessor;
 
   private int[] startTimeCache;
 
@@ -107,11 +108,12 @@ public abstract class OrderingSchedule extends AOSchedule {
           );
 
           next.newestTask = toSchedule;
+          next.newestProcessor = processorToInvestigate;
 
           Graph graph = getCache().getGraph();
 
           next.estimatedStartTime =
-            calculateEEST(toSchedule, processorToInvestigate);
+            next.calculateEEST(toSchedule, processorToInvestigate);
 
           // b-level vs allocated b-level
           int nextScp = Math.max(
@@ -124,7 +126,7 @@ public abstract class OrderingSchedule extends AOSchedule {
 
           int nextOrderedLoad = Math.max(
             orderedLoad,
-            nextProcFinishTime + sumUnordered(available)
+            nextProcFinishTime + sumUnordered(available & ~(1 << toSchedule))
           );
 
           next.setHeuristics(nextScp, nextOrderedLoad);
@@ -200,12 +202,23 @@ public abstract class OrderingSchedule extends AOSchedule {
         edrt = Math.max(edrt, localEdrt);
       }
 
-      boolean hasPrevious =
-        this.parent.processorToInvestigate == this.processorToInvestigate;
+      OrderingSchedule nodeSchedule = findPartial(forNode);
+      boolean hasPrevious = false;
+      if (
+        nodeSchedule != null &&
+        nodeSchedule.processorToInvestigate ==
+        nodeSchedule.parent.processorToInvestigate
+      ) {
+        // avoid root level schedule
+        if (nodeSchedule.parent.parent != null) {
+          hasPrevious = true;
+        }
+      }
 
       if (hasPrevious) {
-        int prevWeight = graph.getNodeWeight(this.parent.newestTask);
-        eest = Math.max(edrt, this.parent.estimatedStartTime + prevWeight);
+        int prevWeight = graph.getNodeWeight(nodeSchedule.parent.newestTask);
+        eest =
+          Math.max(edrt, nodeSchedule.parent.estimatedStartTime + prevWeight);
       } else {
         eest = edrt;
       }
@@ -215,6 +228,17 @@ public abstract class OrderingSchedule extends AOSchedule {
     }
 
     return eest;
+  }
+
+  private OrderingSchedule findPartial(int withTask) {
+    OrderingSchedule current = this;
+    while (current != null) {
+      if (current.newestTask == withTask) {
+        return current;
+      }
+      current = current.parent;
+    }
+    return null;
   }
 
   private void setHeuristics(int scp, int orderedLoad) {
@@ -271,6 +295,11 @@ public abstract class OrderingSchedule extends AOSchedule {
     return parent;
   }
 
+  @Override
+  public AOSchedule predecessor() {
+    return this.allocation;
+  }
+
   @Beta
   public Task getFormattable() {
     if (startTimeCache == null) {
@@ -299,5 +328,13 @@ public abstract class OrderingSchedule extends AOSchedule {
       graph.getNodeWeight(newestTask),
       newestTask
     );
+  }
+
+  public int getNewestTask() {
+    return newestTask;
+  }
+
+  public int getNewestProcessor() {
+    return newestProcessor;
   }
 }

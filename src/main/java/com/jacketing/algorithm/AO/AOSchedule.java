@@ -37,6 +37,8 @@ public abstract class AOSchedule
 
   public abstract int calculateHeuristic();
 
+  public abstract AOSchedule predecessor();
+
   /**
    * Upgrades the partial solution to the next tier. For example, Allocation ->
    * Ordering -> Complete

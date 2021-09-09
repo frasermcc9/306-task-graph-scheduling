@@ -13,11 +13,11 @@
 
 package com.jacketing.algorithm.AO;
 
-import java.util.AbstractQueue;
+import com.jacketing.algorithm.AO.Collections.AlgorithmCollection;
 
 public class QueuedOrderingSchedule extends OrderingSchedule {
 
-  protected final AbstractQueue<AOSchedule> queue;
+  protected final AlgorithmCollection<AOSchedule> queue;
 
   public QueuedOrderingSchedule(
     AllocationSchedule allocation,
@@ -25,7 +25,7 @@ public class QueuedOrderingSchedule extends OrderingSchedule {
     int scheduled,
     int allScheduled,
     int investigateProcessor,
-    AbstractQueue<AOSchedule> queue,
+    AlgorithmCollection<AOSchedule> queue,
     OrderingSchedule parent
   ) {
     super(
@@ -40,7 +40,7 @@ public class QueuedOrderingSchedule extends OrderingSchedule {
   }
 
   public static OrderingSchedule empty(
-    AbstractQueue<AOSchedule> queue,
+    AlgorithmCollection<AOSchedule> queue,
     AllocationSchedule allocationSchedule,
     int cacheKey
   ) {
@@ -57,7 +57,7 @@ public class QueuedOrderingSchedule extends OrderingSchedule {
 
   @Override
   public void addSchedule(AOSchedule toAdd) {
-    queue.add(toAdd);
+    queue.offer(toAdd);
   }
 
   @Override
