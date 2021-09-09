@@ -7,7 +7,6 @@ import com.jacketing.parsing.impl.structures.EnumeratedAdjacencyList;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import javafx.application.Platform;
 import javafx.scene.layout.StackPane;
 import org.graphstream.graph.Graph;
@@ -31,69 +30,73 @@ public class SearchSpaceController {
     Graph graph = new SingleGraph("Input Display");
     this.graphData = graph;
 
-    observer.on(AlgorithmEvent.GRAPH_LOADED, (event) -> {
-      Platform.runLater(() -> {
-        EnumeratedAdjacencyList adjacencyList = observer
-          .getGraph()
-          .getAdjacencyList();
-
-        for (int nodeId : adjacencyList.getNodeIds()) {
-          String id = nodeId + "";
-          nodes.add(id);
-          graph.addNode(id);
-        }
-
-        for (Map.Entry<Integer, List<Integer>> entry : adjacencyList
-          .getInAdjacencyList()
-          .entrySet()) {
-          String key = Integer.toString(entry.getKey());
-          for (int value : entry.getValue()) {
-            String node = Integer.toString(value);
-            String id = key + node;
-            edges.add(id);
-            graph.addEdge(id, key, node);
-          }
-        }
-
-        for (Node node : graph) {
-          node.setAttribute("ui.label", "  " + node.getId());
-          node.setAttribute("size", "big");
-        }
-
-        graph.setAttribute(
-          "ui.stylesheet",
-          "graph { fill-color: #2f2d2e; } node { fill-color: #8b5fbf; size: 30px; stroke-mode: plain; } node.visited { fill-color: #00aeef; } edge { size: 2px; } edge.done { fill-color: green; }"
-        );
-        FxViewer view = new FxViewer(
-          graph,
-          FxViewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD
-        );
-        view.enableAutoLayout();
-
-        FxViewPanel panel = (FxViewPanel) view.addView(
-          FxViewer.DEFAULT_VIEW_ID,
-          new FxGraphRenderer()
-        );
-        pane.getChildren().addAll(panel); // prevent UI shift issues
-        this.observer = observer;
-
-        Thread pollingThread = new Thread(
+    observer.on(
+      AlgorithmEvent.GRAPH_LOADED,
+      event -> {
+        Platform.runLater(
           () -> {
-            while (true) {
-              pollGraph();
-              try {
-                Thread.sleep(200);
-              } catch (InterruptedException e) {
-                e.printStackTrace();
+            EnumeratedAdjacencyList adjacencyList = observer
+              .getGraph()
+              .getAdjacencyList();
+
+            for (int nodeId : adjacencyList.getNodeIds()) {
+              String id = nodeId + "";
+              nodes.add(id);
+              graph.addNode(id);
+            }
+
+            for (Map.Entry<Integer, List<Integer>> entry : adjacencyList
+              .getInAdjacencyList()
+              .entrySet()) {
+              String key = Integer.toString(entry.getKey());
+              for (int value : entry.getValue()) {
+                String node = Integer.toString(value);
+                String id = key + node;
+                edges.add(id);
+                graph.addEdge(id, key, node);
               }
             }
+
+            for (Node node : graph) {
+              node.setAttribute("ui.label", "  " + node.getId());
+              node.setAttribute("size", "big");
+            }
+
+            graph.setAttribute(
+              "ui.stylesheet",
+              "graph { fill-color: #2f2d2e; } node { fill-color: #8b5fbf; size: 30px; stroke-mode: plain; } node.visited { fill-color: #00aeef; } edge { size: 2px; } edge.done { fill-color: green; }"
+            );
+            FxViewer view = new FxViewer(
+              graph,
+              FxViewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD
+            );
+            view.enableAutoLayout();
+
+            FxViewPanel panel = (FxViewPanel) view.addView(
+              FxViewer.DEFAULT_VIEW_ID,
+              new FxGraphRenderer()
+            );
+            pane.getChildren().addAll(panel); // prevent UI shift issues
+            this.observer = observer;
+
+            Thread pollingThread = new Thread(
+              () -> {
+                while (true) {
+                  pollGraph();
+                  try {
+                    Thread.sleep(200);
+                  } catch (InterruptedException e) {
+                    e.printStackTrace();
+                  }
+                }
+              }
+            );
+            this.pollingThread = pollingThread;
+            pollingThread.start();
           }
         );
-        this.pollingThread = pollingThread;
-        pollingThread.start();
-      });
-
-    });
+      }
+    );
   }
 
   public void stop() {

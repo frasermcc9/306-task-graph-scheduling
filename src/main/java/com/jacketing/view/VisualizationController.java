@@ -52,7 +52,11 @@ public class VisualizationController {
   private StatsTextController statsTextController;
   private boolean running = true;
 
-  public void setAlgorithmFields(AlgorithmObserver observer, Thread thread, ApplicationContext context) {
+  public void setAlgorithmFields(
+    AlgorithmObserver observer,
+    Thread thread,
+    ApplicationContext context
+  ) {
     this.observer = observer;
     this.context = context;
     this.algorithmThread = thread;
@@ -69,48 +73,61 @@ public class VisualizationController {
   }
 
   private void start() {
-    searchSpaceController = new SearchSpaceController(observer, searchSpaceStackPane);
-    new ScheduleController(observer, bestScheduleGraph, scheduleList, scheduleAxis);
-    statsTextController = new StatsTextController(
+    searchSpaceController =
+      new SearchSpaceController(observer, searchSpaceStackPane);
+    new ScheduleController(
       observer,
-      duration,
-      schedulesChecked,
-      improvements,
-      schedulesCulled,
-      duplicatesRemoved,
-      currentBestTime,
-      numberCores,
-      numberProcessors,
-      algorithm,
-      time,
-      inputFile
+      bestScheduleGraph,
+      scheduleList,
+      scheduleAxis
     );
+    statsTextController =
+      new StatsTextController(
+        observer,
+        duration,
+        schedulesChecked,
+        improvements,
+        schedulesCulled,
+        duplicatesRemoved,
+        currentBestTime,
+        numberCores,
+        numberProcessors,
+        algorithm,
+        time,
+        inputFile
+      );
 
     inputFile.setText(context.getInputFile());
-    numberCores.setText("Number of Threads: " + context.getCoresToCalculateWith());
-    numberProcessors.setText("Number of Processors: " + context.getProcessorsToScheduleOn());
+    numberCores.setText(
+      "Number of Threads: " + context.getCoresToCalculateWith()
+    );
+    numberProcessors.setText(
+      "Number of Processors: " + context.getProcessorsToScheduleOn()
+    );
     algorithm.setText("Algorithm: DFS");
 
     String resumeColour = "-fx-background-color: #00aeef;";
     String stopColour = "-fx-background-color: #e84855;";
 
-    stop.setOnAction((event) -> {
-      if (running) {
-        algorithmThread.suspend();
-        statsTextController.stop();
-        searchSpaceController.stop();
-        stop.setStyle(resumeColour);
-        stop.setText("Resume");
-      } else {
-        algorithmThread.resume();
-        statsTextController.resume();
-        searchSpaceController.resume();
-        stop.setStyle(stopColour);
-        stop.setText("Stop");
-      }
+    stop.setOnAction(
+      event -> {
+        if (running) {
+          algorithmThread.suspend();
+          statsTextController.stop();
+          searchSpaceController.stop();
+          stop.setStyle(resumeColour);
+          stop.setText("Resume");
+        } else {
+          algorithmThread.resume();
+          statsTextController.resume();
+          searchSpaceController.resume();
+          stop.setStyle(stopColour);
+          stop.setText("Stop");
+        }
 
-      running = !running;
-    });
+        running = !running;
+      }
+    );
 
     algorithmThread.start();
   }

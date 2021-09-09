@@ -11,30 +11,25 @@
  *
  */
 
-package com.jacketing.algorithm.algorithms.astar;
+package com.jacketing.algorithm.AO;
 
+import com.jacketing.algorithm.AO.Collections.AlgorithmCollection;
+import com.jacketing.algorithm.AO.Collections.PriorityQueueCollection;
 import com.jacketing.algorithm.algorithms.AbstractSchedulingAlgorithm;
 import com.jacketing.algorithm.algorithms.SchedulingAlgorithmStrategy;
-import com.jacketing.algorithm.algorithms.common.AbstractIterativeSchedule;
 import com.jacketing.algorithm.algorithms.common.AlgorithmSchedule;
-import com.jacketing.algorithm.algorithms.common.cache.ArrayDuplicationStaticCache;
 import com.jacketing.algorithm.algorithms.common.cache.StaticCacheFactory;
+import com.jacketing.algorithm.algorithms.common.cache.ValidDuplicationStaticCache;
 import com.jacketing.algorithm.structures.ScheduleFactory;
-import com.jacketing.algorithm.util.topological.TopologicalSort;
-import com.jacketing.algorithm.util.topological.TopologicalSortContext;
 import com.jacketing.io.cli.AlgorithmContext;
 import com.jacketing.parsing.impl.structures.Graph;
-import java.util.AbstractQueue;
 import java.util.HashSet;
-import java.util.List;
-import java.util.PriorityQueue;
 
-public class AStar extends AbstractSchedulingAlgorithm {
+public class AllocationOrderingAStar extends AbstractSchedulingAlgorithm {
 
-  private final TopologicalSortContext<List<Integer>> layeredTopologicalFinder;
   private final int cacheKey;
 
-  public AStar(
+  public AllocationOrderingAStar(
     Graph graph,
     AlgorithmContext context,
     ScheduleFactory scheduleFactory,
@@ -43,9 +38,6 @@ public class AStar extends AbstractSchedulingAlgorithm {
     super(graph, context, scheduleFactory);
     cacheKey = useCache(cacheFactory.create(graph, context, HashSet::new));
 
-    layeredTopologicalFinder =
-      new TopologicalSortContext<>(TopologicalSort.withLayers(graph));
-
     SchedulingAlgorithmStrategy algorithm = estimateAlgorithmFactory.createAlgorithm(
       graph,
       context,
@@ -53,37 +45,33 @@ public class AStar extends AbstractSchedulingAlgorithm {
     );
     AlgorithmSchedule estimateSchedule = algorithm.schedule();
     getCache(cacheKey).updateUpper(estimateSchedule);
+
+    graph.preparePredecessorMap();
   }
 
-  public AStar(
+  public AllocationOrderingAStar(
     Graph graph,
     AlgorithmContext context,
     ScheduleFactory scheduleFactory
   ) {
-    this(graph, context, scheduleFactory, ArrayDuplicationStaticCache::new);
+    this(graph, context, scheduleFactory, ValidDuplicationStaticCache::new);
   }
 
   @Override
   public AlgorithmSchedule schedule() {
-    List<List<Integer>> topological = layeredTopologicalFinder.sortedTopological();
+    final int nodeCount = graph.getAdjacencyList().getNodeCount();
 
-    if (topological.size() == 0) {
-      return scheduleFactory.newSchedule(context);
-    }
-    int orphans = listToBitfield(topological.get(0));
+    final AlgorithmCollection<AOSchedule> queue = new PriorityQueueCollection<>();
 
-    final AbstractQueue<AbstractIterativeSchedule> queue = new PriorityQueue<>();
-    queue.offer(new AStarSchedule(orphans, null, queue, cacheKey));
+    queue.offer(QueuedAllocationSchedule.empty(queue, -1, nodeCount, cacheKey));
 
     while (!queue.isEmpty()) {
-      AbstractIterativeSchedule next = queue.poll();
+      AOSchedule next = queue.poll();
       if (next.saturated()) {
-        return next;
+        return next.upgrade();
       }
-
       next.propagate();
     }
-
     return getCache(cacheKey).getBestSchedule();
   }
 }

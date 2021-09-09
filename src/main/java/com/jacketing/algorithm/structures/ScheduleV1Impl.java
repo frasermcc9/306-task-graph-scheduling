@@ -93,6 +93,11 @@ public class ScheduleV1Impl
     return getFinishTime(true);
   }
 
+  @Override
+  public void propagate() {
+    throw new UnsupportedOperationException();
+  }
+
   public int getEarliestFinishTime() {
     return getFinishTime(false);
   }

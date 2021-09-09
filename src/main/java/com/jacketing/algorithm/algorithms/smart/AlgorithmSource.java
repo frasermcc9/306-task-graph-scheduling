@@ -13,6 +13,7 @@
 
 package com.jacketing.algorithm.algorithms.smart;
 
+import com.jacketing.algorithm.AO.AllocationOrderingAStar;
 import com.jacketing.algorithm.AlgorithmFactory;
 import com.jacketing.algorithm.algorithms.astar.AStar;
 import com.jacketing.algorithm.algorithms.dfs.IterativeDfs;
@@ -34,5 +35,9 @@ public interface AlgorithmSource {
 
   default AlgorithmFactory getList() {
     return ListScheduler::new;
+  }
+
+  default AlgorithmFactory getAOAStar() {
+    return AllocationOrderingAStar::new;
   }
 }

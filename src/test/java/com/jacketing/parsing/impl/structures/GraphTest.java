@@ -68,4 +68,18 @@ public class GraphTest {
     List<Integer> childNodes = graph.getAdjacencyList().getChildNodes(1);
     assertTrue(childNodes.contains(2));
   }
+
+  @Test
+  public void testNodeDependents() {
+    Graph graph = TestUtil.graphVariantTwo();
+    graph.preparePredecessorMap();
+
+    int depsFor0 = graph.getDependenciesForNode(0);
+    int depsFor3 = graph.getDependenciesForNode(3);
+    int depsFor6 = graph.getDependenciesForNode(6);
+
+    assertEquals(0, depsFor0);
+    assertEquals(1, depsFor3);
+    assertEquals(3, depsFor6);
+  }
 }

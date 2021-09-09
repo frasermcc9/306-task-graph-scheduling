@@ -11,12 +11,21 @@
  *
  */
 
-package com.jacketing.algorithm.algorithms.common;
+package com.jacketing.algorithm.AO.Collections;
 
-public interface HeuristicSchedule {
-  int getMaxBottomLevel();
+import java.util.Stack;
 
-  int getIdleTime();
+public class StackCollection<T>
+  extends Stack<T>
+  implements AlgorithmCollection<T> {
 
-  int calculateHeuristic();
+  @Override
+  public T poll() {
+    return super.pop();
+  }
+
+  @Override
+  public boolean offer(T item) {
+    return this.add(item);
+  }
 }

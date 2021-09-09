@@ -11,12 +11,10 @@
  *
  */
 
-package com.jacketing.algorithm.algorithms.common;
+package com.jacketing.algorithm.AO.Collections;
 
-public interface HeuristicSchedule {
-  int getMaxBottomLevel();
+import java.util.PriorityQueue;
 
-  int getIdleTime();
-
-  int calculateHeuristic();
-}
+public class PriorityQueueCollection<E>
+  extends PriorityQueue<E>
+  implements AlgorithmCollection<E> {}

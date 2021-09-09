@@ -91,10 +91,10 @@ public abstract class AbstractIterativeSchedule
 
   public void updateHeuristics(int startTime, int bLevelOfNext, int processor) {
     this.maxBottomLevel =
-      Math.max(this.maxBottomLevel, startTime + bLevelOfNext);
+      Math.max(parent.maxBottomLevel, startTime + bLevelOfNext);
     this.idleTime = this.idleTime + startTime - findProcEnd(processor);
 
-    this.heuristic = calculateHeuristic(this);
+    this.heuristic = this.calculateHeuristic();
   }
 
   public int getTotalTime() {
@@ -120,6 +120,7 @@ public abstract class AbstractIterativeSchedule
     return orphans == 0;
   }
 
+  @Override
   public void propagate() {
     int processors = getCache().getContext().getProcessorsToScheduleOn();
     Graph graph = getCache().getGraph();
@@ -216,9 +217,9 @@ public abstract class AbstractIterativeSchedule
             cacheKey,
             nextId
           );
-          schedule.setAddedTask(processor, startTime, orphan, taskWeight);
-
           schedule.updateHeuristics(startTime, bLevelOfNext, processor);
+
+          schedule.setAddedTask(processor, startTime, orphan, taskWeight);
 
           addItem(schedule);
         }
@@ -226,18 +227,16 @@ public abstract class AbstractIterativeSchedule
     }
   }
 
-  @Override
   public int getMaxBottomLevel() {
     return this.maxBottomLevel;
   }
 
-  @Override
   public int getIdleTime() {
-    return 0;
+    return this.idleTime;
   }
 
   @Override
-  public int calculateHeuristic(HeuristicSchedule schedule) {
+  public int calculateHeuristic() {
     return Integer.MIN_VALUE;
   }
 

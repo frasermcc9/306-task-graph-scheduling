@@ -17,4 +17,6 @@ import com.jacketing.common.FormattableSchedule;
 
 public interface AlgorithmSchedule extends FormattableSchedule {
   int getDuration();
+
+  void propagate();
 }

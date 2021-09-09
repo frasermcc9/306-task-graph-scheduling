@@ -49,7 +49,6 @@ public class ApplicationEntry extends Application {
     FXMLLoader loader = new FXMLLoader(
       getClass().getClassLoader().getResource("final.fxml")
     );
-    //Image icon = new Image(getClass().getClassLoader().getResourceAsStream("/img/logo/jacketing-no-text@4x.png"));
 
     Parent root;
     root = loader.load();

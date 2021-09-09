@@ -11,12 +11,12 @@
  *
  */
 
-package com.jacketing.algorithm.algorithms.common;
+package com.jacketing.algorithm.AO.Collections;
 
-public interface HeuristicSchedule {
-  int getMaxBottomLevel();
+public interface AlgorithmCollection<E> {
+  boolean offer(E item);
 
-  int getIdleTime();
+  E poll();
 
-  int calculateHeuristic();
+  boolean isEmpty();
 }

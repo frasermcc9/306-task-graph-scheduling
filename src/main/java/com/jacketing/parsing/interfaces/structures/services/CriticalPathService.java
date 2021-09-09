@@ -11,12 +11,10 @@
  *
  */
 
-package com.jacketing.algorithm.algorithms.common;
+package com.jacketing.parsing.interfaces.structures.services;
 
-public interface HeuristicSchedule {
-  int getMaxBottomLevel();
+import java.util.List;
 
-  int getIdleTime();
-
-  int calculateHeuristic();
+public interface CriticalPathService {
+  List<Integer> getCriticalPath();
 }
