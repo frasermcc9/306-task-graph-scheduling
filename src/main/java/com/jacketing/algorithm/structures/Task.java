@@ -39,6 +39,11 @@ public class Task implements FormattableTask {
     return duration;
   }
 
+  @Override
+  public void setStartTime(int startTime) {
+    throw new UnsupportedOperationException();
+  }
+
   public int getId() {
     return id;
   }

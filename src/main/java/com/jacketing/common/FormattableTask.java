@@ -19,4 +19,6 @@ public interface FormattableTask {
   int getStartTime();
 
   int getDuration();
+
+  void setStartTime(int startTime);
 }
